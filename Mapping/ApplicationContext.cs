@@ -21,8 +21,7 @@ public class ApplicationContext : DbContext
 
         modelBuilder.Entity<Configuration>(x =>
         {
-            x.HasKey("id");
-            x.Property("id").UseIdentityColumn();
+            x.HasKey(t => t.Id);
             x.Property(t => t.Name).HasMaxLength(100);
             x.Property(t => t.Value).HasMaxLength(500);
             x.HasIndex(t => t.Name).IsUnique();

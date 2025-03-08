@@ -2,8 +2,6 @@
 
 public class Configuration
 {
-    protected int? id;
-
     private Configuration() { }
 
     public Configuration(string name, string value)
@@ -11,6 +9,8 @@ public class Configuration
         Name = name;
         Value = value;
     }
+
+    public int Id { get; private set; }
 
     public string Name { get; init; }
     public string Value { get; private set; }
