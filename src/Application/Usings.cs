@@ -1,2 +1,2 @@
-global using Mapping;
+global using Persistence;
 global using Model;

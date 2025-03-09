@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Mapping.Migrations
+namespace Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class AdjustingIdCase : Migration

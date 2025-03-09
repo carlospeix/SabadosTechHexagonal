@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model;
 
-namespace Mapping;
+namespace Persistence;
 
 public class ApplicationContext : DbContext
 {
