@@ -19,32 +19,39 @@ public class ApplicationContext : DbContext
         // Por ahora dejamos esto aquí, pero debería ir en un archivo o servicio de configuración 
         string relativePath = @"SabadosTech\SabadosTechHexagonalData.mdf";
         string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        string fullPath = Path.Combine(userFolder, relativePath);
+        string fullPath = Path.Combine(userFolder, relativePath) ?? throw new InvalidDataException("Error getting the database path");
 
-        string tempConnectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
         connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={fullPath};Integrated Security=True";
 
-        if (!File.Exists(fullPath))
+        if (File.Exists(fullPath))
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-            try
+            return;
+        }
+
+        var directoryPath = Path.GetDirectoryName(fullPath);
+        if (directoryPath != null)
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+
+        try
+        {
+            string tempConnectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
+            using (var connection = new SqlConnection(tempConnectionString))
             {
-                using (var connection = new SqlConnection(tempConnectionString))
+                connection.Open();
+                using (var command = new SqlCommand(
+                    $"CREATE DATABASE [{Path.GetFileNameWithoutExtension(fullPath)}] " +
+                    $"ON (NAME = N'{Path.GetFileNameWithoutExtension(fullPath)}', " +
+                    $"FILENAME = '{fullPath}')", connection))
                 {
-                    connection.Open();
-                    using (var command = new SqlCommand(
-                        $"CREATE DATABASE [{Path.GetFileNameWithoutExtension(fullPath)}] " +
-                        $"ON (NAME = N'{Path.GetFileNameWithoutExtension(fullPath)}', " +
-                        $"FILENAME = '{fullPath}')", connection))
-                    {
-                        command.ExecuteNonQuery();
-                    }
+                    command.ExecuteNonQuery();
                 }
             }
-            catch (SqlException ex)
-            {
-                Console.WriteLine($"Error creating database: {ex.Message}");
-            }
+        }
+        catch (SqlException ex)
+        {
+            Console.WriteLine($"Error creating database: {ex.Message}");
         }
     }
 
@@ -64,7 +71,7 @@ public class ApplicationContext : DbContext
     {
         optionsBuilder
             .UseSqlServer(connectionString)
-            .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
+            .LogTo(Console.WriteLine, [DbLoggerCategory.Database.Command.Name], LogLevel.Information)
             .EnableSensitiveDataLogging();
     }
 
@@ -79,7 +86,7 @@ public class ApplicationContext : DbContext
             x.Property(t => t.Value).HasMaxLength(500);
             x.HasIndex(t => t.Name).IsUnique();
         });
-        
+
     }
 
     public DbSet<Configuration> Configurations { get; set; }
