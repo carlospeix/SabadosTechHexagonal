@@ -11,7 +11,9 @@ El sistema que tenemos ahora ni se acerca a lo que necesitamos, es muy limitado 
 
 ## Las comunicaciones
 
-Tenemos varios tipos de comunicaciones, administrativas, disciplinarias, educativas relacionadas con el curso, generales, etc
+Tenemos varios tipos de comunicaciones, administrativas, disciplinarias, educativas relacionadas con el curso, generales, etc.
+
+Me gustaría que el sistema me permita saber si la comunicación fue recibida por la persona responsable, si la leyó y si la aceptó.
 
 * Las administrativas las enviamos sólo a las/los responsables que lo piden.  
 * Las disciplinarias las enviamos a todos los responsables de la alumna/o en cuestión.  
