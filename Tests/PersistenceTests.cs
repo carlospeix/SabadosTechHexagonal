@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Tests;
 
 public class PersistenceTests
@@ -8,6 +10,7 @@ public class PersistenceTests
     public void Setup()
     {
         _context = new ApplicationContext();
+        _context.ApplyMigrations();
         _context.Configurations.RemoveRange(_context.Configurations);
         _context.SaveChanges();
     }
