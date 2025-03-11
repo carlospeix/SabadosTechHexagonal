@@ -25,13 +25,13 @@ public class PersistenceTests
     }
 
     [Test]
-    public void IniciaConCeroConfiguraciones()
+    public void StartWithNoConfigurations()
     {
         Assert.That(_context.Configurations.Count(), Is.EqualTo(0));
     }
 
     [Test]
-    public void NombreDeConfiguracionDuplicadoDeberiaFallar()
+    public void DuplicatedConfigurationNameShouldFail()
     {
         _context.Configurations.Add(new Configuration("OneName", "one value"));
         _context.SaveChanges();
@@ -43,7 +43,7 @@ public class PersistenceTests
     }
 
     [Test]
-    public void PuedeModificarValorDeConfiguracion()
+    public void ConfigurationValueCanBeModified()
     {
         var config = new Configuration("OneName", "value");
         _context.Configurations.Add(config);
