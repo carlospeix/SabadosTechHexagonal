@@ -31,7 +31,7 @@ public class PersistenceTests
     }
 
     [Test]
-    public void NombreDeConfiguracionDuplicadoDeberíaFallar()
+    public void NombreDeConfiguracionDuplicadoDeberiaFallar()
     {
         _context.Configurations.Add(new Configuration("OneName", "one value"));
         _context.SaveChanges();

@@ -1,5 +1,5 @@
 
-del /Q /S Tests\TestResults\*.*
+rmdir /S /Q Tests\TestResults
 
 dotnet test --collect:"XPlat Code Coverage;Exclude=[Mapping.*]" --verbosity quiet
 
