@@ -12,6 +12,18 @@ public class Secretary
 
     public bool SendNotification(string message)
     {
+        foreach (var recipient in Recipients())
+        {
+            notificationSender.Send(recipient, message);
+        }
+
         return true;
+    }
+
+    private IList<Recipient> Recipients()
+    {
+        return new List<Recipient>() {
+            new Recipient()
+        };
     }
 }
