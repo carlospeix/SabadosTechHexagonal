@@ -103,5 +103,23 @@ public class PersistenceTests
         Assert.That(grade, Is.Not.Null);
     }
 
+    [Test]
+    public void CanPersistASubject()
+    {
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("John", "john@school.edu", "1111")).Entity;
+        var subject = grade.AddSubject(teacher, "Math");
+
+        dataContext.SaveChanges();
+        var id = grade.Id;
+
+        dataContext.Dispose();
+        dataContext = new ApplicationContext();
+
+        grade = dataContext.Grades.Find(id);
+
+        Assert.That(grade?.Subjects.Count, Is.EqualTo(1));
+    }
+
     #endregion
 }

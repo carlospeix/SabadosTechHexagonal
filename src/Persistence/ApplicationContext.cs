@@ -52,6 +52,16 @@ public class ApplicationContext : DbContext, IRegistrar
         {
             x.HasKey(t => t.Id);
             x.Property(t => t.Name).HasMaxLength(100);
+            x.HasMany(t => t.Subjects).WithOne(t => t.Grade).IsRequired();
+            x.Navigation(t => t.Subjects).AutoInclude();
+        });
+
+        modelBuilder.Entity<Subject>(x =>
+        {
+            x.ToTable("Subjects");
+            x.HasKey(t => t.Id);
+            x.Property(t => t.Name).HasMaxLength(100);
+            x.HasOne(t => t.Teacher);
         });
     }
 
