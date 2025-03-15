@@ -3,10 +3,12 @@ namespace Model;
 
 public class Secretary
 {
+    private readonly IRegistrar registrar;
     private INotificationSender notificationSender;
 
-    public Secretary(INotificationSender notificationSender)
+    public Secretary(IRegistrar registrar, INotificationSender notificationSender)
     {
+        this.registrar = registrar;
         this.notificationSender = notificationSender;
     }
 
@@ -22,8 +24,6 @@ public class Secretary
 
     private IList<Recipient> Recipients()
     {
-        return new List<Recipient>() {
-            new Recipient()
-        };
+        return registrar.Teachers.Select(t => new Recipient(t.Name, t.Email, t.Phone)).ToList();
     }
 }

@@ -5,12 +5,14 @@ using Model;
 
 namespace Persistence;
 
-public class ApplicationContext : DbContext
+public class ApplicationContext : DbContext, IRegistrar
 {
     private string connectionString;
 
     public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
+
+    IQueryable<Teacher> IRegistrar.Teachers => Teachers;
 
     public ApplicationContext()
     {
