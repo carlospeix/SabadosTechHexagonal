@@ -6,7 +6,7 @@
 
 El unico elemento de persistencia presente en el modelo es el identificador (usualmente propiedad Id, public get, private set)
 
-### Protección de estado e implementación del modelo (implementarion hidein)
+### Protección de estado e implementación del modelo (implementation hiding)
 
 #### Las colecciones no se modifican desde fuera del modelo que las contiene
 
