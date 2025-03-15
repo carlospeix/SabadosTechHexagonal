@@ -10,6 +10,7 @@ public class PersistenceTests
         _context = new ApplicationContext();
         _context.ApplyMigrations();
         _context.Configurations.RemoveRange(_context.Configurations);
+        _context.Teachers.RemoveRange(_context.Teachers);
         _context.SaveChanges();
     }
 
@@ -18,9 +19,12 @@ public class PersistenceTests
     {
         _context.ChangeTracker.Clear();
         _context.Configurations.RemoveRange(_context.Configurations);
+        _context.Teachers.RemoveRange(_context.Teachers);
         _context.SaveChanges();
         _context.Dispose();
     }
+
+    #region Configurations
 
     [Test]
     public void StartWithNoConfigurations()
@@ -62,4 +66,26 @@ public class PersistenceTests
 
         Assert.That(config?.Value, Is.EqualTo("new value"));
     }
+
+    #endregion
+
+    #region Teachers
+
+    [Test]
+    public void CanPersistATeacher()
+    {
+        var teacher = new Teacher("John", "john@school.edu", "1111");
+        _context.Teachers.Add(teacher);
+        _context.SaveChanges();
+        var id = teacher.Id;
+
+        _context.Dispose();
+        _context = new ApplicationContext();
+
+        teacher = _context.Teachers.Find(id);
+
+        Assert.That(teacher, Is.Not.Null);
+    }
+
+    #endregion
 }
