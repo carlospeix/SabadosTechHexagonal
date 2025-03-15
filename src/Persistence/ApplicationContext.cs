@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model;
-using Persistence.Migrations;
 
 namespace Persistence;
 
