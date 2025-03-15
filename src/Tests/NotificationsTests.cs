@@ -52,7 +52,9 @@ public class NotificationsTests
         var notificationSender = new TestNotificationSender();
         var secretary = new Secretary(dataContext, notificationSender);
 
-        dataContext.Teachers.Add(new Teacher("John Doe", "john@school.edu", ""));
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("John Doe", "john@school.edu", "")).Entity;
+        grade.AddSubject(teacher, "Math");
         dataContext.SaveChanges();
 
         var notificationSent = secretary.SendNotification("Hello World");

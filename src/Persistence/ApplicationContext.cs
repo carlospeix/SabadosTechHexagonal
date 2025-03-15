@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model;
+using Persistence.Migrations;
 
 namespace Persistence;
 
@@ -14,6 +15,7 @@ public class ApplicationContext : DbContext, IRegistrar
     public DbSet<Grade> Grades { get; set; }
 
     IQueryable<Teacher> IRegistrar.Teachers => Teachers;
+    IQueryable<Grade> IRegistrar.Grades => Grades;
 
     public ApplicationContext()
     {

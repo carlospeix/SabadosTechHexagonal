@@ -22,8 +22,14 @@ public class Secretary
         return true;
     }
 
-    private IList<Recipient> Recipients()
+    private IEnumerable<Recipient> Recipients()
     {
-        return registrar.Teachers.Select(t => new Recipient(t.Name, t.Email, t.Phone)).ToList();
+        foreach (var grade in registrar.Grades)
+        {
+            foreach (var subject in grade.Subjects)
+            {
+                yield return new Recipient(subject.Teacher.Name, subject.Teacher.Email, subject.Teacher.Phone);
+            }
+        }
     }
 }
