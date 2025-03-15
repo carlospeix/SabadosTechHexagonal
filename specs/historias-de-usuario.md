@@ -20,5 +20,5 @@
 Como administrador del colegio, deseo enviar un mensaje de inicio del año a toda la comunidad educativa.
 
 ### Criterios de aceptación
-
+  - El mensaje es enviado a responsables de estudiantes y a los profesores de todas las manterias
 
