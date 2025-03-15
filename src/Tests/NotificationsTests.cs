@@ -11,6 +11,7 @@ public class NotificationsTests
         dataContext = new ApplicationContext();
         dataContext.ApplyMigrations();
         dataContext.Configurations.RemoveRange(dataContext.Configurations);
+        dataContext.Grades.RemoveRange(dataContext.Grades);
         dataContext.Teachers.RemoveRange(dataContext.Teachers);
         dataContext.SaveChanges();
     }
@@ -20,6 +21,7 @@ public class NotificationsTests
     {
         dataContext.ChangeTracker.Clear();
         dataContext.Configurations.RemoveRange(dataContext.Configurations);
+        dataContext.Grades.RemoveRange(dataContext.Grades);
         dataContext.Teachers.RemoveRange(dataContext.Teachers);
         dataContext.SaveChanges();
         dataContext.Dispose();

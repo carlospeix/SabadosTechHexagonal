@@ -62,7 +62,7 @@ public class ApplicationContext : DbContext, IRegistrar
             x.ToTable("Subjects");
             x.HasKey(t => t.Id);
             x.Property(t => t.Name).HasMaxLength(100);
-            x.HasOne(t => t.Teacher);
+            x.HasOne(t => t.Teacher).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
         });
     }
 
