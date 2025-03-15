@@ -69,7 +69,7 @@ public class PersistenceTests
 
     #endregion
 
-    #region Teachers
+    #region Teachers, Grades, Subjects
 
     [Test]
     public void CanPersistATeacher()
@@ -85,6 +85,22 @@ public class PersistenceTests
         teacher = dataContext.Teachers.Find(id);
 
         Assert.That(teacher, Is.Not.Null);
+    }
+
+    [Test]
+    public void CanPersistAGrade()
+    {
+        var grade = new Grade("10th grade");
+        dataContext.Grades.Add(grade);
+        dataContext.SaveChanges();
+        var id = grade.Id;
+
+        dataContext.Dispose();
+        dataContext = new ApplicationContext();
+
+        grade = dataContext.Grades.Find(id);
+
+        Assert.That(grade, Is.Not.Null);
     }
 
     #endregion

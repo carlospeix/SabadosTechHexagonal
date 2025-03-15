@@ -11,6 +11,7 @@ public class ApplicationContext : DbContext, IRegistrar
 
     public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
+    public DbSet<Grade> Grades { get; set; }
 
     IQueryable<Teacher> IRegistrar.Teachers => Teachers;
 
@@ -45,6 +46,12 @@ public class ApplicationContext : DbContext, IRegistrar
             x.Property(t => t.Name).HasMaxLength(100);
             x.Property(t => t.Email).HasMaxLength(100);
             x.Property(t => t.Phone).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<Grade>(x =>
+        {
+            x.HasKey(t => t.Id);
+            x.Property(t => t.Name).HasMaxLength(100);
         });
     }
 

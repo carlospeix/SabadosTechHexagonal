@@ -47,10 +47,11 @@ public class NotificationsTests
     }
 
     [Test]
-    public void SendNotificationWhenOneRecipients()
+    public void SendNotificationForOneTeacher()
     {
         var notificationSender = new TestNotificationSender();
         var secretary = new Secretary(dataContext, notificationSender);
+
         dataContext.Teachers.Add(new Teacher("John Doe", "john@school.edu", ""));
         dataContext.SaveChanges();
 
