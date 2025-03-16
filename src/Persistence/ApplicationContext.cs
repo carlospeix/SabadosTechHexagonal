@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Model;
 
 namespace Persistence;
 
 public class ApplicationContext : DbContext, IRegistrar
 {
-    private readonly IConfiguration config;
-
     public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Grade> Grades { get; set; }
@@ -16,17 +12,8 @@ public class ApplicationContext : DbContext, IRegistrar
     IQueryable<Teacher> IRegistrar.Teachers => Teachers;
     IQueryable<Grade> IRegistrar.Grades => Grades;
 
-    public ApplicationContext(IConfiguration config)
+    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
     {
-        this.config = config;
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder
-            .UseSqlServer(config.GetConnectionString("SabadosTechHexagonal"))
-            .LogTo(Console.WriteLine, [DbLoggerCategory.Database.Command.Name], LogLevel.Information)
-            .EnableSensitiveDataLogging();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

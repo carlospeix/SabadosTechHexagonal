@@ -1,22 +1,31 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Tests;
 
 public abstract class BaseTests
 {
-    private readonly IConfiguration config;
+    private readonly DbContextOptions<ApplicationContext> options;
 
     protected BaseTests()
     {
-        config = new ConfigurationBuilder()
+        var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", false, true)
             .Build();
+
+        var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
+
+        optionsBuilder.UseSqlServer(config.GetConnectionString("SabadosTechHexagonal"))
+                      .LogTo(Console.WriteLine, [DbLoggerCategory.Database.Command.Name], LogLevel.Information)
+                      .EnableSensitiveDataLogging();
+
+        options = optionsBuilder.Options;
     }
 
     protected ApplicationContext CreateContext()
     {
-        return new ApplicationContext(config);
+        return new ApplicationContext(options);
     }
 
     protected void ClearDatabase(ApplicationContext dataContext)
