@@ -1,4 +1,3 @@
-
 namespace Tests;
 
 public class NotificationsTests : BaseTests

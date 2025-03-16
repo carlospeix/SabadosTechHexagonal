@@ -16,8 +16,16 @@ public abstract class BaseTests
 
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
 
-        optionsBuilder.UseSqlServer(config.GetConnectionString("SabadosTechHexagonal"))
-                      .LogTo(Console.WriteLine, [DbLoggerCategory.Database.Command.Name], LogLevel.Information)
+        if ("InMemory".Equals(config.GetValue<string>("DatabaseAdapter")))
+        {
+            optionsBuilder.UseInMemoryDatabase<ApplicationContext>("test");
+        }
+        else
+        {
+            optionsBuilder.UseSqlServer(config.GetConnectionString("SabadosTechHexagonal"));
+        }
+
+        optionsBuilder.LogTo(Console.WriteLine, [DbLoggerCategory.Database.Command.Name], LogLevel.Information)
                       .EnableSensitiveDataLogging();
 
         options = optionsBuilder.Options;

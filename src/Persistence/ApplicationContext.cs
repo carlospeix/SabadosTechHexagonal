@@ -3,7 +3,7 @@ using Model;
 
 namespace Persistence;
 
-public class ApplicationContext : DbContext, IRegistrar
+public class ApplicationContext(DbContextOptions<ApplicationContext> options) : DbContext(options), IRegistrar
 {
     public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
@@ -11,10 +11,6 @@ public class ApplicationContext : DbContext, IRegistrar
 
     IQueryable<Teacher> IRegistrar.Teachers => Teachers;
     IQueryable<Grade> IRegistrar.Grades => Grades;
-
-    public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

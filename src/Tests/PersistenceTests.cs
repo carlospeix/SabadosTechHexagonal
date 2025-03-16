@@ -30,6 +30,11 @@ public class PersistenceTests : BaseTests
     [Test]
     public void DuplicatedConfigurationNameShouldFail()
     {
+        if (dataContext.Database.IsInMemory())
+        {
+            Assert.Ignore("In-memory database does not enforce unique constraints");
+        }
+
         dataContext.Configurations.Add(new Configuration("OneName", "one value"));
         dataContext.SaveChanges();
         Assert.Throws<DbUpdateException>(delegate
