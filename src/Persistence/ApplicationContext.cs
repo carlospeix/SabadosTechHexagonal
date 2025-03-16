@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Model;
 
@@ -7,7 +7,7 @@ namespace Persistence;
 
 public class ApplicationContext : DbContext, IRegistrar
 {
-    private string connectionString;
+    private readonly IConfiguration config;
 
     public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
@@ -16,15 +16,15 @@ public class ApplicationContext : DbContext, IRegistrar
     IQueryable<Teacher> IRegistrar.Teachers => Teachers;
     IQueryable<Grade> IRegistrar.Grades => Grades;
 
-    public ApplicationContext()
+    public ApplicationContext(IConfiguration config)
     {
-        InitializeDatabase();
+        this.config = config;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder
-            .UseSqlServer(connectionString)
+            .UseSqlServer(config.GetConnectionString("SabadosTechHexagonal"))
             .LogTo(Console.WriteLine, [DbLoggerCategory.Database.Command.Name], LogLevel.Information)
             .EnableSensitiveDataLogging();
     }
@@ -64,58 +64,5 @@ public class ApplicationContext : DbContext, IRegistrar
             x.Property(t => t.Name).HasMaxLength(100);
             x.HasOne(t => t.Teacher).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
         });
-    }
-
-    public void ApplyMigrations()
-    {
-        try
-        {
-            Database.Migrate();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error applying migrations: {ex.Message}");
-        }
-    }
-
-    private void InitializeDatabase()
-    {
-        // Por ahora dejamos esto aquí, pero debería ir en un archivo o servicio de configuración 
-        string relativePath = @"SabadosTech\SabadosTechHexagonalData.mdf";
-        string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        string fullPath = Path.Combine(userFolder, relativePath) ?? throw new InvalidDataException("Error getting the database path");
-
-        connectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={fullPath};Integrated Security=True";
-
-        if (File.Exists(fullPath))
-        {
-            return;
-        }
-
-        var directoryPath = Path.GetDirectoryName(fullPath);
-        if (directoryPath != null)
-        {
-            Directory.CreateDirectory(directoryPath);
-        }
-
-        try
-        {
-            string tempConnectionString = $@"Data Source=(LocalDB)\MSSQLLocalDB;Integrated Security=True";
-            using (var connection = new SqlConnection(tempConnectionString))
-            {
-                connection.Open();
-                using (var command = new SqlCommand(
-                    $"CREATE DATABASE [{Path.GetFileNameWithoutExtension(fullPath)}] " +
-                    $"ON (NAME = N'{Path.GetFileNameWithoutExtension(fullPath)}', " +
-                    $"FILENAME = '{fullPath}')", connection))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
-        catch (SqlException ex)
-        {
-            Console.WriteLine($"Error creating database: {ex.Message}");
-        }
     }
 }

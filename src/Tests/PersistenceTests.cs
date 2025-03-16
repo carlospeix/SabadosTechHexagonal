@@ -1,28 +1,21 @@
 namespace Tests;
 
-public class PersistenceTests
+public class PersistenceTests : BaseTests
 {
     ApplicationContext dataContext;
 
     [SetUp]
     public void Setup()
     {
-        dataContext = new ApplicationContext();
-        dataContext.ApplyMigrations();
-        dataContext.Configurations.RemoveRange(dataContext.Configurations);
-        dataContext.Grades.RemoveRange(dataContext.Grades);
-        dataContext.Teachers.RemoveRange(dataContext.Teachers);
-        dataContext.SaveChanges();
+        dataContext = CreateContext();
+        ClearDatabase(dataContext);
     }
 
     [TearDown]
     public void TearDown()
     {
         dataContext.ChangeTracker.Clear();
-        dataContext.Configurations.RemoveRange(dataContext.Configurations);
-        dataContext.Grades.RemoveRange(dataContext.Grades);
-        dataContext.Teachers.RemoveRange(dataContext.Teachers);
-        dataContext.SaveChanges();
+        ClearDatabase(dataContext);
         dataContext.Dispose();
     }
 
@@ -55,14 +48,14 @@ public class PersistenceTests
         var id = config.Id;
 
         dataContext.Dispose();
-        dataContext = new ApplicationContext();
+        dataContext = CreateContext();
 
         config = dataContext.Configurations.Find(id);
         config?.ChangeValue("new value");
         dataContext.SaveChanges();
 
         dataContext.Dispose();
-        dataContext = new ApplicationContext();
+        dataContext = CreateContext();
 
         config = dataContext.Configurations.Find(id);
 
@@ -82,7 +75,7 @@ public class PersistenceTests
         var id = teacher.Id;
 
         dataContext.Dispose();
-        dataContext = new ApplicationContext();
+        dataContext = CreateContext();
 
         teacher = dataContext.Teachers.Find(id);
 
@@ -98,7 +91,7 @@ public class PersistenceTests
         var id = grade.Id;
 
         dataContext.Dispose();
-        dataContext = new ApplicationContext();
+        dataContext = CreateContext();
 
         grade = dataContext.Grades.Find(id);
 
@@ -110,13 +103,13 @@ public class PersistenceTests
     {
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("John", "john@school.edu", "1111")).Entity;
-        var subject = grade.AddSubject(teacher, "Math");
+        _ = grade.AddSubject(teacher, "Math");
 
         dataContext.SaveChanges();
         var id = grade.Id;
 
         dataContext.Dispose();
-        dataContext = new ApplicationContext();
+        dataContext = CreateContext();
 
         grade = dataContext.Grades.Find(id);
 

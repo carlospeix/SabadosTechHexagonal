@@ -1,29 +1,22 @@
 
 namespace Tests;
 
-public class NotificationsTests
+public class NotificationsTests : BaseTests
 {
     ApplicationContext dataContext;
 
     [SetUp]
     public void Setup()
     {
-        dataContext = new ApplicationContext();
-        dataContext.ApplyMigrations();
-        dataContext.Configurations.RemoveRange(dataContext.Configurations);
-        dataContext.Grades.RemoveRange(dataContext.Grades);
-        dataContext.Teachers.RemoveRange(dataContext.Teachers);
-        dataContext.SaveChanges();
+        dataContext = CreateContext();
+        ClearDatabase(dataContext);
     }
 
     [TearDown]
     public void TearDown()
     {
         dataContext.ChangeTracker.Clear();
-        dataContext.Configurations.RemoveRange(dataContext.Configurations);
-        dataContext.Grades.RemoveRange(dataContext.Grades);
-        dataContext.Teachers.RemoveRange(dataContext.Teachers);
-        dataContext.SaveChanges();
+        ClearDatabase(dataContext);
         dataContext.Dispose();
     }
 
