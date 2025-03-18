@@ -52,3 +52,4 @@ Mantengamos acá una lista de los refáctorings pendientes para que cualquier pu
   - Hacemos una API? App?
   - Hacemos pruebas de carga?
   - Multitenancy
+  - Transacciones (UnitOfWork) vs acciones compensatorias.
