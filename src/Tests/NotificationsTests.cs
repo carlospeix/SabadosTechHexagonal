@@ -1,3 +1,6 @@
+using Model.Adapters;
+using Model.Ports;
+
 namespace Tests;
 
 public class NotificationsTests : BaseTests
@@ -47,6 +50,20 @@ public class NotificationsTests : BaseTests
         dataContext.SaveChanges();
 
         var notificationSent = secretary.SendNotification("Hello World");
+
+        Assert.That(notificationSender.NotificationsSent, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void SendGlobalNotificationWithJustTeachersRegistered()
+    {
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Mariano", "john@school.edu", "")).Entity;
+        grade.AddSubject(teacher, "History");
+        dataContext.SaveChanges();
+
+        var notifications = new NotificationsAdapter(CreateContext(), notificationSender);
+        notifications.SendGlobal("Hello World");
 
         Assert.That(notificationSender.NotificationsSent, Is.EqualTo(1));
     }

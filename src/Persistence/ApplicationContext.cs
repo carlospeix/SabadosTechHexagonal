@@ -46,6 +46,7 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             x.HasKey(t => t.Id);
             x.Property(t => t.Name).HasMaxLength(100);
             x.HasOne(t => t.Teacher).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
+            x.Navigation(t => t.Teacher).AutoInclude();
         });
     }
 }
