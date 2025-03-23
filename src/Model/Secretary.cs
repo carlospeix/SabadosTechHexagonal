@@ -3,7 +3,7 @@
 public class Secretary
 {
     private readonly IRegistrar registrar;
-    private INotificationSender notificationSender;
+    private readonly INotificationSender notificationSender;
 
     public Secretary(IRegistrar registrar, INotificationSender notificationSender)
     {
