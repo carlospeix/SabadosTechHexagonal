@@ -16,11 +16,7 @@ public class Secretary
 
     public bool SendNotification(string message)
     {
-        foreach (var recipient in Recipients())
-        {
-            notificator.Send(recipient, message);
-        }
-
+        notificator.Send(Recipients(), message);
         return true;
     }
 

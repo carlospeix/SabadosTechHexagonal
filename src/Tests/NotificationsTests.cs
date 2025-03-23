@@ -86,15 +86,15 @@ public class NotificationsTests : BaseTests
 
 internal class TestNotificationSender : INotificator
 {
-    private int notificationCount = 0;
+    private int notificationCount;
 
     public TestNotificationSender()
     {
     }
 
-    public void Send(Recipient recipient, string message)
+    public void Send(IEnumerable<Recipient> recipients, string message)
     {
-        notificationCount++;
+        notificationCount = recipients.Count();
     }
 
     internal int NotificationsSent()
