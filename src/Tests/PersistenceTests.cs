@@ -152,7 +152,6 @@ public class PersistenceTests : BaseTests
         _ = grade.AddSubject(teacher, "Math");
 
         dataContext.SaveChanges();
-        var id = grade.Id;
 
         dataContext.Dispose();
         dataContext = CreateContext();

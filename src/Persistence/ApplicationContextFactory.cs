@@ -15,9 +15,8 @@ public class ApplicationContextFactory : IDesignTimeDbContextFactory<Application
             .AddJsonFile("appsettings.json", true, true)
             .Build();
 
-        var connectionString = config.GetConnectionString("SabadosTechHexagonal");
-        if (connectionString == null)
-            connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=SabadosTechHexagonalData.mdf;Integrated Security=True";
+        var connectionString = config.GetConnectionString("SabadosTechHexagonal") ??
+            "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=SabadosTechHexagonalData.mdf;Integrated Security=True";
 
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
         optionsBuilder.UseSqlServer(connectionString);
