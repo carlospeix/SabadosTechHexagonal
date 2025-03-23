@@ -84,7 +84,7 @@ public class NotificationsTests : BaseTests
     }
 }
 
-internal class TestNotificationSender : INotificationSender
+internal class TestNotificationSender : INotificator
 {
     private int notificationCount = 0;
 

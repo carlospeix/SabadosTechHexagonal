@@ -5,17 +5,17 @@ namespace Model.Adapters;
 public class NotificationsAdapter : INotifications
 {
     private IRegistrar registrar;
-    private INotificationSender notificationSender;
+    private INotificator notificator;
 
-    public NotificationsAdapter(IRegistrar registrar, INotificationSender notificationSender)
+    public NotificationsAdapter(IRegistrar registrar, INotificator notificator)
     {
         this.registrar = registrar;
-        this.notificationSender = notificationSender;
+        this.notificator = notificator;
     }
 
     public void SendGlobal(string message)
     {
-        var secretary = new Secretary(registrar, notificationSender);
+        var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(message);
     }
 }

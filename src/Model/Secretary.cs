@@ -1,23 +1,24 @@
-﻿using System.Diagnostics;
+﻿using Model.Ports;
+using System.Diagnostics;
 
 namespace Model;
 
 public class Secretary
 {
     private readonly IRegistrar registrar;
-    private readonly INotificationSender notificationSender;
+    private readonly INotificator notificator;
 
-    public Secretary(IRegistrar registrar, INotificationSender notificationSender)
+    public Secretary(IRegistrar registrar, INotificator notificator)
     {
         this.registrar = registrar;
-        this.notificationSender = notificationSender;
+        this.notificator = notificator;
     }
 
     public bool SendNotification(string message)
     {
         foreach (var recipient in Recipients())
         {
-            notificationSender.Send(recipient, message);
+            notificator.Send(recipient, message);
         }
 
         return true;
