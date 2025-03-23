@@ -1,11 +1,11 @@
 ﻿using Model.Ports;
 
-namespace Model.Adapters;
+namespace Application.Adapters;
 
 public class NotificationsAdapter : INotifications
 {
-    private IRegistrar registrar;
-    private INotificator notificator;
+    private readonly IRegistrar registrar;
+    private readonly INotificator notificator;
 
     public NotificationsAdapter(IRegistrar registrar, INotificator notificator)
     {

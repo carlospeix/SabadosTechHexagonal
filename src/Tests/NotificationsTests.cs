@@ -1,4 +1,4 @@
-using Model.Adapters;
+using Application.Adapters;
 using Model.Ports;
 
 namespace Tests;
