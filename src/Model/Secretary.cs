@@ -1,4 +1,6 @@
-﻿namespace Model;
+﻿using System.Diagnostics;
+
+namespace Model;
 
 public class Secretary
 {
@@ -29,6 +31,10 @@ public class Secretary
             {
                 yield return new Recipient(subject.Teacher.Name, subject.Teacher.Email, subject.Teacher.Phone);
             }
+        }
+        foreach (var parent in registrar.Parents)
+        {
+            yield return new Recipient(parent.Name, parent.Email, parent.Phone);
         }
     }
 }

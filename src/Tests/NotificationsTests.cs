@@ -67,6 +67,21 @@ public class NotificationsTests : BaseTests
 
         Assert.That(notificationSender.NotificationsSent, Is.EqualTo(1));
     }
+
+    [Test]
+    public void SendGlobalNotificationWithTeachersAndParentsRegistered()
+    {
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Mariano", "john@school.edu", "")).Entity;
+        grade.AddSubject(teacher, "History");
+        dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", ""));
+        dataContext.SaveChanges();
+
+        var notifications = new NotificationsAdapter(CreateContext(), notificationSender);
+        notifications.SendGlobal("Hello World");
+
+        Assert.That(notificationSender.NotificationsSent, Is.EqualTo(2));
+    }
 }
 
 internal class TestNotificationSender : INotificationSender

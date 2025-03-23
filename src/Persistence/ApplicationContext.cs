@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Model;
 
 namespace Persistence;
@@ -8,9 +9,11 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Grade> Grades { get; set; }
+    public DbSet<Parent> Parents { get; set; }
 
     IQueryable<Teacher> IRegistrar.Teachers => Teachers;
     IQueryable<Grade> IRegistrar.Grades => Grades;
+    IQueryable<Parent> IRegistrar.Parents => Parents;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,6 +50,14 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             x.Property(t => t.Name).HasMaxLength(100);
             x.HasOne(t => t.Teacher).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
             x.Navigation(t => t.Teacher).AutoInclude();
+        });
+
+        modelBuilder.Entity<Parent>(x =>
+        {
+            x.HasKey(t => t.Id);
+            x.Property(t => t.Name).HasMaxLength(100);
+            x.Property(t => t.Email).HasMaxLength(100);
+            x.Property(t => t.Phone).HasMaxLength(100);
         });
     }
 }
