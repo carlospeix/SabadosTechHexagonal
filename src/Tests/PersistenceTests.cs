@@ -14,8 +14,6 @@ public class PersistenceTests : BaseTests
     [TearDown]
     public void TearDown()
     {
-        dataContext.ChangeTracker.Clear();
-        ClearDatabase(dataContext);
         dataContext.Dispose();
     }
 
@@ -119,6 +117,50 @@ public class PersistenceTests : BaseTests
         grade = dataContext.Grades.Find(id);
 
         Assert.That(grade?.Subjects.Count, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void CanNotDeleteATeacherAssociatedToASubject()
+    {
+        if (dataContext.Database.IsInMemory())
+        {
+            Assert.Ignore("In-memory database does not enforce referential integrity.");
+        }
+
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("John", "john@school.edu", "1111")).Entity;
+        _ = grade.AddSubject(teacher, "Math");
+
+        dataContext.SaveChanges();
+        var id = teacher.Id;
+
+        dataContext.Dispose();
+        dataContext = CreateContext();
+
+        Assert.Throws<DbUpdateException>(() =>
+        {
+            dataContext.Teachers.RemoveRange(dataContext.Teachers);
+            dataContext.SaveChanges();
+        });
+    }
+
+    [Test]
+    public void DeletingGradeDoesNotDeleteTeacher()
+    {
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("John", "john@school.edu", "1111")).Entity;
+        _ = grade.AddSubject(teacher, "Math");
+
+        dataContext.SaveChanges();
+        var id = grade.Id;
+
+        dataContext.Dispose();
+        dataContext = CreateContext();
+
+        dataContext.Grades.RemoveRange(dataContext.Grades);
+        dataContext.SaveChanges();
+
+        Assert.That(dataContext.Teachers.Count(), Is.EqualTo(1));
     }
 
     #endregion
