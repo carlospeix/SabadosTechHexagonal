@@ -5,9 +5,11 @@ namespace Tests;
 
 public class NotificationsTests : BaseTests
 {
-    Secretary secretary;
     ApplicationContext dataContext;
-    TestNotificator notificationSender;
+
+    Secretary secretary;
+    IRegistrar registrar;
+    TestNotificator notificator;
 
     [SetUp]
     public void Setup()
@@ -15,8 +17,9 @@ public class NotificationsTests : BaseTests
         dataContext = CreateContext();
         ClearDatabase(dataContext);
 
-        notificationSender = new();
-        secretary = new Secretary(dataContext, notificationSender);
+        registrar = dataContext;
+        notificator = new();
+        secretary = new Secretary(registrar, notificator);
     }
 
     [TearDown]
@@ -38,7 +41,7 @@ public class NotificationsTests : BaseTests
     {
         var notificationSent = secretary.SendNotification("Hello World");
 
-        Assert.That(notificationSender.NotificationsSent, Is.EqualTo(0));
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(0));
     }
 
     [Test]
@@ -51,36 +54,36 @@ public class NotificationsTests : BaseTests
 
         var notificationSent = secretary.SendNotification("Hello World");
 
-        Assert.That(notificationSender.NotificationsSent, Is.EqualTo(1));
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 
     [Test]
     public void SendGlobalNotificationWithJustTeachersRegistered()
     {
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
-        var teacher = dataContext.Teachers.Add(new Teacher("Mariano", "john@school.edu", "")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         grade.AddSubject(teacher, "History");
         dataContext.SaveChanges();
 
-        var notifications = new Notifications(CreateContext(), notificationSender);
+        var notifications = new Notifications(registrar, notificator);
         notifications.SendGlobal("Hello World");
 
-        Assert.That(notificationSender.NotificationsSent, Is.EqualTo(1));
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 
     [Test]
     public void SendGlobalNotificationWithTeachersAndParentsRegistered()
     {
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
-        var teacher = dataContext.Teachers.Add(new Teacher("Mariano", "john@school.edu", "")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         grade.AddSubject(teacher, "History");
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", ""));
         dataContext.SaveChanges();
 
-        var notifications = new Notifications(CreateContext(), notificationSender);
+        var notifications = new Notifications(registrar, notificator);
         notifications.SendGlobal("Hello World");
 
-        Assert.That(notificationSender.NotificationsSent, Is.EqualTo(2));
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(2));
     }
 }
 
