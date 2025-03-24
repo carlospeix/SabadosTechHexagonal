@@ -5,7 +5,10 @@ A continuación se recopilan los enlaces que se han compartido durante las conve
 - **NHibernate HiLo en Stack Overflow:**  
   [https://stackoverflow.com/questions/2738671/explanation-of-nhibernate-hilo](https://stackoverflow.com/questions/2738671/explanation-of-nhibernate-hilo)
 
-- **Hexagonal Architecture – Arho Huttunen:**  
+- **Hexagonal Architecture**  
+  [Un descripción de alto nivel, completa](https://blog.octo.com/hexagonal-architecture-three-principles-and-an-implementation-example)
+  [La descripción anterior aplicada a dotnet, estamos yendo por este lado, por ahora](https://medium.com/@odinnou/hexagonal-architecture-in-net-the-fastest-right-way-df93bec46bff)
+  [Otra implementación pero que se queda corta con los driven ports](https://www.bytehide.com/blog/hexagonal-architectural-pattern-in-c-full-guide-2024)
   [https://www.arhohuttunen.com/hexagonal-architecture/](https://www.arhohuttunen.com/hexagonal-architecture/)
 
 - **NerdDinner Tutorial (Microsoft Docs):**  
