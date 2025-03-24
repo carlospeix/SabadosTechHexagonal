@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Model.Ports.Driven;
 using Model;
 
 namespace Persistence;

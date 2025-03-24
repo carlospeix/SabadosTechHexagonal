@@ -1,4 +1,5 @@
-﻿using Model.Ports;
+﻿using Model.Ports.Driven;
+using Model.Ports.Driver;
 
 namespace Application.Adapters;
 

@@ -1,4 +1,4 @@
-﻿namespace Model;
+﻿namespace Model.Ports.Driven;
 
 public interface IRegistrar
 {

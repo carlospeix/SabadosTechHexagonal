@@ -1,5 +1,5 @@
 using Application.Adapters;
-using Model.Ports;
+using Model.Ports.Driven;
 
 namespace Tests;
 
@@ -7,7 +7,7 @@ public class NotificationsTests : BaseTests
 {
     Secretary secretary;
     ApplicationContext dataContext;
-    TestNotificationSender notificationSender;
+    TestNotificator notificationSender;
 
     [SetUp]
     public void Setup()
@@ -84,13 +84,9 @@ public class NotificationsTests : BaseTests
     }
 }
 
-internal class TestNotificationSender : INotificator
+internal class TestNotificator : INotificator
 {
     private int notificationCount;
-
-    public TestNotificationSender()
-    {
-    }
 
     public void Send(IEnumerable<Recipient> recipients, string message)
     {

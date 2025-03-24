@@ -1,4 +1,4 @@
-﻿namespace Model.Ports;
+﻿namespace Model.Ports.Driver;
 
 public interface INotifications
 {
