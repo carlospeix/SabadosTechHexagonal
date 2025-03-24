@@ -4,9 +4,9 @@
 
 Mantengamos acá una lista de los refáctorings pendientes para que cualquier pueda hacerlos. Todas las propuestas sobn tentativas, para debatirlas.
 
-  - Renombrar el port **INotificationSender** a **INotificator**, creo que el sufijo sender no es necesario. Me parece natural decir que la Secretary, para responder a un pedido de notificación, colabora con el IRegistrar y con un INotificator
+  - [Done] Renombrar el port **INotificationSender** a **INotificator**, creo que el sufijo sender no es necesario. Me parece natural decir que la Secretary, para responder a un pedido de notificación, colabora con el IRegistrar y con un INotificator
 
-  - La firma del método Send del Notificator podría cambiar de
+  - [Done] La firma del método Send del Notificator podría cambiar de
 ```csharp
   public void Send(Recipient recipient, string message);
 ```
@@ -19,7 +19,7 @@ Mantengamos acá una lista de los refáctorings pendientes para que cualquier pu
   public void Send(IEnumerable<Recipient>, string message);
 ```
 
-  - Quizás podriamos mover los ports IRegistrar e INotificationSender (o INotificator si lo cambiamos) a una carpeta (y namespace) /Ports, para clarificar.
+  [Done] - Quizás podriamos mover los ports IRegistrar e INotificationSender (o INotificator si lo cambiamos) a una carpeta (y namespace) /Ports, para clarificar.
 
   - La clase Recipient podría convertirse a un record
 
