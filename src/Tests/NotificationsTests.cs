@@ -1,5 +1,5 @@
-using Application.Adapters;
 using Model.Ports.Driven;
+using Model.UseCases;
 
 namespace Tests;
 
@@ -62,7 +62,7 @@ public class NotificationsTests : BaseTests
         grade.AddSubject(teacher, "History");
         dataContext.SaveChanges();
 
-        var notifications = new NotificationsAdapter(CreateContext(), notificationSender);
+        var notifications = new Notifications(CreateContext(), notificationSender);
         notifications.SendGlobal("Hello World");
 
         Assert.That(notificationSender.NotificationsSent, Is.EqualTo(1));
@@ -77,7 +77,7 @@ public class NotificationsTests : BaseTests
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", ""));
         dataContext.SaveChanges();
 
-        var notifications = new NotificationsAdapter(CreateContext(), notificationSender);
+        var notifications = new Notifications(CreateContext(), notificationSender);
         notifications.SendGlobal("Hello World");
 
         Assert.That(notificationSender.NotificationsSent, Is.EqualTo(2));

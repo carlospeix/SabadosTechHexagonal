@@ -1,14 +1,14 @@
 ﻿using Model.Ports.Driven;
 using Model.Ports.Driver;
 
-namespace Application.Adapters;
+namespace Model.UseCases;
 
-public class NotificationsAdapter : INotifications
+public class Notifications : INotifications
 {
     private readonly IRegistrar registrar;
     private readonly INotificator notificator;
 
-    public NotificationsAdapter(IRegistrar registrar, INotificator notificator)
+    public Notifications(IRegistrar registrar, INotificator notificator)
     {
         this.registrar = registrar;
         this.notificator = notificator;
