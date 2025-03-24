@@ -1,5 +1,5 @@
 ﻿using Model.Ports.Driven;
-using Model.Ports.Driver;
+using Model.Ports.Driving;
 
 namespace Model.UseCases;
 
