@@ -6,11 +6,14 @@ public class Bootstrap : BaseTests
     [OneTimeSetUp]
     public void RunBeforeAnyTests()
     {
-        if (CreateContext().Database.IsInMemory())
+        var dataContext = CreateContext();
+
+        if (dataContext.Database.IsInMemory())
         {
             return;
         }
 
-        CreateContext().Database.Migrate();
+        dataContext.Database.EnsureDeleted();
+        dataContext.Database.EnsureCreated();
     }
 }
