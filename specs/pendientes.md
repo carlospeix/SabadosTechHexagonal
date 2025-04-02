@@ -21,8 +21,6 @@ Mantengamos acá una lista de los refáctorings pendientes para que cualquier pu
 
   - [Done] Quizás podriamos mover los ports IRegistrar e INotificationSender (o INotificator si lo cambiamos) a una carpeta (y namespace) /Ports, para clarificar.
 
-  - La clase Recipient podría convertirse a un record
-
   - [Done] Ocultamos el Id de la clase Subject? No se usa más alla de la persistencia, nadie debería referenciar directo a un Subject ya que es parte de un aggregate. De hecho lo encontré porque el coverage lo marca como no utilizado. Para ocultarlo habría que hacer esto:
 
 ```csharp
@@ -39,6 +37,8 @@ Mantengamos acá una lista de los refáctorings pendientes para que cualquier pu
   // En la clase Subject
   protected int? Id;
 ```
+
+  - Adding tests for the DataRange class and rename it to DatePeriod
 
 ## Agregados
 
