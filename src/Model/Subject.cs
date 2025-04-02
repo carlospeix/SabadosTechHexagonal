@@ -2,7 +2,7 @@
 
 public class Subject
 {
-    public int Id { get; private set; }
+    protected int? Id;
 
     public Grade Grade { get; private set; }
     public string Name { get; private set; }

@@ -46,7 +46,8 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
         modelBuilder.Entity<Subject>(x =>
         {
             x.ToTable("Subjects");
-            x.HasKey(t => t.Id);
+            x.HasKey("Id");
+            x.Property("Id").UseIdentityColumn();
             x.Property(t => t.Name).HasMaxLength(100);
             x.HasOne(t => t.Teacher).WithMany().IsRequired().OnDelete(DeleteBehavior.NoAction);
             x.Navigation(t => t.Teacher).AutoInclude();

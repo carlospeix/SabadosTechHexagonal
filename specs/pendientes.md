@@ -19,30 +19,30 @@ Mantengamos acá una lista de los refáctorings pendientes para que cualquier pu
   public void Send(IEnumerable<Recipient>, string message);
 ```
 
-  [Done] - Quizás podriamos mover los ports IRegistrar e INotificationSender (o INotificator si lo cambiamos) a una carpeta (y namespace) /Ports, para clarificar.
+  - [Done] Quizás podriamos mover los ports IRegistrar e INotificationSender (o INotificator si lo cambiamos) a una carpeta (y namespace) /Ports, para clarificar.
 
   - La clase Recipient podría convertirse a un record
 
-  - Ocultamos el Id de la clase Subject? No se usa más alla de la persistencia, nadie debería referenciar directo a un Subject ya que es parte de un aggregate. De hecho lo encontré porque el coverage lo marca como no utilizado. Para ocultarlo habría que hacer esto:
+  - [Done] Ocultamos el Id de la clase Subject? No se usa más alla de la persistencia, nadie debería referenciar directo a un Subject ya que es parte de un aggregate. De hecho lo encontré porque el coverage lo marca como no utilizado. Para ocultarlo habría que hacer esto:
 
 ```csharp
   // En ApplicationContext
   modelBuilder.Entity<Subject>(x =>
   {
     x.ToTable("Subjects");
-    x.HasKey("id");
-    x.Property("id").UseIdentityColumn();
+    x.HasKey("Id");
+    x.Property("Id").UseIdentityColumn();
     ...
   });
 ```
 ```csharp
   // En la clase Subject
-  protected int? id;
+  protected int? Id;
 ```
 
 ## Agregados
 
-  - Podríamos agregar una fachada (en el proyecto Application u otro) que interacture con una eventual API. En esa fachada estaría todo el "cableado" de las dependencias, etc. Esa sería la "protection layer" o *facade*. Incluso podrían ser varias. En este modelo quizás una para notificaciones y otra para mantenimiendo de la base de datos de Students y Parents y también de Grades, Teachers, Subjects, etc.
+  - [Done] Podríamos agregar una fachada (en el proyecto Application u otro) que interacture con una eventual API. En esa fachada estaría todo el "cableado" de las dependencias, etc. Esa sería la "protection layer" o *facade*. Incluso podrían ser varias. En este modelo quizás una para notificaciones y otra para mantenimiendo de la base de datos de Students y Parents y también de Grades, Teachers, Subjects, etc.
   
 
 ## Temas para la próxima reunión
