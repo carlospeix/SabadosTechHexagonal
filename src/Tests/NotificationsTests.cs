@@ -7,9 +7,9 @@ public class NotificationsTests : BaseTests
 {
     ApplicationContext dataContext;
 
-    Secretary secretary;
     IRegistrar registrar;
     TestNotificator notificator;
+    Notifications notifications;
 
     [SetUp]
     public void Setup()
@@ -19,7 +19,7 @@ public class NotificationsTests : BaseTests
 
         registrar = dataContext;
         notificator = new();
-        secretary = new Secretary(registrar, notificator);
+        notifications = new Notifications(registrar, notificator);
     }
 
     [TearDown]
@@ -29,32 +29,11 @@ public class NotificationsTests : BaseTests
     }
 
     [Test]
-    public void SendNotification()
-    {
-        var notificationSent = secretary.SendNotification("Hello World");
-
-        Assert.That(notificationSent, Is.True);
-    }
-
-    [Test]
     public void SendNoNotificationWhenNoRecipients()
     {
-        var notificationSent = secretary.SendNotification("Hello World");
+        notifications.SendGlobal("Hello World");
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(0));
-    }
-
-    [Test]
-    public void SendNotificationForOneTeacher()
-    {
-        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
-        var teacher = dataContext.Teachers.Add(new Teacher("John Doe", "john@school.edu", "")).Entity;
-        grade.AddSubject(teacher, "Math");
-        dataContext.SaveChanges();
-
-        var notificationSent = secretary.SendNotification("Hello World");
-
-        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 
     [Test]
@@ -65,7 +44,6 @@ public class NotificationsTests : BaseTests
         grade.AddSubject(teacher, "History");
         dataContext.SaveChanges();
 
-        var notifications = new Notifications(registrar, notificator);
         notifications.SendGlobal("Hello World");
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
@@ -80,7 +58,6 @@ public class NotificationsTests : BaseTests
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", ""));
         dataContext.SaveChanges();
 
-        var notifications = new Notifications(registrar, notificator);
         notifications.SendGlobal("Hello World");
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(2));
