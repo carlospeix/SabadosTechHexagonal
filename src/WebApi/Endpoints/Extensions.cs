@@ -3,7 +3,7 @@ using Model.UseCases;
 
 namespace WebApi.Endpoints;
 
-public static class ConfigEndpoints
+public static class Extensions
 {
     public static void MapNotificationsEndPoints(this IEndpointRouteBuilder app)
     {

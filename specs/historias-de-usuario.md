@@ -33,7 +33,6 @@ Como administrador del colegio, deseo enviar un mensaje de inicio del año a tod
   X Enviamos una notificación cuando solo hay un Teacher, manda una sola notificación
   X Enviamos una notificación cuando hay un Teacher y un Parent, manda dos notificaciones
   - Si la notificación está vacía, reportamos un error
-  - Podemos programar la notificación para un momento determinado en el futuro
 
 Como administrador del colegio, deseo enviar un una notificación a los Parents y Teachers de un Grade en particular.
   - Si hay más de un grade, el mensaje solo se envía a los teachers del grade indicado
