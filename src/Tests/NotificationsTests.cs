@@ -1,5 +1,7 @@
+using Model;
 using Model.Ports.Driven;
 using Model.UseCases;
+using Persistence;
 
 namespace Tests;
 

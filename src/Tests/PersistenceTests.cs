@@ -1,3 +1,6 @@
+using Model;
+using Persistence;
+
 namespace Tests;
 
 public class PersistenceTests : BaseTests
