@@ -13,10 +13,9 @@ public class Secretary
         this.notificator = notificator;
     }
 
-    public bool SendGeneralNotification(string message)
+    public void SendGeneralNotification(string message)
     {
         notificator.Send(Recipients(), message);
-        return true;
     }
 
     public void SendGradeNotification(Grade grade, string message)
