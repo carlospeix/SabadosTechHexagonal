@@ -14,7 +14,7 @@ public class Notifications : INotifications
         this.notificator = notificator;
     }
 
-    public void SendGeneralNotification(string message)
+    public void SendGeneral(string message)
     {
         if (string.IsNullOrEmpty(message))
         {

@@ -67,3 +67,4 @@ Pending refactorings
 
   - Reusing same notificationRequest object or not?
   - Registrar, persistence, etc.
+  - Separate endpoint configuration

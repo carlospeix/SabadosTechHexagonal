@@ -13,7 +13,7 @@ public static class Extensions
         {
             try
             {
-                notificationsUseCase.SendGeneralNotification(Sanitize(request.Message));
+                notificationsUseCase.SendGeneral(Sanitize(request.Message));
 
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
 
