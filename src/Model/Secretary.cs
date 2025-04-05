@@ -15,7 +15,7 @@ public class Secretary
 
     public void SendGeneralNotification(string message)
     {
-        notificator.Send(Recipients(), message);
+        notificator.Send(AllRecipients(), message);
     }
 
     public void SendGradeNotification(Grade grade, string message)
@@ -23,13 +23,13 @@ public class Secretary
         notificator.Send(GradeRecipients(grade), message);
     }
 
-    private IEnumerable<Recipient> Recipients()
+    private IEnumerable<Recipient> AllRecipients()
     {
         foreach (var grade in registrar.Grades)
         {
-            foreach (var subject in grade.Subjects)
+            foreach (var recipient in GradeRecipients(grade))
             {
-                yield return new Recipient(subject.Teacher.Name, subject.Teacher.Email, subject.Teacher.Phone);
+                yield return recipient;
             }
         }
         foreach (var parent in registrar.Parents)
