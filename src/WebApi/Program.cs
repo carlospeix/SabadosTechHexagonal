@@ -33,3 +33,5 @@ app.UseHttpsRedirection();
 app.MapNotificationsEndPoints();
 
 app.Run();
+
+public partial class Program { }
