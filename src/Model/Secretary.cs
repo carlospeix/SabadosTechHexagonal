@@ -19,6 +19,11 @@ public class Secretary
         return true;
     }
 
+    public void SendGradeNotification(Grade grade, string message)
+    {
+        notificator.Send(GradeRecipients(grade), message);
+    }
+
     private IEnumerable<Recipient> Recipients()
     {
         foreach (var grade in registrar.Grades)
@@ -31,6 +36,14 @@ public class Secretary
         foreach (var parent in registrar.Parents)
         {
             yield return new Recipient(parent.Name, parent.Email, parent.Phone);
+        }
+    }
+
+    private IEnumerable<Recipient> GradeRecipients(Grade grade)
+    {
+        foreach (var subject in grade.Subjects)
+        {
+            yield return new Recipient(subject.Teacher.Name, subject.Teacher.Email, subject.Teacher.Phone);
         }
     }
 }

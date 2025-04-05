@@ -32,12 +32,12 @@ Como administrador del colegio, deseo enviar un mensaje de inicio del año a tod
   X El administrador envía un mensaje con una base de datos vacía, salen cero mensajes.
   X Enviamos una notificación cuando solo hay un Teacher, manda una sola notificación
   X Enviamos una notificación cuando hay un Teacher y un Parent, manda dos notificaciones
-  - Si la notificación está vacía, reportamos un error
+  X Si la notificación está vacía, reportamos un error
 
 Como administrador del colegio, deseo enviar un una notificación a los Parents y Teachers de un Grade en particular.
-  - Si hay más de un grade, el mensaje solo se envía a los teachers del grade indicado
-  - Si hay más de un grade, el mensaje solo se envía a los teachers y parents del grade indicado
+  X Envío la notificación a los teachers del grade indicado
   - Si el grade no existe, reportamos un error
+  - Envío la notificación a los teachers y parents del grade indicado
 
 Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents y Teachers de un Student en particular.
   - Si hay más de un student, el mensaje solo se envía a los teachers y parents del student indicado

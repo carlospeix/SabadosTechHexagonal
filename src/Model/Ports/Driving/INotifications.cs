@@ -3,4 +3,5 @@
 public interface INotifications
 {
     void SendGlobal(string message);
+    void SendToGrade(int gradeId, string message);
 }

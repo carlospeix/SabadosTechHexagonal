@@ -29,6 +29,27 @@ public static class Extensions
         .Produces(StatusCodes.Status500InternalServerError)
         .WithName("SubmitGlobalNotification")
         .WithOpenApi();
+
+        apiV1.MapPost("/notifications/grade", (NotificationRequest request, INotifications notificationsUseCase) =>
+        {
+            try
+            {
+                notificationsUseCase.SendToGrade(request.GradeId, Sanitize(request.Message));
+
+                var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
+
+                return Results.Created($"/api/comunications/grade/{response.Id}", response);
+            }
+            catch (UseCaseException e)
+            {
+                return TypedResults.BadRequest(e.Message);
+            }
+        })
+        .Produces<NotificationResponse>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status500InternalServerError)
+        .WithName("SubmitGradeNotification")
+        .WithOpenApi();
     }
 
     // Sanitizes the parameter. Just a placeholder for now.
@@ -38,5 +59,5 @@ public static class Extensions
     }
 }
 
-internal record NotificationRequest(string Message);
+internal record NotificationRequest(int GradeId, string Message);
 internal record NotificationResponse(Guid Id, string Message, int RecipientsAddressed);
