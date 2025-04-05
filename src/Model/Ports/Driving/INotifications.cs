@@ -2,6 +2,6 @@
 
 public interface INotifications
 {
-    void SendGlobal(string message);
+    void SendGeneralNotification(string message);
     void SendToGrade(int gradeId, string message);
 }

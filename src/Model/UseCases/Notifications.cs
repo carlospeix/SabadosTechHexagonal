@@ -14,14 +14,14 @@ public class Notifications : INotifications
         this.notificator = notificator;
     }
 
-    public void SendGlobal(string message)
+    public void SendGeneralNotification(string message)
     {
         if (string.IsNullOrEmpty(message))
         {
             throw new ArgumentNullException(nameof(message), "Message cannot be null or empty");
         }
         var secretary = new Secretary(registrar, notificator);
-        secretary.SendNotification(message);
+        secretary.SendGeneralNotification(message);
     }
 
     public void SendToGrade(int gradeId, string message)

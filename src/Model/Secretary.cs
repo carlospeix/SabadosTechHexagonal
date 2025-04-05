@@ -13,7 +13,7 @@ public class Secretary
         this.notificator = notificator;
     }
 
-    public bool SendNotification(string message)
+    public bool SendGeneralNotification(string message)
     {
         notificator.Send(Recipients(), message);
         return true;

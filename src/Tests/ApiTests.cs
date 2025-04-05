@@ -19,7 +19,7 @@ public class ApiTests : BaseTests
         
         // Act
         var client = app.CreateClient();
-        var response = await client.PostAsJsonAsync("/api/v1/notifications/global", new { Message = "Hello World" });
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/general", new { Message = "Hello World" });
         
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));

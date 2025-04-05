@@ -33,26 +33,26 @@ public class NotificationsTests : BaseTests
     [Test]
     public void SendNoNotificationWhenNoRecipients()
     {
-        notifications.SendGlobal("Hello World");
+        notifications.SendGeneralNotification("Hello World");
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(0));
     }
 
     [Test]
-    public void SendGlobalNotificationWithJustTeachersRegistered()
+    public void SendGeneralNotificationWithJustTeachersRegistered()
     {
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         grade.AddSubject(teacher, "History");
         dataContext.SaveChanges();
 
-        notifications.SendGlobal("Hello World");
+        notifications.SendGeneralNotification("Hello World");
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 
     [Test]
-    public void SendGlobalNotificationWithTeachersAndParentsRegistered()
+    public void SendGeneralNotificationWithTeachersAndParentsRegistered()
     {
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
@@ -60,7 +60,7 @@ public class NotificationsTests : BaseTests
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", ""));
         dataContext.SaveChanges();
 
-        notifications.SendGlobal("Hello World");
+        notifications.SendGeneralNotification("Hello World");
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(2));
     }
@@ -68,7 +68,7 @@ public class NotificationsTests : BaseTests
     [Test]
     public void ShouldThrowIfMessageIsEmpty()
     {
-        Assert.Throws<ArgumentNullException>(() => notifications.SendGlobal(""));
+        Assert.Throws<ArgumentNullException>(() => notifications.SendGeneralNotification(""));
     }
 }
 

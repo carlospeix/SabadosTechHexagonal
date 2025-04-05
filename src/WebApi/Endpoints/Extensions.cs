@@ -9,15 +9,15 @@ public static class Extensions
     {
         var apiV1 = app.MapGroup("/api/v1");
 
-        apiV1.MapPost("/notifications/global", (NotificationRequest request , INotifications notificationsUseCase) =>
+        apiV1.MapPost("/notifications/general", (NotificationRequest request , INotifications notificationsUseCase) =>
         {
             try
             {
-                notificationsUseCase.SendGlobal(Sanitize(request.Message));
+                notificationsUseCase.SendGeneralNotification(Sanitize(request.Message));
 
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
 
-                return Results.Created($"/api/comunications/global/{response.Id}", response);
+                return Results.Created($"/api/comunications/general/{response.Id}", response);
             }
             catch (UseCaseException e)
             {
@@ -27,7 +27,7 @@ public static class Extensions
         .Produces<NotificationResponse>(StatusCodes.Status201Created)
         .Produces(StatusCodes.Status400BadRequest)
         .Produces(StatusCodes.Status500InternalServerError)
-        .WithName("SubmitGlobalNotification")
+        .WithName("SubmitGeneralNotification")
         .WithOpenApi();
 
         apiV1.MapPost("/notifications/grade", (NotificationRequest request, INotifications notificationsUseCase) =>
