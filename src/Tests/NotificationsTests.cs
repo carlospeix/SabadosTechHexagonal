@@ -64,6 +64,12 @@ public class NotificationsTests : BaseTests
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(2));
     }
+
+    [Test]
+    public void ShouldThrowIfMessageIsEmpty()
+    {
+        Assert.Throws<ArgumentNullException>(() => notifications.SendGlobal(""));
+    }
 }
 
 internal class TestNotificator : INotificator

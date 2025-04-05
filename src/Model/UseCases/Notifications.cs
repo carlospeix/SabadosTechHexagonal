@@ -16,6 +16,10 @@ public class Notifications : INotifications
 
     public void SendGlobal(string message)
     {
+        if (string.IsNullOrEmpty(message))
+        {
+            throw new ArgumentNullException(nameof(message), "Message cannot be null or empty");
+        }
         var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(message);
     }
