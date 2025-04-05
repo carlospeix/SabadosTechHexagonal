@@ -56,3 +56,14 @@ Como administrador del colegio, deseo enviar un una notificación para una fecha
 Como administrador del colegio, en la medida de lo posible, quiero saber si las notificaciones llegan y son leidas.
   - Si envío una notificación y el destinatario no la ha leído aún, aparece como no recibida/leída
   - Si envío una notificación y el destinatario la ha leído, aparece como recibida/leída
+
+
+Pending refactorings
+  X Global vs General notifications
+  X Boolean return value de secretary.SendNotification
+  X Reusing GradeRecipients in secretary.Recipients
+  X ApiTests
+  - Domain exceptions
+
+  - Reusing same notificationRequest object or not?
+  - Registrar, persistence, etc.
