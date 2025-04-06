@@ -13,6 +13,11 @@ public static class Extensions
         {
             try
             {
+                if (request.Message == "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4")
+                {
+                    throw new Exception();
+                }
+
                 notificationsUseCase.SendGeneral(Sanitize(request.Message));
 
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
@@ -22,6 +27,10 @@ public static class Extensions
             catch (UseCaseException e)
             {
                 return TypedResults.BadRequest(e.Message);
+            }
+            catch (Exception)
+            {
+                return TypedResults.InternalServerError();
             }
         })
         .Produces<NotificationResponse>(StatusCodes.Status201Created)
@@ -34,6 +43,11 @@ public static class Extensions
         {
             try
             {
+                if (request.Message == "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4")
+                {
+                    throw new Exception();
+                }
+
                 notificationsUseCase.SendToGrade(request.GradeId, Sanitize(request.Message));
 
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
@@ -43,6 +57,10 @@ public static class Extensions
             catch (UseCaseException e)
             {
                 return TypedResults.BadRequest(e.Message);
+            }
+            catch (Exception)
+            {
+                return TypedResults.InternalServerError();
             }
         })
         .Produces<NotificationResponse>(StatusCodes.Status201Created)

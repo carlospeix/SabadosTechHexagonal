@@ -68,6 +68,6 @@ public class NotificationsTests : BaseTests
     [Test]
     public void ShouldThrowIfMessageIsEmpty()
     {
-        Assert.Throws<ArgumentNullException>(() => notifications.SendGeneral(""));
+        Assert.Throws<InvalidParameterException>(() => notifications.SendGeneral(""));
     }
 }

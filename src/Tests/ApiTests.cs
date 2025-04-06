@@ -59,6 +59,31 @@ public class ApiTests : BaseTests
     }
 
     [Test]
+    public async Task GeneralNotificationReturnsBadRequestWhenMessageIsEmpty()
+    {
+        // Arrange
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/general", new { Message = "" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task GeneralNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
+    {
+        // Arrange
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/general",
+            new { Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+    }
+
+    [Test]
     public async Task GradeNotificationHappyPath()
     {
         // Arrange
@@ -70,10 +95,55 @@ public class ApiTests : BaseTests
         dataContext.SaveChanges();
 
         // Act
-        var response = await client.PostAsJsonAsync("/api/v1/notifications/grade", new { GradeId = grade.Id, Message = "Hello grade" });
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/grade",
+            new { GradeId = grade.Id, Message = "Hello grade" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task GradeNotificationReturnsBadRequestWhenMessageIsEmpty()
+    {
+        // Arrange
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        dataContext.SaveChanges();
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/grade", new { GradeId = grade.Id, Message = "" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task GradeNotificationReturnsBadRequestWhenGradeDoesNotExist()
+    {
+        // Arrange
+        const int NON_EXISTENT_GRADE_ID = 100;
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/grade",
+            new { GradeId = NON_EXISTENT_GRADE_ID, Message = "Hello grade" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task GradeNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
+    {
+        // Arrange
+        // Arrange
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        dataContext.SaveChanges();
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/grade",
+            new { GradeId = grade.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
     }
 }

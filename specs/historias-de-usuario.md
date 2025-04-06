@@ -36,8 +36,8 @@ Como administrador del colegio, deseo enviar un mensaje de inicio del año a tod
 
 Como administrador del colegio, deseo enviar un una notificación a los Parents y Teachers de un Grade en particular.
   X Envío la notificación a los teachers del grade indicado
+  X Si el grade no existe, reportamos un error
   - Envío la notificación a los teachers y parents del grade indicado
-  - Si el grade no existe, reportamos un error
 
 Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents de un Student.
   - Si el Student no existe, reportamos un error
