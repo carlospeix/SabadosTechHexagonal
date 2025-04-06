@@ -42,10 +42,12 @@ Como administrador del colegio, deseo enviar un una notificación a los Parents 
 Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents de un Student.
   - Si el Student no existe, reportamos un error
 
-Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents y Teacher de un Student en un Grade en particular.
+Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents y Teacher de un Student
+en un Grade en particular.
   - Si el Student o el Grade no existen, reportamos un error
 
-Como administrador del colegio, deseo enviar un una notificación administrativa a los Parents de un Student en particular.
+Como administrador del colegio, deseo enviar un una notificación administrativa a los Parents de un Student
+en particular.
   - Si hay más de un student, el mensaje solo se envía a los parents del student indicado
   - Si hay más de un parent para el student, el mensaje solo se envía al parent designado para contacto administrativo
   - Si el student no existe, reportamos un error
@@ -65,7 +67,8 @@ Como destinatario deseo que solo me llegue una notificación.
     - en una notificación para el grade, recibe una notificación por cada grade
   - Si un Parent tiene dos Students a cargo,
     - en una notificación general recibe solo una notificación
-    - en una notificación por grade recibe solo una notificación si ambos Students están en el mismo grade o dos si estan en grades diferentes
+    - en una notificación por grade recibe solo una notificación si ambos Students están en el mismo grade o dos si
+      estan en grades diferentes
 
 
 Pending refactorings
@@ -74,7 +77,6 @@ Pending refactorings
   X Reusing GradeRecipients in secretary.Recipients
   X ApiTests
   - Domain exceptions
-
   - Reusing same notificationRequest object or not?
   - Registrar, persistence, etc.
   - Separate endpoint configuration
