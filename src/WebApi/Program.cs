@@ -3,6 +3,7 @@ using Model.Ports.Driven;
 using Model.Ports.Driving;
 using Model.UseCases;
 using WebApi.Endpoints;
+using WebApi;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,11 +23,9 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    await using (var scope = app.Services.CreateAsyncScope())
-    {
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-        await context.Database.MigrateAsync();
-    }
+    await using var scope = app.Services.CreateAsyncScope();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+    await context.Database.MigrateAsync();
 }
 
 // Configure the HTTP request pipeline.

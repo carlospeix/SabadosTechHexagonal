@@ -71,18 +71,3 @@ public class NotificationsTests : BaseTests
         Assert.Throws<ArgumentNullException>(() => notifications.SendGeneral(""));
     }
 }
-
-internal class TestNotificator : INotificator
-{
-    private int notificationCount;
-
-    public void Send(IEnumerable<Recipient> recipients, string message)
-    {
-        notificationCount = recipients.Count();
-    }
-
-    internal int NotificationsSent()
-    {
-        return notificationCount;
-    }
-}
