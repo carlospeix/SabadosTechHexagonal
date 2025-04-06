@@ -2,8 +2,11 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Model;
 using Persistence;
+using Model.Ports.Driven;
 
 namespace Tests;
 
@@ -23,7 +26,11 @@ public class ApiTests : BaseTests
             .WithWebHostBuilder(builder =>
             {
                 builder.UseEnvironment("Test");
-                builder.ConfigureServices(services => { });
+                builder.ConfigureServices(services =>
+                {
+                    services.RemoveAll<INotificator>();
+                    services.AddSingleton<INotificator, TestNotificator>();
+                });
             });
         client = app.CreateClient();
     }
@@ -37,21 +44,28 @@ public class ApiTests : BaseTests
     }
 
     [Test]
-    public async Task NotificationHappyPath()
+    public async Task GeneralNotificationHappyPath()
     {
         // Arrange
-        
+        var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
+
+        dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
+        dataContext.SaveChanges();
+
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/general", new { Message = "Hello World" });
         
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 
     [Test]
     public async Task GradeNotificationHappyPath()
     {
         // Arrange
+        var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
+
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         grade.AddSubject(teacher, "History");
@@ -62,5 +76,6 @@ public class ApiTests : BaseTests
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 }
