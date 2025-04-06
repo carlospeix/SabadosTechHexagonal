@@ -36,12 +36,14 @@ Como administrador del colegio, deseo enviar un mensaje de inicio del año a tod
 
 Como administrador del colegio, deseo enviar un una notificación a los Parents y Teachers de un Grade en particular.
   X Envío la notificación a los teachers del grade indicado
-  - Si el grade no existe, reportamos un error
   - Envío la notificación a los teachers y parents del grade indicado
+  - Si el grade no existe, reportamos un error
 
-Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents y Teachers de un Student en particular.
-  - Si hay más de un student, el mensaje solo se envía a los teachers y parents del student indicado
-  - Si el student no existe, reportamos un error
+Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents de un Student.
+  - Si el Student no existe, reportamos un error
+
+Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents y Teacher de un Student en un Grade en particular.
+  - Si el Student o el Grade no existen, reportamos un error
 
 Como administrador del colegio, deseo enviar un una notificación administrativa a los Parents de un Student en particular.
   - Si hay más de un student, el mensaje solo se envía a los parents del student indicado
@@ -56,6 +58,14 @@ Como administrador del colegio, deseo enviar un una notificación para una fecha
 Como administrador del colegio, en la medida de lo posible, quiero saber si las notificaciones llegan y son leidas.
   - Si envío una notificación y el destinatario no la ha leído aún, aparece como no recibida/leída
   - Si envío una notificación y el destinatario la ha leído, aparece como recibida/leída
+
+Como destinatario deseo que solo me llegue una notificación.
+  - Si un Teacher tiene dos Subjects
+    - en una notificación general recibe solo una notificación
+    - en una notificación para el grade, recibe una notificación por cada grade
+  - Si un Parent tiene dos Students a cargo,
+    - en una notificación general recibe solo una notificación
+    - en una notificación por grade recibe solo una notificación si ambos Students están en el mismo grade o dos si estan en grades diferentes
 
 
 Pending refactorings

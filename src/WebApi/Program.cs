@@ -11,8 +11,6 @@ builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", false, true);
 
-var cs = builder.Configuration.GetConnectionString("SabadosTechHexagonal");
-
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<IRegistrar, ApplicationContext>(options =>
@@ -21,6 +19,15 @@ builder.Services.AddTransient<INotificator, NullNotificator>();
 builder.Services.AddTransient<INotifications, Notifications>();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    await using (var scope = app.Services.CreateAsyncScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+        await context.Database.MigrateAsync();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
