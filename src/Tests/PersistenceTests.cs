@@ -1,4 +1,5 @@
 using Model;
+using Model.UseCases;
 using Persistence;
 
 namespace Tests;
@@ -70,7 +71,7 @@ public class PersistenceTests : BaseTests
 
     #endregion
 
-    #region Teachers, Grades, Subjects, Parents
+    #region Teachers, Grades, Subjects, Parents, Students
 
     [Test]
     public void CanPersistATeacher()
@@ -181,5 +182,128 @@ public class PersistenceTests : BaseTests
         Assert.That(dataContext.Teachers.Count(), Is.EqualTo(1));
     }
 
+    [Test]
+    public void CanPersistAStudent()
+    {
+        var student = new Student("Student 1");
+        dataContext.Students.Add(student);
+        dataContext.SaveChanges();
+        var id = student.Id;
+
+        dataContext.Dispose();
+        dataContext = CreateContext();
+
+        student = dataContext.Students.Find(id);
+
+        Assert.That(student, Is.Not.Null);
+    }
+
+    [Test]
+    public void CanAddAStudentToAGrade()
+    {
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var student = new Student("Student 1");
+        grade.AddStudent(student);
+
+        dataContext.SaveChanges();
+        var id = grade.Id;
+
+        dataContext.Dispose();
+        dataContext = CreateContext();
+
+        grade = dataContext.Grades.Find(id);
+        Assert.That(grade?.Students.Count, Is.EqualTo(1));
+
+        student = grade.Students.First();
+        Assert.That(student.Grade, Is.Not.Null);
+    }
+
+    [Test]
+    public void CanNotAddAStudentTwice()
+    {
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var student = new Student("Student 1");
+        grade.AddStudent(student);
+
+        dataContext.SaveChanges();
+        var id = grade.Id;
+
+        dataContext.Dispose();
+        dataContext = CreateContext();
+
+        grade = dataContext.Grades.Find(id);
+
+        Assert.That(grade, Is.Not.Null);
+
+        student = grade.Students.First();
+        Assert.Throws<InvalidParameterException>(() =>
+        {
+            grade.AddStudent(student);
+        });
+    }
+
+    //[Test]
+    //public void CanAddAParentToAStudent()
+    //{
+    //    var parent = new Parent("Mariano", "john@gmail.com", "1111");
+    //    var student = new Student("Student 1");
+    //    student.AddParent(parent);
+
+    //    dataContext.SaveChanges();
+    //    var id = student.Id;
+
+    //    dataContext.Dispose();
+    //    dataContext = CreateContext();
+
+    //    student = dataContext.Students.Find(id);
+
+    //    Assert.That(student?.Parents.Count, Is.EqualTo(1));
+    //}
+
+    //[Test]
+    //public void CanAddMoreThanOneParentToAStudent()
+    //{
+    //    var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
+    //    var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
+    //    var student = new Student("Student 1");
+    //    student.AddParent(parent1);
+    //    student.AddParent(parent2);
+
+    //    dataContext.SaveChanges();
+    //    var id = student.Id;
+
+    //    dataContext.Dispose();
+    //    dataContext = CreateContext();
+
+    //    student = dataContext.Students.Find(id);
+    //    parent1 = student.Parents.First();
+
+    //    Assert.That(student?.Parents.Count, Is.EqualTo(2));
+    //    Assert.That(parent1?.Students.Count, Is.EqualTo(1));
+    //}
+
+    //[Test]
+    //public void CanNotDeleteAParentIfItIsAssociatedToAStudent()
+    //{
+    //    var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
+    //    var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
+    //    var student = new Student("Student 1");
+    //    student.AddParent(parent1);
+    //    student.AddParent(parent2);
+
+    //    dataContext.SaveChanges();
+    //    var id = student.Id;
+
+    //    dataContext.Dispose();
+    //    dataContext = CreateContext();
+
+    //    student = dataContext.Grades.Find(id);
+
+    //    Assert.Throws<DbUpdateException>(() =>
+    //    {
+    //        student.RemoveParent(student.Parents.Last);
+    //        dataContext.SaveChanges();
+    //    });
+    //}
     #endregion
 }

@@ -10,10 +10,12 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Grade> Grades { get; set; }
     public DbSet<Parent> Parents { get; set; }
+    public DbSet<Student> Students { get; set; }
 
     IQueryable<Teacher> IRegistrar.Teachers => Teachers;
     IQueryable<Grade> IRegistrar.Grades => Grades;
     IQueryable<Parent> IRegistrar.Parents => Parents;
+    IQueryable<Student> IRegistrar.Students => Students;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,7 +42,9 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             x.HasKey(t => t.Id);
             x.Property(t => t.Name).HasMaxLength(100);
             x.HasMany(t => t.Subjects).WithOne(t => t.Grade).IsRequired();
+            x.HasMany(t => t.Students).WithOne(t => t.Grade).IsRequired(false);
             x.Navigation(t => t.Subjects).AutoInclude();
+            x.Navigation(t => t.Students).AutoInclude();
         });
 
         modelBuilder.Entity<Subject>(x =>
@@ -59,6 +63,12 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             x.Property(t => t.Name).HasMaxLength(100);
             x.Property(t => t.Email).HasMaxLength(100);
             x.Property(t => t.Phone).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<Student>(x =>
+        {
+            x.HasKey(t => t.Id);
+            x.Property(t => t.Name).HasMaxLength(100);
         });
     }
 }

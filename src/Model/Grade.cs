@@ -1,4 +1,6 @@
 ﻿
+using Model.UseCases;
+
 namespace Model;
 
 public class Grade
@@ -9,6 +11,9 @@ public class Grade
 
     public IReadOnlyCollection<Subject> Subjects => subjects.ToList().AsReadOnly();
     private readonly HashSet<Subject> subjects = [];
+
+    public IReadOnlyCollection<Student> Students => students.ToList().AsReadOnly();
+    private readonly HashSet<Student> students = [];
 
     private Grade() {}
 
@@ -24,5 +29,13 @@ public class Grade
         subjects.Add(subject);
 
         return subject;
+    }
+
+    public void AddStudent(Student student)
+    {
+        if (students.Contains(student))
+            throw new InvalidParameterException("Student already exists in this grade.");
+        
+        students.Add(student);
     }
 }
