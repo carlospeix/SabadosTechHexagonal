@@ -44,5 +44,12 @@ public class Secretary
         {
             yield return new Recipient(subject.Teacher.Name, subject.Teacher.Email, subject.Teacher.Phone);
         }
+        foreach (var student in grade.Students)
+        {
+            foreach (var parent in student.Parents)
+            {
+                yield return new Recipient(parent.Name, parent.Email, parent.Phone);
+            }
+        }
     }
 }

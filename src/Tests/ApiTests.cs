@@ -41,6 +41,8 @@ public class ApiTests : BaseTests
         app.Dispose();
     }
 
+    #region General notification
+
     [Test]
     public async Task GeneralNotificationHappyPath()
     {
@@ -82,6 +84,10 @@ public class ApiTests : BaseTests
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
     }
+
+    #endregion
+
+    #region Grade notification
 
     [Test]
     public async Task GradeNotificationHappyPath()
@@ -146,4 +152,35 @@ public class ApiTests : BaseTests
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
     }
+
+    [Test]
+    public async Task GradeNotificationForGradeTeacherAndTwoParents()
+    {
+        // Arrange
+        var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
+
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
+        grade.AddSubject(teacher, "History");
+
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
+        var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
+        student.AddParent(parent1);
+        student.AddParent(parent2);
+        grade.AddStudent(student);
+
+        dataContext.SaveChanges();
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/grade",
+            new { GradeId = grade.Id, Message = "Hello grade" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(3));
+    }
+
+    #endregion
+
 }

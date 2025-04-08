@@ -37,7 +37,7 @@ Como administrador del colegio, deseo enviar un mensaje de inicio del año a tod
 Como administrador del colegio, deseo enviar un una notificación a los Parents y Teachers de un Grade en particular.
   X Envío la notificación a los teachers del grade indicado
   X Si el grade no existe, reportamos un error
-  - Envío la notificación a los teachers y parents del grade indicado
+  X Envío la notificación a los teachers y parents del grade indicado
 
 Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents de un Student.
   - Si el Student no existe, reportamos un error
@@ -76,7 +76,7 @@ Pending refactorings
   X Boolean return value de secretary.SendNotification
   X Reusing GradeRecipients in secretary.Recipients
   X ApiTests
-  - Domain exceptions
+  - Domain exceptions, refactoring
   - Reusing same notificationRequest object or not?
   - Registrar, persistence, etc.
   - Separate endpoint configuration
