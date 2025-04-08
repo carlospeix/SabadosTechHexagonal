@@ -232,7 +232,6 @@ public class PersistenceTests : BaseTests
         dataContext = CreateContext();
 
         grade = dataContext.Grades.Find(id);
-
         Assert.That(grade, Is.Not.Null);
 
         student = grade.Students.First();
@@ -242,68 +241,106 @@ public class PersistenceTests : BaseTests
         });
     }
 
-    //[Test]
-    //public void CanAddAParentToAStudent()
-    //{
-    //    var parent = new Parent("Mariano", "john@gmail.com", "1111");
-    //    var student = new Student("Student 1");
-    //    student.AddParent(parent);
+    [Test]
+    public void CanAddAParentToAStudent()
+    {
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var parent = new Parent("Mariano", "john@gmail.com", "1111");
+        student.AddParent(parent);
 
-    //    dataContext.SaveChanges();
-    //    var id = student.Id;
+        dataContext.SaveChanges();
+        var id = student.Id;
 
-    //    dataContext.Dispose();
-    //    dataContext = CreateContext();
+        dataContext.Dispose();
+        dataContext = CreateContext();
 
-    //    student = dataContext.Students.Find(id);
+        student = dataContext.Students.Find(id);
+        Assert.That(student, Is.Not.Null);
 
-    //    Assert.That(student?.Parents.Count, Is.EqualTo(1));
-    //}
+        Assert.That(student.Parents, Has.Count.EqualTo(1));
+    }
 
-    //[Test]
-    //public void CanAddMoreThanOneParentToAStudent()
-    //{
-    //    var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
-    //    var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
-    //    var student = new Student("Student 1");
-    //    student.AddParent(parent1);
-    //    student.AddParent(parent2);
+    [Test]
+    public void CanAddMoreThanOneParentToAStudent()
+    {
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
+        var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
+        student.AddParent(parent1);
+        student.AddParent(parent2);
 
-    //    dataContext.SaveChanges();
-    //    var id = student.Id;
+        dataContext.SaveChanges();
+        var id = student.Id;
 
-    //    dataContext.Dispose();
-    //    dataContext = CreateContext();
+        dataContext.Dispose();
+        dataContext = CreateContext();
 
-    //    student = dataContext.Students.Find(id);
-    //    parent1 = student.Parents.First();
+        student = dataContext.Students.Find(id);
+        Assert.That(student, Is.Not.Null);
+        parent1 = student.Parents.First();
 
-    //    Assert.That(student?.Parents.Count, Is.EqualTo(2));
-    //    Assert.That(parent1?.Students.Count, Is.EqualTo(1));
-    //}
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(student?.Parents.Count, Is.EqualTo(2));
+            Assert.That(parent1?.Students.Count, Is.EqualTo(1));
+        }
+    }
 
-    //[Test]
-    //public void CanNotDeleteAParentIfItIsAssociatedToAStudent()
-    //{
-    //    var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
-    //    var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
-    //    var student = new Student("Student 1");
-    //    student.AddParent(parent1);
-    //    student.AddParent(parent2);
+    [Test]
+    public void DeletesRelationshipWhenParentIsDeleted()
+    {
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
+        var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
+        student.AddParent(parent1);
+        student.AddParent(parent2);
 
-    //    dataContext.SaveChanges();
-    //    var id = student.Id;
+        dataContext.SaveChanges();
+        var id = student.Id;
 
-    //    dataContext.Dispose();
-    //    dataContext = CreateContext();
+        dataContext.Dispose();
+        dataContext = CreateContext();
 
-    //    student = dataContext.Grades.Find(id);
+        student = dataContext.Students.Find(id);
+        Assert.That(student, Is.Not.Null);
+        Assert.That(student.Parents, Has.Count.EqualTo(2));
 
-    //    Assert.Throws<DbUpdateException>(() =>
-    //    {
-    //        student.RemoveParent(student.Parents.Last);
-    //        dataContext.SaveChanges();
-    //    });
-    //}
+        var parent = student.Parents.Last();
+        dataContext.Parents.Remove(parent);
+        dataContext.SaveChanges();
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(student.Parents, Has.Count.EqualTo(1));
+            Assert.That(student.CaregivingRelationships, Has.Count.EqualTo(1));
+        }
+    }
+
+    [Test]
+    public void StoresARelationshipNameWhenProvided()
+    {
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
+        var parent2 = new Parent("Marie", "aut_marie@gmail.com", "222");
+        student.AddParent(parent1);
+        student.AddParent(parent2, "Aunt");
+
+        dataContext.SaveChanges();
+        var id = student.Id;
+
+        dataContext.Dispose();
+        dataContext = CreateContext();
+
+        student = dataContext.Students.Find(id);
+        parent1 = dataContext.Parents.First(p => p.Name == "Mariano");
+        parent2 = dataContext.Parents.First(p => p.Name == "Marie");
+        Assert.That(student, Is.Not.Null);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(student.CaregivingRelationships.First(r => r.Parent == parent1).Name, Is.EqualTo("Parent"));
+            Assert.That(student.CaregivingRelationships.First(r => r.Parent == parent2).Name, Is.EqualTo("Aunt"));
+        }
+    }
     #endregion
 }

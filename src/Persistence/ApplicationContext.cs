@@ -69,6 +69,9 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
         {
             x.HasKey(t => t.Id);
             x.Property(t => t.Name).HasMaxLength(100);
+            x.HasMany(t => t.Parents).WithMany(t => t.Students).UsingEntity<CaregivingRelationship>().ToTable("CaregivingRelationships");
+            x.Navigation(t => t.CaregivingRelationships).AutoInclude();
+            x.Navigation(t => t.Parents).AutoInclude();
         });
     }
 }
