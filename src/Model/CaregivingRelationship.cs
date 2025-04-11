@@ -4,7 +4,7 @@ namespace Model;
 
 public class CaregivingRelationship
 {
-    public int Id { get; private set; }
+    protected int? Id;
 
     public Parent Parent { get; private set; }
     public Student Student { get; private set; }
