@@ -45,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
     <ProjectReference Include="..\WebApi\WebApi.csproj" />

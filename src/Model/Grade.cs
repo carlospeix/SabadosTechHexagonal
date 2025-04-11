@@ -1,6 +1,4 @@
 ﻿
-using Model.UseCases;
-
 namespace Model;
 
 public class Grade
@@ -34,7 +32,7 @@ public class Grade
     public void AddStudent(Student student)
     {
         if (students.Contains(student))
-            throw new InvalidParameterException("Student already exists in this grade.");
+            return;
         
         students.Add(student);
     }

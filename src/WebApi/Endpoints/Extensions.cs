@@ -1,5 +1,5 @@
-﻿using Model.Ports.Driving;
-using Model.UseCases;
+﻿using Application;
+using Model.Ports.Driving;
 
 namespace WebApi.Endpoints;
 

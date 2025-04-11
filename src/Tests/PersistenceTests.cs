@@ -1,5 +1,4 @@
 using Model;
-using Model.UseCases;
 using Persistence;
 
 namespace Tests;
@@ -216,29 +215,6 @@ public class PersistenceTests : BaseTests
 
         student = grade.Students.First();
         Assert.That(student.Grade, Is.Not.Null);
-    }
-
-    [Test]
-    public void CanNotAddAStudentTwice()
-    {
-        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
-        var student = new Student("Student 1");
-        grade.AddStudent(student);
-
-        dataContext.SaveChanges();
-        var id = grade.Id;
-
-        dataContext.Dispose();
-        dataContext = CreateContext();
-
-        grade = dataContext.Grades.Find(id);
-        Assert.That(grade, Is.Not.Null);
-
-        student = grade.Students.First();
-        Assert.Throws<InvalidParameterException>(() =>
-        {
-            grade.AddStudent(student);
-        });
     }
 
     [Test]

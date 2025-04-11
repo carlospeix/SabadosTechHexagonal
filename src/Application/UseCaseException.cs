@@ -1,4 +1,4 @@
-﻿namespace Model.UseCases;
+﻿namespace Application;
 
 public abstract class UseCaseException : Exception
 {

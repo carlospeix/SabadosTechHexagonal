@@ -1,8 +1,8 @@
-﻿using Model.Ports.Driven;
+﻿using Model;
+using Model.Ports.Driven;
 using Model.Ports.Driving;
-using System.Diagnostics;
 
-namespace Model.UseCases;
+namespace Application;
 
 public class Notifications : INotifications
 {

@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Model.Ports.Driven;
 using Model.Ports.Driving;
-using Model.UseCases;
 using WebApi.Endpoints;
 using WebApi;
 using Persistence;
+using Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
