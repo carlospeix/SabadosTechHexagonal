@@ -52,9 +52,9 @@ public class Secretary
         }
         foreach (var student in grade.Students)
         {
-            foreach (var parent in student.Parents)
+            foreach (var recipient in StudentRecipients(student))
             {
-                yield return new Recipient(parent.Name, parent.Email, parent.Phone);
+                yield return recipient;
             }
         }
     }
