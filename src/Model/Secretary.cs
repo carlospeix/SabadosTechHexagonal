@@ -1,5 +1,4 @@
 ﻿using Model.Ports.Driven;
-using System.Diagnostics;
 
 namespace Model;
 

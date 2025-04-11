@@ -24,7 +24,7 @@ public static class Extensions
 
                 return Results.Created($"/api/comunications/general/{response.Id}", response);
             }
-            catch (UseCaseException e)
+            catch (SystemException e)
             {
                 return TypedResults.BadRequest(e.Message);
             }
@@ -54,7 +54,7 @@ public static class Extensions
 
                 return Results.Created($"/api/comunications/grade/{response.Id}", response);
             }
-            catch (UseCaseException e)
+            catch (SystemException e)
             {
                 return TypedResults.BadRequest(e.Message);
             }
@@ -84,7 +84,7 @@ public static class Extensions
 
                 return Results.Created($"/api/comunications/student/{response.Id}", response);
             }
-            catch (UseCaseException e)
+            catch (SystemException e)
             {
                 return TypedResults.BadRequest(e.Message);
             }

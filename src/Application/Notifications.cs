@@ -19,7 +19,7 @@ public class Notifications : INotifications
     {
         if (string.IsNullOrEmpty(message))
         {
-            throw new InvalidParameterException("Message cannot be null or empty");
+            throw new InvalidDataException("Message cannot be null or empty");
         }
 
         var secretary = new Secretary(registrar, notificator);
@@ -30,13 +30,13 @@ public class Notifications : INotifications
     {
         if (string.IsNullOrEmpty(message))
         {
-            throw new InvalidParameterException("Message cannot be null or empty");
+            throw new InvalidDataException("Message cannot be null or empty");
         }
 
         var grade = registrar.Grades.FirstOrDefault(grade => grade.Id == gradeId);
         if (grade is null)
         {
-            throw new InvalidParameterException("Invalid grade identifier");
+            throw new InvalidDataException("Invalid grade identifier");
         }
 
         var secretary = new Secretary(registrar, notificator);
@@ -47,13 +47,13 @@ public class Notifications : INotifications
     {
         if (string.IsNullOrEmpty(message))
         {
-            throw new InvalidParameterException("Message cannot be null or empty");
+            throw new InvalidDataException("Message cannot be null or empty");
         }
 
         var student = registrar.Students.FirstOrDefault(s => s.Id == studentId);
         if (student is null)
         {
-            throw new InvalidParameterException("Invalid student identifier");
+            throw new InvalidDataException("Invalid student identifier");
         }
 
         var secretary = new Secretary(registrar, notificator);
