@@ -73,6 +73,11 @@ public static class Extensions
         {
             try
             {
+                if (request.Message == "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4")
+                {
+                    throw new Exception();
+                }
+
                 notificationsUseCase.SendStudent(request.StudentId, Sanitize(request.Message));
 
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);

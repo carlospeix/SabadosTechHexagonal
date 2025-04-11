@@ -1,5 +1,6 @@
 ﻿using Model.Ports.Driven;
 using Model.Ports.Driving;
+using System.Diagnostics;
 
 namespace Model.UseCases;
 
@@ -44,7 +45,16 @@ public class Notifications : INotifications
 
     public void SendStudent(int studentId, string message)
     {
+        if (string.IsNullOrEmpty(message))
+        {
+            throw new InvalidParameterException("Message cannot be null or empty");
+        }
+
         var student = registrar.Students.FirstOrDefault(s => s.Id == studentId);
+        if (student is null)
+        {
+            throw new InvalidParameterException("Invalid student identifier");
+        }
 
         var secretary = new Secretary(registrar, notificator);
         secretary.SendStudentNotification(student, message);

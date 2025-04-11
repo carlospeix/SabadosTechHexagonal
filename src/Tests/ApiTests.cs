@@ -117,7 +117,8 @@ public class ApiTests : BaseTests
         dataContext.SaveChanges();
 
         // Act
-        var response = await client.PostAsJsonAsync("/api/v1/notifications/grade", new { GradeId = grade.Id, Message = "" });
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/grade",
+            new { GradeId = grade.Id, Message = "" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -140,7 +141,6 @@ public class ApiTests : BaseTests
     [Test]
     public async Task GradeNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
     {
-        // Arrange
         // Arrange
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
         dataContext.SaveChanges();
@@ -183,6 +183,7 @@ public class ApiTests : BaseTests
 
     #endregion
 
+    #region Student
 
     [Test]
     public async Task StudentNotificationHappyPath()
@@ -207,4 +208,49 @@ public class ApiTests : BaseTests
         Assert.That(notificator.NotificationsSent, Is.EqualTo(2));
     }
 
+    [Test]
+    public async Task StudentNotificationReturnsBadRequestWhenMessageIsEmpty()
+    {
+        // Arrange
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        dataContext.SaveChanges();
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+            new { StudentId = student.Id, Message = "" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task StudentNotificationReturnsBadRequestWhenStudentDoesNotExist()
+    {
+        // Arrange
+        const int NON_EXISTENT_STUDENT_ID = 100;
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+            new { StudentId = NON_EXISTENT_STUDENT_ID, Message = "Hello student" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task StudentNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
+    {
+        // Arrange
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        dataContext.SaveChanges();
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+            new { StudentId = student.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+    }
+
+    #endregion
 }
