@@ -41,4 +41,12 @@ public class Notifications : INotifications
         var secretary = new Secretary(registrar, notificator);
         secretary.SendGradeNotification(grade, message);
     }
+
+    public void SendStudent(int studentId, string message)
+    {
+        var student = registrar.Students.FirstOrDefault(s => s.Id == studentId);
+
+        var secretary = new Secretary(registrar, notificator);
+        secretary.SendStudentNotification(student, message);
+    }
 }

@@ -183,4 +183,28 @@ public class ApiTests : BaseTests
 
     #endregion
 
+
+    [Test]
+    public async Task StudentNotificationHappyPath()
+    {
+        // Arrange
+        var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
+
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
+        var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
+        student.AddParent(parent1);
+        student.AddParent(parent2);
+
+        dataContext.SaveChanges();
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+            new { StudentId = student.Id, Message = "Hello student" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(2));
+    }
+
 }

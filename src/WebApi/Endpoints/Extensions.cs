@@ -68,6 +68,31 @@ public static class Extensions
         .Produces(StatusCodes.Status500InternalServerError)
         .WithName("SubmitGradeNotification")
         .WithOpenApi();
+
+        apiV1.MapPost("/notifications/student", (NotificationRequest request, INotifications notificationsUseCase) =>
+        {
+            try
+            {
+                notificationsUseCase.SendStudent(request.StudentId, Sanitize(request.Message));
+
+                var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
+
+                return Results.Created($"/api/comunications/student/{response.Id}", response);
+            }
+            catch (UseCaseException e)
+            {
+                return TypedResults.BadRequest(e.Message);
+            }
+            catch (Exception)
+            {
+                return TypedResults.InternalServerError();
+            }
+        })
+        .Produces<NotificationResponse>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status500InternalServerError)
+        .WithName("SubmitStudentNotification")
+        .WithOpenApi();
     }
 
     // Sanitizes the parameter. Just a placeholder for now.
@@ -77,5 +102,5 @@ public static class Extensions
     }
 }
 
-internal record NotificationRequest(int GradeId, string Message);
+internal record NotificationRequest(int GradeId, int StudentId, string Message);
 internal record NotificationResponse(Guid Id, string Message, int RecipientsAddressed);

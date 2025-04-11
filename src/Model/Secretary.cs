@@ -1,4 +1,5 @@
 ﻿using Model.Ports.Driven;
+using System.Diagnostics;
 
 namespace Model;
 
@@ -21,6 +22,11 @@ public class Secretary
     public void SendGradeNotification(Grade grade, string message)
     {
         notificator.Send(GradeRecipients(grade), message);
+    }
+
+    public void SendStudentNotification(Student student, string message)
+    {
+        notificator.Send(StudentRecipients(student), message);
     }
 
     private IEnumerable<Recipient> AllRecipients()
@@ -50,6 +56,13 @@ public class Secretary
             {
                 yield return new Recipient(parent.Name, parent.Email, parent.Phone);
             }
+        }
+    }
+    private IEnumerable<Recipient> StudentRecipients(Student student)
+    {
+        foreach (var parent in student.Parents)
+        {
+            yield return new Recipient(parent.Name, parent.Email, parent.Phone);
         }
     }
 }
