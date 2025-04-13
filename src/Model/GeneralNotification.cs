@@ -1,33 +1,20 @@
 ﻿using Model.Ports.Driven;
+
 namespace Model;
 
-public class Secretary
+public class GeneralNotification
 {
+    public string Message { get; init; }
+
     private readonly IRegistrar registrar;
-    private readonly INotificator notificator;
 
-    public Secretary(IRegistrar registrar, INotificator notificator)
+    public GeneralNotification(IRegistrar registrar, string message)
     {
-        this.registrar = registrar;
-        this.notificator = notificator;
+        this.registrar = registrar ?? throw new ArgumentNullException(nameof(registrar));
+        Message = message;
     }
 
-    public void SendNotification(GeneralNotification notification)
-    {
-        notificator.Send(notification.GetRecipients(), notification.Message);
-    }
-
-    public void SendNotification(GradeNotification notification)
-    {
-        notificator.Send(notification.GetRecipients(), notification.Message);
-    }
-
-    public void SendNotification(StudentNotification notification)
-    {
-        notificator.Send(notification.GetRecipients(), notification.Message);
-    }
-
-    private IEnumerable<Recipient> AllRecipients()
+    public IEnumerable<Recipient> GetRecipients()
     {
         foreach (var grade in registrar.Grades)
         {

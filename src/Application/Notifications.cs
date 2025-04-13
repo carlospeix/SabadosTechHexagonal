@@ -23,7 +23,7 @@ public class Notifications : INotifications
         }
 
         var secretary = new Secretary(registrar, notificator);
-        secretary.SendGeneralNotification(message);
+        secretary.SendNotification(new GeneralNotification(registrar, message));
     }
 
     public void SendToGrade(int gradeId, string message)
@@ -40,7 +40,7 @@ public class Notifications : INotifications
         }
 
         var secretary = new Secretary(registrar, notificator);
-        secretary.SendGradeNotification(new GradeNotification(grade, message));
+        secretary.SendNotification(new GradeNotification(grade, message));
     }
 
     public void SendStudent(int studentId, string message)
@@ -57,6 +57,6 @@ public class Notifications : INotifications
         }
 
         var secretary = new Secretary(registrar, notificator);
-        secretary.SendStudentNotification(new StudentNotification(student, message));
+        secretary.SendNotification(new StudentNotification(student, message));
     }
 }
