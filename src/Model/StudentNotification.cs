@@ -1,9 +1,7 @@
 ﻿namespace Model;
 
-public class StudentNotification
+public class StudentNotification : Notification
 {
-    public string Message { get; init; }
-
     private Student student;
 
     public StudentNotification(Student student, string message)
@@ -12,7 +10,7 @@ public class StudentNotification
         Message = message;
     }
 
-    public IEnumerable<Recipient> GetRecipients()
+    public override IEnumerable<Recipient> GetRecipients()
     {
         foreach (var parent in student.Parents)
         {

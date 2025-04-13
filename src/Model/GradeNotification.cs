@@ -1,9 +1,7 @@
 ﻿namespace Model;
 
-public class GradeNotification
+public class GradeNotification : Notification
 {
-    public string Message { get; init; }
-
     private readonly Grade grade;
 
     public GradeNotification(Grade grade, string message)
@@ -12,7 +10,7 @@ public class GradeNotification
         Message = message;
     }
 
-    public IEnumerable<Recipient> GetRecipients()
+    public override IEnumerable<Recipient> GetRecipients()
     {
         foreach (var subject in grade.Subjects)
         {

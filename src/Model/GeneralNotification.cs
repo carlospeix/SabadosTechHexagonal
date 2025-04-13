@@ -2,19 +2,17 @@
 
 namespace Model;
 
-public class GeneralNotification
+public class GeneralNotification : Notification
 {
-    public string Message { get; init; }
-
     private readonly IRegistrar registrar;
 
     public GeneralNotification(IRegistrar registrar, string message)
     {
-        this.registrar = registrar ?? throw new ArgumentNullException(nameof(registrar));
+        this.registrar = registrar;
         Message = message;
     }
 
-    public IEnumerable<Recipient> GetRecipients()
+    public override  IEnumerable<Recipient> GetRecipients()
     {
         foreach (var grade in registrar.Grades)
         {
