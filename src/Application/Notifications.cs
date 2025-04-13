@@ -57,6 +57,6 @@ public class Notifications : INotifications
         }
 
         var secretary = new Secretary(registrar, notificator);
-        secretary.SendStudentNotification(student, message);
+        secretary.SendStudentNotification(new StudentNotification(student, message));
     }
 }

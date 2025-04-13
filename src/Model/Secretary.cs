@@ -28,6 +28,11 @@ public class Secretary
         notificator.Send(StudentRecipients(student), message);
     }
 
+    public void SendStudentNotification(StudentNotification notification)
+    {
+        notificator.Send(notification.GetRecipients(), notification.Message);
+    }
+
     private IEnumerable<Recipient> AllRecipients()
     {
         foreach (var grade in registrar.Grades)
