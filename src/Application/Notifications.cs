@@ -40,7 +40,7 @@ public class Notifications : INotifications
         }
 
         var secretary = new Secretary(registrar, notificator);
-        secretary.SendGradeNotification(grade, message);
+        secretary.SendGradeNotification(new GradeNotification(grade, message));
     }
 
     public void SendStudent(int studentId, string message)

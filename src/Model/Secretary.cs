@@ -1,4 +1,5 @@
 ﻿using Model.Ports.Driven;
+using Model.Ports.Driving;
 
 namespace Model;
 
@@ -18,14 +19,9 @@ public class Secretary
         notificator.Send(AllRecipients(), message);
     }
 
-    public void SendGradeNotification(Grade grade, string message)
+    public void SendGradeNotification(GradeNotification notification)
     {
-        notificator.Send(GradeRecipients(grade), message);
-    }
-
-    public void SendStudentNotification(Student student, string message)
-    {
-        notificator.Send(StudentRecipients(student), message);
+        notificator.Send(notification.GetRecipients(), notification.Message);
     }
 
     public void SendStudentNotification(StudentNotification notification)
@@ -62,6 +58,7 @@ public class Secretary
             }
         }
     }
+
     private IEnumerable<Recipient> StudentRecipients(Student student)
     {
         foreach (var parent in student.Parents)
