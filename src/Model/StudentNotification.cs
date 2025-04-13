@@ -12,9 +12,9 @@ public class StudentNotification : Notification
 
     public override IEnumerable<Recipient> GetRecipients()
     {
-        foreach (var parent in student.Parents)
+        foreach (var recipient in StudentRecipients(student))
         {
-            yield return new Recipient(parent.Name, parent.Email, parent.Phone);
+            yield return recipient;
         }
     }
 }
