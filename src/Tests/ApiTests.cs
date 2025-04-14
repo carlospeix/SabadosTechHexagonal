@@ -263,7 +263,7 @@ public class ApiTests : BaseTests
         var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
 
         var config = dataContext.Configurations.Add(
-            new Configuration("DISCIPLINARY_INBOX", "disciplinary-inbox@school.edu")).Entity;
+            new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
         var parent = new Parent("Mariano", "john@gmail.com", "1111");
@@ -281,6 +281,21 @@ public class ApiTests : BaseTests
         // A notification is sent to parent, another to the teacher and another to the special address
         Assert.That(notificator.NotificationsSent, Is.EqualTo(3));
     }
+
+    //[Test]
+    //public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenDisciplinaryInboxIsNotConfigured()
+    //{
+    //    // Arrange
+    //    var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+    //    dataContext.SaveChanges();
+
+    //    // Act
+    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+    //        new { StudentId = student.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+
+    //    // Assert
+    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+    //}
 
     //[Test]
     //public async Task DisciplinaryNotificationReturnsBadRequestWhenMessageIsEmpty()
@@ -327,21 +342,6 @@ public class ApiTests : BaseTests
 
     //[Test]
     //public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
-    //{
-    //    // Arrange
-    //    var student = dataContext.Students.Add(new Student("Student 1")).Entity;
-    //    dataContext.SaveChanges();
-
-    //    // Act
-    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-    //        new { StudentId = student.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
-
-    //    // Assert
-    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
-    //}
-
-    //[Test]
-    //public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenDisciplinaryInboxIsNotConfigured()
     //{
     //    // Arrange
     //    var student = dataContext.Students.Add(new Student("Student 1")).Entity;

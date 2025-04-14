@@ -2,6 +2,8 @@
 
 public class Configuration
 {
+    public const string DISCIPLINARY_INBOX = "DISCIPLINARY_INBOX";
+
     private Configuration() { }
 
     public Configuration(string name, string value)

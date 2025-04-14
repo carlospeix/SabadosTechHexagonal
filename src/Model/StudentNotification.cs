@@ -2,7 +2,7 @@
 
 public class StudentNotification : Notification
 {
-    private Student student;
+    private readonly Student student;
 
     public StudentNotification(Student student, string message)
     {

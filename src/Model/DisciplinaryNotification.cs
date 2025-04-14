@@ -1,14 +1,12 @@
-﻿
-
-using Model.Ports.Driven;
+﻿using Model.Ports.Driven;
 
 namespace Model;
 
 public class DisciplinaryNotification : Notification
 {
-    private IRegistrar registrar;
-    private Student student;
-    private Teacher teacher;
+    private readonly IRegistrar registrar;
+    private readonly Student student;
+    private readonly Teacher teacher;
 
     public DisciplinaryNotification(IRegistrar registrar, Student student, Teacher teacher, string message)
     {
@@ -31,7 +29,7 @@ public class DisciplinaryNotification : Notification
     private Recipient DisciplinaryInboxRecipient()
     {
         var config = registrar.Configurations
-            .FirstOrDefault(c => c.Name == "DISCIPLINARY_INBOX");
+            .FirstOrDefault(c => c.Name == Configuration.DISCIPLINARY_INBOX);
         return new Recipient("Disciplinary ionbox", config.Value, "");
     }
 }
