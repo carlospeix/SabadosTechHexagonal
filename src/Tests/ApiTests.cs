@@ -253,4 +253,107 @@ public class ApiTests : BaseTests
     }
 
     #endregion
+
+    #region Disciplinary
+
+    [Test]
+    public async Task DisciplinaryNotificationHappyPath()
+    {
+        // Arrange
+        var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
+
+        var config = dataContext.Configurations.Add(
+            new Configuration("DISCIPLINARY_INBOX", "disciplinary-inbox@school.edu")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var parent = new Parent("Mariano", "john@gmail.com", "1111");
+        student.AddParent(parent);
+
+        dataContext.SaveChanges();
+
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
+            new { StudentId = student.Id, TeacherId = teacher.Id, Message = "Disciplinary notification" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+        
+        // A notification is sent to parent, another to the teacher and another to the special address
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(3));
+    }
+
+    //[Test]
+    //public async Task DisciplinaryNotificationReturnsBadRequestWhenMessageIsEmpty()
+    //{
+    //    // Arrange
+    //    var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+    //    dataContext.SaveChanges();
+
+    //    // Act
+    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+    //        new { StudentId = student.Id, Message = "" });
+
+    //    // Assert
+    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    //}
+
+    //[Test]
+    //public async Task DisciplinaryNotificationReturnsBadRequestWhenStudentDoesNotExist()
+    //{
+    //    // Arrange
+    //    const int NON_EXISTENT_STUDENT_ID = 100;
+
+    //    // Act
+    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+    //        new { StudentId = NON_EXISTENT_STUDENT_ID, Message = "Hello student" });
+
+    //    // Assert
+    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    //}
+
+    //[Test]
+    //public async Task DisciplinaryNotificationReturnsBadRequestWhenTeacherDoesNotExist()
+    //{
+    //    // Arrange
+    //    const int NON_EXISTENT_TEACHER_ID = 100;
+
+    //    // Act
+    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+    //        new { StudentId = NON_EXISTENT_TEACHER_ID, Message = "Hello student" });
+
+    //    // Assert
+    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    //}
+
+    //[Test]
+    //public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
+    //{
+    //    // Arrange
+    //    var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+    //    dataContext.SaveChanges();
+
+    //    // Act
+    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+    //        new { StudentId = student.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+
+    //    // Assert
+    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+    //}
+
+    //[Test]
+    //public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenDisciplinaryInboxIsNotConfigured()
+    //{
+    //    // Arrange
+    //    var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+    //    dataContext.SaveChanges();
+
+    //    // Act
+    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
+    //        new { StudentId = student.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+
+    //    // Assert
+    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+    //}
+
+    #endregion
 }

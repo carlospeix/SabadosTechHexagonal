@@ -16,6 +16,7 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     IQueryable<Grade> IRegistrar.Grades => Grades;
     IQueryable<Parent> IRegistrar.Parents => Parents;
     IQueryable<Student> IRegistrar.Students => Students;
+    IQueryable<Configuration> IRegistrar.Configurations => Configurations;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

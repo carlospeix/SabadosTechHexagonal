@@ -59,4 +59,13 @@ public class Notifications : INotifications
         var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(new StudentNotification(student, message));
     }
+
+    public void SendDisciplinary(int studentId, int teacherId, string message)
+    {
+        var student = registrar.Students.FirstOrDefault(s => s.Id == studentId);
+        var teacher = registrar.Teachers.FirstOrDefault(s => s.Id == teacherId);
+
+        var secretary = new Secretary(registrar, notificator);
+        secretary.SendNotification(new DisciplinaryNotification(registrar, student, teacher, message));
+    }
 }

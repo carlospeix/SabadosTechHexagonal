@@ -52,6 +52,21 @@ public static class Extensions
         .Produces(StatusCodes.Status500InternalServerError)
         .WithName("SubmitStudentNotification")
         .WithOpenApi();
+
+        apiV1.MapPost("/notifications/disciplinary", (NotificationRequest request, INotifications notifications) =>
+        {
+            return CommonHandler(request, () =>
+            {
+                notifications.SendDisciplinary(request.StudentId, request.TeacherId, Sanitize(request.Message));
+                var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
+                return Results.Created($"/api/comunications/disciplinary/{response.Id}", response);
+            });
+        })
+        .Produces<NotificationResponse>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
+        .Produces(StatusCodes.Status500InternalServerError)
+        .WithName("SubmitDisciplinaryNotification")
+        .WithOpenApi();
     }
 
     // Sanitizes the parameter. Just a placeholder for now.
@@ -82,5 +97,5 @@ public static class Extensions
     }
 }
 
-internal record NotificationRequest(int GradeId, int StudentId, string Message);
+internal record NotificationRequest(int GradeId, int StudentId, int TeacherId, string Message);
 internal record NotificationResponse(Guid Id, string Message, int RecipientsAddressed);

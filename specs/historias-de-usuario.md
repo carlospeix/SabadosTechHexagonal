@@ -48,8 +48,9 @@ Como administrador del colegio, deseo enviar un una notificación general a los 
 
 Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents y Teacher de un Student
 en un Grade en particular.
-  - El mensaje se envía a los parents y teacher del student indicado
-  - Además. notificamos a la direccion configurada especialmente para ese motivo.
+  X El mensaje se envía a los parents y teacher del student indicado
+  X Además, notificamos a la direccion de mail configurada especialmente para ese motivo.
+  - Si no existe la dirección de mail de incidentes disciplinarios, reportamos un error.
   - Si el Student o el Teacher no existen, reportamos un error
   - Si la notificación está vacía, reportamos un error
 
