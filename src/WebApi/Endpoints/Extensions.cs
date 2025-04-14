@@ -86,7 +86,7 @@ public static class Extensions
 
             return innerHandler();
         }
-        catch (SystemException e)
+        catch (ArgumentException e)
         {
             return TypedResults.BadRequest(e.Message);
         }

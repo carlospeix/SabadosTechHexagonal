@@ -19,7 +19,7 @@ public class Notifications : INotifications
     {
         if (string.IsNullOrEmpty(message))
         {
-            throw new InvalidDataException("Message cannot be null or empty");
+            throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
         var secretary = new Secretary(registrar, notificator);
@@ -30,14 +30,11 @@ public class Notifications : INotifications
     {
         if (string.IsNullOrEmpty(message))
         {
-            throw new InvalidDataException("Message cannot be null or empty");
+            throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var grade = registrar.Grades.FirstOrDefault(grade => grade.Id == gradeId);
-        if (grade is null)
-        {
-            throw new InvalidDataException("Invalid grade identifier");
-        }
+        var grade = registrar.Grades.FirstOrDefault(grade => grade.Id == gradeId) ??
+            throw new ArgumentException("Invalid grade identifier", nameof(gradeId));
 
         var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(new GradeNotification(grade, message));
@@ -47,14 +44,11 @@ public class Notifications : INotifications
     {
         if (string.IsNullOrEmpty(message))
         {
-            throw new InvalidDataException("Message cannot be null or empty");
+            throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var student = registrar.Students.FirstOrDefault(s => s.Id == studentId);
-        if (student is null)
-        {
-            throw new InvalidDataException("Invalid student identifier");
-        }
+        var student = registrar.Students.FirstOrDefault(s => s.Id == studentId) ??
+            throw new ArgumentException("Invalid student identifier", nameof(studentId));
 
         var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(new StudentNotification(student, message));
@@ -62,8 +56,16 @@ public class Notifications : INotifications
 
     public void SendDisciplinary(int studentId, int teacherId, string message)
     {
-        var student = registrar.Students.FirstOrDefault(s => s.Id == studentId);
-        var teacher = registrar.Teachers.FirstOrDefault(s => s.Id == teacherId);
+        if (string.IsNullOrEmpty(message))
+        {
+            throw new ArgumentException("Message cannot be null or empty", nameof(message));
+        }
+
+        var student = registrar.Students.FirstOrDefault(s => s.Id == studentId) ??
+            throw new ArgumentException("Invalid student identifier", nameof(studentId));
+
+        var teacher = registrar.Teachers.FirstOrDefault(s => s.Id == teacherId) ??
+            throw new ArgumentException("Invalid teacher identifier", nameof(teacherId));
 
         var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(new DisciplinaryNotification(registrar, student, teacher, message));

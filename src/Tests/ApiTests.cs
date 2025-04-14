@@ -282,78 +282,94 @@ public class ApiTests : BaseTests
         Assert.That(notificator.NotificationsSent, Is.EqualTo(3));
     }
 
-    //[Test]
-    //public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenDisciplinaryInboxIsNotConfigured()
-    //{
-    //    // Arrange
-    //    var student = dataContext.Students.Add(new Student("Student 1")).Entity;
-    //    dataContext.SaveChanges();
+    [Test]
+    public async Task DisciplinaryNotificationReturnsBadRequestWhenMessageIsEmpty()
+    {
+        // Arrange
+        var config = dataContext.Configurations.Add(
+            new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
+        dataContext.SaveChanges();
 
-    //    // Act
-    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-    //        new { StudentId = student.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
+            new { StudentId = student.Id, TeacherId = teacher.Id, Message = "" });
 
-    //    // Assert
-    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
-    //}
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
 
-    //[Test]
-    //public async Task DisciplinaryNotificationReturnsBadRequestWhenMessageIsEmpty()
-    //{
-    //    // Arrange
-    //    var student = dataContext.Students.Add(new Student("Student 1")).Entity;
-    //    dataContext.SaveChanges();
+    [Test]
+    public async Task DisciplinaryNotificationReturnsBadRequestWhenStudentDoesNotExist()
+    {
+        // Arrange
+        var config = dataContext.Configurations.Add(
+            new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
+        dataContext.SaveChanges();
+        
+        const int NON_EXISTENT_STUDENT_ID = 100;
 
-    //    // Act
-    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-    //        new { StudentId = student.Id, Message = "" });
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
+            new { StudentId = NON_EXISTENT_STUDENT_ID, TeacherId = teacher.Id, Message = "Disciplinary notification" });
 
-    //    // Assert
-    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-    //}
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
 
-    //[Test]
-    //public async Task DisciplinaryNotificationReturnsBadRequestWhenStudentDoesNotExist()
-    //{
-    //    // Arrange
-    //    const int NON_EXISTENT_STUDENT_ID = 100;
+    [Test]
+    public async Task DisciplinaryNotificationReturnsBadRequestWhenTeacherDoesNotExist()
+    {
+        // Arrange
+        var config = dataContext.Configurations.Add(
+            new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        dataContext.SaveChanges();
 
-    //    // Act
-    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-    //        new { StudentId = NON_EXISTENT_STUDENT_ID, Message = "Hello student" });
+        const int NON_EXISTENT_TEACHER_ID = 100;
 
-    //    // Assert
-    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-    //}
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
+            new { StudentId = student.Id, TeacherId = NON_EXISTENT_TEACHER_ID, Message = "Disciplinary notification" });
 
-    //[Test]
-    //public async Task DisciplinaryNotificationReturnsBadRequestWhenTeacherDoesNotExist()
-    //{
-    //    // Arrange
-    //    const int NON_EXISTENT_TEACHER_ID = 100;
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
 
-    //    // Act
-    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-    //        new { StudentId = NON_EXISTENT_TEACHER_ID, Message = "Hello student" });
+    [Test]
+    public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
+    {
+        // Arrange
+        var config = dataContext.Configurations.Add(
+            new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
 
-    //    // Assert
-    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-    //}
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
+            new { StudentId = student.Id, TeacherId = teacher.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
 
-    //[Test]
-    //public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
-    //{
-    //    // Arrange
-    //    var student = dataContext.Students.Add(new Student("Student 1")).Entity;
-    //    dataContext.SaveChanges();
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+    }
 
-    //    // Act
-    //    var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-    //        new { StudentId = student.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+    [Test]
+    public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenDisciplinaryInboxIsNotConfigured()
+    {
+        // Arrange
+        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
+        dataContext.SaveChanges();
 
-    //    // Assert
-    //    Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
-    //}
+        // Act
+        var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
+            new { StudentId = student.Id, TeacherId = teacher.Id, Message = "Disciplinary notification" });
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+    }
 
     #endregion
 }

@@ -30,6 +30,12 @@ public class DisciplinaryNotification : Notification
     {
         var config = registrar.Configurations
             .FirstOrDefault(c => c.Name == Configuration.DISCIPLINARY_INBOX);
+
+        if (config is null)
+        {
+            throw new InvalidOperationException("Disciplinary inbox configuration not found");
+        }
+
         return new Recipient("Disciplinary ionbox", config.Value, "");
     }
 }

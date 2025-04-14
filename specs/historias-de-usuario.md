@@ -44,22 +44,15 @@ Como administrador del colegio, deseo enviar un una notificación general a los 
   X Si el Student no existe, reportamos un error
   X Si la notificación está vacía, reportamos un error
 
-====================================================================================
-
 Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents y Teacher de un Student
 en un Grade en particular.
   X El mensaje se envía a los parents y teacher del student indicado
   X Además, notificamos a la direccion de mail configurada especialmente para ese motivo.
-  - Si no existe la dirección de mail de incidentes disciplinarios, reportamos un error.
-  - Si el Student o el Teacher no existen, reportamos un error
-  - Si la notificación está vacía, reportamos un error
+  X Si no existe la dirección de mail de incidentes disciplinarios, reportamos un error.
+  X Si el Student o el Teacher no existen, reportamos un error
+  X Si la notificación está vacía, reportamos un error
 
-Como administrador del colegio, deseo enviar un una notificación administrativa a los Parents de un Student
-en particular.
-  - El mensaje (solo) se envía a los parents del student indicado
-  - Si hay más de un parent para el student, el mensaje solo se envía al parent designado para contacto administrativo
-  - Si el student no existe, reportamos un error
-  - Si la notificación está vacía, reportamos un error
+====================================================================================
 
 Como administrador del colegio, deseo enviar una notificación para una fecha y hora futura.
   - Si envío una notificación futura, no se envía inmediatamente
@@ -78,6 +71,13 @@ Como destinatario deseo que solo me llegue una notificación.
     - en una notificación general recibe solo una notificación
     - en una notificación por grade recibe solo una notificación si ambos Students están en el mismo grade o dos si
       estan en grades diferentes
+
+Como administrador del colegio, deseo enviar un una notificación administrativa a los Parents de un Student
+en particular.
+  - El mensaje (solo) se envía a los parents del student indicado
+  - Si hay más de un parent para el student, el mensaje solo se envía al parent designado para contacto administrativo
+  - Si el student no existe, reportamos un error
+  - Si la notificación está vacía, reportamos un error
 
 
 Pending refactorings
