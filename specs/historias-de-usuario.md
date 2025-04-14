@@ -39,20 +39,28 @@ Como administrador del colegio, deseo enviar un una notificación a los Parents 
   X Si el grade no existe, reportamos un error
   X Envío la notificación a los teachers y parents del grade indicado
 
-Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents de un Student.
-  - Si el Student no existe, reportamos un error
+Como administrador del colegio, deseo enviar un una notificación general a los Parents de un Student.
+  X Notificamos a todos los parents del student indicado
+  X Si el Student no existe, reportamos un error
+  X Si la notificación está vacía, reportamos un error
+
+====================================================================================
 
 Como administrador del colegio, deseo enviar un una notificación disciplinaria a los Parents y Teacher de un Student
 en un Grade en particular.
-  - Si el Student o el Grade no existen, reportamos un error
+  - El mensaje se envía a los parents y teacher del student indicado
+  - Además. notificamos a la direccion configurada especialmente para ese motivo.
+  - Si el Student o el Teacher no existen, reportamos un error
+  - Si la notificación está vacía, reportamos un error
 
 Como administrador del colegio, deseo enviar un una notificación administrativa a los Parents de un Student
 en particular.
-  - Si hay más de un student, el mensaje solo se envía a los parents del student indicado
+  - El mensaje (solo) se envía a los parents del student indicado
   - Si hay más de un parent para el student, el mensaje solo se envía al parent designado para contacto administrativo
   - Si el student no existe, reportamos un error
+  - Si la notificación está vacía, reportamos un error
 
-Como administrador del colegio, deseo enviar un una notificación para una fecha y hora futura.
+Como administrador del colegio, deseo enviar una notificación para una fecha y hora futura.
   - Si envío una notificación futura, no se envía inmediatamente
   - Si envío una notificación futura, se envía en el momento indicado, con una tolerancia de 10 minutos.
   - Si el momento no es en el futuro, reportamos un error.

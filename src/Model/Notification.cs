@@ -10,7 +10,7 @@ public abstract class Notification
     {
         foreach (var subject in grade.Subjects)
         {
-            yield return new Recipient(subject.Teacher.Name, subject.Teacher.Email, subject.Teacher.Phone);
+            yield return subject.Teacher.GetRecipient();
         }
         foreach (var student in grade.Students)
         {
@@ -25,7 +25,7 @@ public abstract class Notification
     {
         foreach (var parent in student.Parents)
         {
-            yield return new Recipient(parent.Name, parent.Email, parent.Phone);
+            yield return parent.GetRecipient();
         }
     }
 }

@@ -23,7 +23,7 @@ public class GeneralNotification : Notification
         }
         foreach (var parent in registrar.Parents)
         {
-            yield return new Recipient(parent.Name, parent.Email, parent.Phone);
+            yield return parent.GetRecipient();
         }
     }
 }
