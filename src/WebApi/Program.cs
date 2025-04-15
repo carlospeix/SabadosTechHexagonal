@@ -14,8 +14,10 @@ builder.Configuration
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddHostedService<BackgroundWorkerService>();
 builder.Services.AddDbContext<IRegistrar, ApplicationContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SabadosTechHexagonal")));
+builder.Services.AddSingleton<ITimeProvider, SystemTimeProvider>();
 builder.Services.AddTransient<INotificator, NullNotificator>();
 builder.Services.AddTransient<INotifications, Notifications>();
 
