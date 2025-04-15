@@ -15,7 +15,7 @@ public class Notifications : INotifications
         this.notificator = notificator;
     }
 
-    public void SendGeneral(string message)
+    public void SendGeneral(string message, DateTime scheduledAt = default)
     {
         if (string.IsNullOrEmpty(message))
         {
@@ -23,7 +23,7 @@ public class Notifications : INotifications
         }
 
         var secretary = new Secretary(notificator);
-        secretary.SendNotification(new GeneralNotification(registrar, message));
+        secretary.SendNotification(new GeneralNotification(registrar, message, scheduledAt));
     }
 
     public void SendToGrade(int gradeId, string message)

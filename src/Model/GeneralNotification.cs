@@ -6,9 +6,10 @@ public class GeneralNotification : Notification
 {
     private readonly IRegistrar registrar;
 
-    public GeneralNotification(IRegistrar registrar, string message)
+    public GeneralNotification(IRegistrar registrar, string message, DateTime scheduleAt)
     {
         this.registrar = registrar;
+        ScheduleAt = scheduleAt;
         Message = message;
     }
 

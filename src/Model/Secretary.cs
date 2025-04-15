@@ -14,6 +14,10 @@ public class Secretary
     public void SendNotification(Notification notification)
     {
         var recipients = notification.GetRecipients();
-        notificator.Send(recipients, notification.Message);
+
+        if (notification.ShouldSendNow())
+        {
+            notificator.Send(recipients, notification.Message);
+        }
     }
 }

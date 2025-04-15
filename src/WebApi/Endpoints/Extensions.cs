@@ -12,7 +12,7 @@ public static class Extensions
         {
             return CommonHandler(request, () =>
             {
-                notifications.SendGeneral(Sanitize(request.Message));
+                notifications.SendGeneral(Sanitize(request.Message), request.ScheduledAt);
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
                 return Results.Created($"/api/comunications/general/{response.Id}", response);
             });
@@ -97,5 +97,5 @@ public static class Extensions
     }
 }
 
-internal record NotificationRequest(int GradeId, int StudentId, int TeacherId, string Message);
+internal record NotificationRequest(int GradeId, int StudentId, int TeacherId, string Message, DateTime ScheduledAt);
 internal record NotificationResponse(Guid Id, string Message, int RecipientsAddressed);

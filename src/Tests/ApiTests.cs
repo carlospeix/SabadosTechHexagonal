@@ -373,7 +373,7 @@ public class ApiTests : BaseTests
 
     #endregion
 
-    [Test, Ignore("Prepared for the video")]
+    [Test]
     public async Task FutureNotificationHappyPath()
     {
         // Arrange
@@ -405,9 +405,10 @@ public class ApiTests : BaseTests
         // Act
         var scheduleAt = testDateTimeProvider.UtcNow.AddMinutes(30);
         var response = await client.PostAsJsonAsync("/api/v1/notifications/general",
-            new { Message = "Hello World", ScheduledAt = "2025-12-30T08:00:00" });
+            new { Message = "Hello World", ScheduledAt = scheduleAt.ToString("o") });
         
         testDateTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
+        // hacer algo
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));

@@ -1,10 +1,17 @@
-﻿namespace Model;
+﻿
+namespace Model;
 
 public abstract class Notification
 {
     public string Message { get; init; }
+    public DateTime ScheduleAt { get; init; }
 
     public abstract IEnumerable<Recipient> GetRecipients();
+
+    public bool ShouldSendNow()
+    {
+        return DateTime.UtcNow >= ScheduleAt;
+    }
 
     protected IEnumerable<Recipient> GradeRecipients(Grade grade)
     {
