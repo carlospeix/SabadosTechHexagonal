@@ -4,12 +4,10 @@ namespace Model;
 
 public class Secretary
 {
-    private readonly IRegistrar registrar;
     private readonly INotificator notificator;
 
-    public Secretary(IRegistrar registrar, INotificator notificator)
+    public Secretary(INotificator notificator)
     {
-        this.registrar = registrar;
         this.notificator = notificator;
     }
 

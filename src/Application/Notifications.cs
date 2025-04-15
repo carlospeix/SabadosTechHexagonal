@@ -22,7 +22,7 @@ public class Notifications : INotifications
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var secretary = new Secretary(registrar, notificator);
+        var secretary = new Secretary(notificator);
         secretary.SendNotification(new GeneralNotification(registrar, message));
     }
 
@@ -36,7 +36,7 @@ public class Notifications : INotifications
         var grade = registrar.Grades.FirstOrDefault(grade => grade.Id == gradeId) ??
             throw new ArgumentException("Invalid grade identifier", nameof(gradeId));
 
-        var secretary = new Secretary(registrar, notificator);
+        var secretary = new Secretary(notificator);
         secretary.SendNotification(new GradeNotification(grade, message));
     }
 
@@ -50,7 +50,7 @@ public class Notifications : INotifications
         var student = registrar.Students.FirstOrDefault(s => s.Id == studentId) ??
             throw new ArgumentException("Invalid student identifier", nameof(studentId));
 
-        var secretary = new Secretary(registrar, notificator);
+        var secretary = new Secretary(notificator);
         secretary.SendNotification(new StudentNotification(student, message));
     }
 
@@ -67,7 +67,7 @@ public class Notifications : INotifications
         var teacher = registrar.Teachers.FirstOrDefault(s => s.Id == teacherId) ??
             throw new ArgumentException("Invalid teacher identifier", nameof(teacherId));
 
-        var secretary = new Secretary(registrar, notificator);
+        var secretary = new Secretary(notificator);
         secretary.SendNotification(new DisciplinaryNotification(registrar, student, teacher, message));
     }
 }

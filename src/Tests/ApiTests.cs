@@ -290,8 +290,7 @@ public class ApiTests : BaseTests
     public async Task DisciplinaryNotificationReturnsBadRequestWhenMessageIsEmpty()
     {
         // Arrange
-        var config = dataContext.Configurations.Add(
-            new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
+        dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         dataContext.SaveChanges();
@@ -308,8 +307,7 @@ public class ApiTests : BaseTests
     public async Task DisciplinaryNotificationReturnsBadRequestWhenStudentDoesNotExist()
     {
         // Arrange
-        var config = dataContext.Configurations.Add(
-            new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
+        dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         dataContext.SaveChanges();
         
@@ -327,8 +325,7 @@ public class ApiTests : BaseTests
     public async Task DisciplinaryNotificationReturnsBadRequestWhenTeacherDoesNotExist()
     {
         // Arrange
-        var config = dataContext.Configurations.Add(
-            new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
+        dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
         dataContext.SaveChanges();
 
@@ -346,8 +343,7 @@ public class ApiTests : BaseTests
     public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
     {
         // Arrange
-        var config = dataContext.Configurations.Add(
-            new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
+        dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
 
