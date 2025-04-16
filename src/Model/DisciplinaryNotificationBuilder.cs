@@ -8,7 +8,7 @@ public class DisciplinaryNotificationBuilder : NotificationBuilder
     private readonly Student student;
     private readonly Teacher teacher;
 
-    public DisciplinaryNotificationBuilder(IRegistrar registrar, Student student, Teacher teacher, string message, DateTime scheduleAt = default)
+    public DisciplinaryNotificationBuilder(IRegistrar registrar, Student student, Teacher teacher, string message, DateTime scheduleAt = default) : base(message, scheduleAt)
     {
         this.registrar = registrar;
         this.student = student;
@@ -17,7 +17,7 @@ public class DisciplinaryNotificationBuilder : NotificationBuilder
 
     public override Notification Build()
     {
-        return new Notification(Message, ScheduleAt, GetRecipients());
+        return new Notification(GetRecipients(), Message, ScheduleAt);
     }
 
     private IEnumerable<Recipient> GetRecipients()

@@ -1,7 +1,4 @@
-﻿
-using Model.Ports.Driven;
-
-namespace Model;
+﻿namespace Model;
 
 public abstract class NotificationBuilder
 {
@@ -9,6 +6,12 @@ public abstract class NotificationBuilder
     public DateTime ScheduleAt { get; init; }
 
     public abstract Notification Build();
+
+    protected NotificationBuilder(string message, DateTime scheduleAt = default)
+    {
+        Message = message;
+        ScheduleAt = scheduleAt;
+    }
 
     protected IEnumerable<Recipient> GradeRecipients(Grade grade)
     {

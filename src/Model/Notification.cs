@@ -8,11 +8,11 @@ public class Notification
     public IReadOnlyCollection<Recipient> Recipients => recipients.ToList().AsReadOnly();
     private readonly HashSet<Recipient> recipients = [];
 
-    public Notification(string message, DateTime scheduleAt, IEnumerable<Recipient> recipients)
+    public Notification(IEnumerable<Recipient> recipients, string message, DateTime scheduleAt)
     {
+        this.recipients = [.. recipients];
         Message = message;
         ScheduleAt = scheduleAt;
-        this.recipients = [.. recipients];
     }
 
     public bool ShouldSendNow()

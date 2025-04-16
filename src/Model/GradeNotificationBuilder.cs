@@ -4,15 +4,14 @@ public class GradeNotificationBuilder : NotificationBuilder
 {
     private readonly Grade grade;
 
-    public GradeNotificationBuilder(Grade grade, string message)
+    public GradeNotificationBuilder(Grade grade, string message, DateTime scheduleAt = default) : base(message, scheduleAt)
     {
         this.grade = grade;
-        Message = message;
     }
 
     public override Notification Build()
     {
-        return new Notification(Message, ScheduleAt, GetRecipients());
+        return new Notification(GetRecipients(), Message, ScheduleAt);
     }
 
     private IEnumerable<Recipient> GetRecipients()

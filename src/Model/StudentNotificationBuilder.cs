@@ -4,16 +4,14 @@ public class StudentNotificationBuilder : NotificationBuilder
 {
     private readonly Student student;
 
-    public StudentNotificationBuilder(Student student, string message, DateTime scheduleAt = default)
+    public StudentNotificationBuilder(Student student, string message, DateTime scheduleAt = default) : base(message, scheduleAt)
     {
         this.student = student;
-        ScheduleAt = scheduleAt;
-        Message = message;
     }
 
     public override Notification Build()
     {
-        return new Notification(Message, ScheduleAt, GetRecipients());
+        return new Notification(GetRecipients(), Message, ScheduleAt);
     }
 
     private IEnumerable<Recipient> GetRecipients()

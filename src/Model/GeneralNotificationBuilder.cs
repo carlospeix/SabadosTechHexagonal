@@ -6,16 +6,14 @@ public class GeneralNotificationBuilder : NotificationBuilder
 {
     private readonly IRegistrar registrar;
 
-    public GeneralNotificationBuilder(IRegistrar registrar, string message, DateTime scheduleAt = default)
+    public GeneralNotificationBuilder(IRegistrar registrar, string message, DateTime scheduleAt = default) : base(message, scheduleAt)
     {
         this.registrar = registrar;
-        ScheduleAt = scheduleAt;
-        Message = message;
     }
 
     public override Notification Build()
     {
-        return new Notification(Message, ScheduleAt, GetRecipients());
+        return new Notification(GetRecipients(), Message, ScheduleAt);
     }
 
     private IEnumerable<Recipient> GetRecipients()
