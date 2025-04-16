@@ -385,7 +385,7 @@ public class ApiTests : BaseTests
         // Act
         var scheduleAt = DateTime.UtcNow.AddMinutes(30);
         var response = await client.PostAsJsonAsync("/api/v1/notifications/general",
-            new { Message = "Hello World", ScheduledAt = scheduleAt.ToString("o") });
+            new { Message = "Hello World", ScheduleAt = scheduleAt.ToString("o") });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
@@ -405,7 +405,7 @@ public class ApiTests : BaseTests
         // Act
         var scheduleAt = testDateTimeProvider.UtcNow.AddMinutes(30);
         var response = await client.PostAsJsonAsync("/api/v1/notifications/general",
-            new { Message = "Hello World", ScheduledAt = scheduleAt.ToString("o") });
+            new { Message = "Hello World", ScheduleAt = scheduleAt.ToString("o") });
         
         testDateTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
         // hacer algo

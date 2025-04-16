@@ -4,7 +4,7 @@ public class GradeNotificationBuilder : NotificationBuilder
 {
     private readonly Grade grade;
 
-    public GradeNotificationBuilder(Grade grade, string message, DateTime scheduleAt = default) : base(message, scheduleAt)
+    public GradeNotificationBuilder(Grade grade, string message) : base(message, default)
     {
         this.grade = grade;
     }

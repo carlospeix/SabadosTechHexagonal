@@ -8,7 +8,7 @@ public class DisciplinaryNotificationBuilder : NotificationBuilder
     private readonly Student student;
     private readonly Teacher teacher;
 
-    public DisciplinaryNotificationBuilder(IRegistrar registrar, Student student, Teacher teacher, string message, DateTime scheduleAt = default) : base(message, scheduleAt)
+    public DisciplinaryNotificationBuilder(IRegistrar registrar, Student student, Teacher teacher, string message) : base(message, default)
     {
         this.registrar = registrar;
         this.student = student;

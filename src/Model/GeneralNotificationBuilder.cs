@@ -6,7 +6,7 @@ public class GeneralNotificationBuilder : NotificationBuilder
 {
     private readonly IRegistrar registrar;
 
-    public GeneralNotificationBuilder(IRegistrar registrar, string message, DateTime scheduleAt = default) : base(message, scheduleAt)
+    public GeneralNotificationBuilder(IRegistrar registrar, string message, DateTime scheduleAt) : base(message, scheduleAt)
     {
         this.registrar = registrar;
     }

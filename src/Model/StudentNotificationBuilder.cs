@@ -4,7 +4,7 @@ public class StudentNotificationBuilder : NotificationBuilder
 {
     private readonly Student student;
 
-    public StudentNotificationBuilder(Student student, string message, DateTime scheduleAt = default) : base(message, scheduleAt)
+    public StudentNotificationBuilder(Student student, string message) : base(message, default)
     {
         this.student = student;
     }

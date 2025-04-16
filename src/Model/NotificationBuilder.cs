@@ -7,7 +7,7 @@ public abstract class NotificationBuilder
 
     protected abstract IEnumerable<Recipient> GetRecipients();
 
-    protected NotificationBuilder(string message, DateTime scheduleAt = default)
+    protected NotificationBuilder(string message, DateTime scheduleAt)
     {
         Message = message;
         ScheduleAt = scheduleAt;

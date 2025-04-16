@@ -15,14 +15,14 @@ public class Notifications : INotifications
         this.notificator = notificator;
     }
 
-    public void SendGeneral(string message, DateTime scheduledAt = default)
+    public void SendGeneral(string message, DateTime scheduleAt = default)
     {
         if (string.IsNullOrEmpty(message))
         {
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var builder = new GeneralNotificationBuilder(registrar, message, scheduledAt);
+        var builder = new GeneralNotificationBuilder(registrar, message, scheduleAt);
         var secretary = new Secretary(notificator);
         secretary.SendNotification(builder.Build());
     }
