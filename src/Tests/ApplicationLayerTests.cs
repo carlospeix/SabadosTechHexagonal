@@ -88,7 +88,7 @@ public class ApplicationLayerTests : BaseTests
         Assert.That(notificator.NotificationsSent, Is.Zero);
     }
 
-    [Test, Ignore("Prepared for the video")]
+    [Test]
     public void FutureNotificationSchedule30MinutesAheadAndSent()
     {
         // Arrange
@@ -102,6 +102,8 @@ public class ApplicationLayerTests : BaseTests
 
         // Simulate the passage of time and act
         testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
+
+        notifications.SendNotificationsScheduledAtOrBefore(testTimeProvider.UtcNow);
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));

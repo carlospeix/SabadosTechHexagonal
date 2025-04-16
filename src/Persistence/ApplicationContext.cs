@@ -20,6 +20,13 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     IQueryable<Configuration> IRegistrar.Configurations => Configurations;
     IQueryable<Notification> IRegistrar.Notifications => Notifications;
 
+    void IRegistrar.AddNotification(Notification notification)
+    {
+        Notifications.Add(notification);
+        // TODO: This should be in a transaction
+        SaveChanges();
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);

@@ -23,7 +23,7 @@ public class Notifications : INotifications
         }
 
         var builder = new GeneralNotificationBuilder(registrar, message, BringToNowPastScheduleDate(scheduleAt));
-        var secretary = new Secretary(notificator);
+        var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(builder.Build());
     }
 
@@ -38,7 +38,7 @@ public class Notifications : INotifications
             throw new ArgumentException("Invalid grade identifier", nameof(gradeId));
 
         var builder = new GradeNotificationBuilder(grade, message);
-        var secretary = new Secretary(notificator);
+        var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(builder.Build());
     }
 
@@ -53,7 +53,7 @@ public class Notifications : INotifications
             throw new ArgumentException("Invalid student identifier", nameof(studentId));
 
         var builder = new StudentNotificationBuilder(student, message);
-        var secretary = new Secretary(notificator);
+        var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(builder.Build());
     }
 
@@ -71,8 +71,14 @@ public class Notifications : INotifications
             throw new ArgumentException("Invalid teacher identifier", nameof(teacherId));
 
         var builder = new DisciplinaryNotificationBuilder(registrar, student, teacher, message);
-        var secretary = new Secretary(notificator);
+        var secretary = new Secretary(registrar, notificator);
         secretary.SendNotification(builder.Build());
+    }
+
+    public void SendNotificationsScheduledAtOrBefore(DateTime utcNow)
+    {
+        var secretary = new Secretary(registrar, notificator);
+        secretary.SendNotificationsScheduledAtOrBefore(utcNow);
     }
 
     private DateTime BringToNowPastScheduleDate(DateTime scheduleAt)
