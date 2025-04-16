@@ -22,7 +22,7 @@ public class Notifications : INotifications
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var builder = new GeneralNotificationBuilder(registrar, message, scheduleAt);
+        var builder = new GeneralNotificationBuilder(registrar, message, BringToNowPastScheduleDate(scheduleAt));
         var secretary = new Secretary(notificator);
         secretary.SendNotification(builder.Build());
     }
@@ -73,5 +73,10 @@ public class Notifications : INotifications
         var builder = new DisciplinaryNotificationBuilder(registrar, student, teacher, message);
         var secretary = new Secretary(notificator);
         secretary.SendNotification(builder.Build());
+    }
+
+    private DateTime BringToNowPastScheduleDate(DateTime scheduleAt)
+    {
+        return scheduleAt == default ? DateTime.UtcNow : scheduleAt;
     }
 }
