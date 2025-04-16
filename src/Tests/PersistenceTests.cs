@@ -319,4 +319,31 @@ public class PersistenceTests : BaseTests
         }
     }
     #endregion
+
+    #region Notifications
+
+    [Test]
+    public void CanPersistANotification()
+    {
+        var recipients = new List<Recipient> 
+        {
+            new("Teacher 1", "teacher-1@school.edu", "111"),
+            new("Teacher 2", "teacher-2@school.edu", "222")
+        };
+        var notification = dataContext.Notifications.Add(new Notification(recipients, "Hello world", DateTime.UtcNow)).Entity;
+
+        dataContext.SaveChanges();
+        var id = notification.Id;
+
+        dataContext.Dispose();
+        dataContext = CreateContext();
+
+        notification = dataContext.Notifications.Find(id);
+
+        Assert.That(notification, Is.Not.Null);
+        Assert.That(notification.Recipients, Has.Count.EqualTo(2));
+    }
+
+    #endregion
+
 }

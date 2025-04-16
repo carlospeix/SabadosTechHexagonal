@@ -11,12 +11,14 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     public DbSet<Grade> Grades { get; set; }
     public DbSet<Parent> Parents { get; set; }
     public DbSet<Student> Students { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     IQueryable<Teacher> IRegistrar.Teachers => Teachers;
     IQueryable<Grade> IRegistrar.Grades => Grades;
     IQueryable<Parent> IRegistrar.Parents => Parents;
     IQueryable<Student> IRegistrar.Students => Students;
     IQueryable<Configuration> IRegistrar.Configurations => Configurations;
+    IQueryable<Notification> IRegistrar.Notifications => Notifications;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,6 +75,25 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             x.HasMany(t => t.Parents).WithMany(t => t.Students).UsingEntity<CaregivingRelationship>().ToTable("CaregivingRelationships");
             x.Navigation(t => t.CaregivingRelationships).AutoInclude();
             x.Navigation(t => t.Parents).AutoInclude();
+        });
+
+        modelBuilder.Entity<Notification>(x =>
+        {
+            x.HasKey(t => t.Id);
+            x.Property(t => t.Message).HasMaxLength(1000);
+            x.Property(t => t.ScheduleAt);
+            x.HasMany(t => t.Recipients).WithOne(t => t.Notification).IsRequired();
+            x.Navigation(t => t.Recipients).AutoInclude();
+        });
+
+        modelBuilder.Entity<Recipient>(x =>
+        {
+            x.ToTable("Recipients");
+            x.HasKey("Id");
+            x.Property("Id").UseIdentityColumn();
+            x.Property(t => t.Name).HasMaxLength(100);
+            x.Property(t => t.Email).HasMaxLength(100);
+            x.Property(t => t.Phone).HasMaxLength(100);
         });
     }
 }

@@ -7,4 +7,5 @@ public interface IRegistrar
     public IQueryable<Parent> Parents { get; }
     public IQueryable<Student> Students { get; }
     public IQueryable<Configuration> Configurations { get; }
+    public IQueryable<Notification> Notifications { get; }
 }

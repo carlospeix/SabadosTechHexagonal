@@ -2,7 +2,6 @@ using Application;
 using Model;
 using Model.Ports.Driven;
 using Persistence;
-using System.Net;
 
 namespace Tests;
 
@@ -99,10 +98,10 @@ public class ApplicationLayerTests : BaseTests
         // Act
         var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);
         notifications.SendGeneral("Hello World", scheduleAt);
-        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(0));
 
+        // Simulate the passage of time and act
         testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
-        // hacer algo
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
