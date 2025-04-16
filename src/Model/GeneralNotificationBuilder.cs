@@ -2,18 +2,23 @@
 
 namespace Model;
 
-public class GeneralNotification : Notification
+public class GeneralNotificationBuilder : NotificationBuilder
 {
     private readonly IRegistrar registrar;
 
-    public GeneralNotification(IRegistrar registrar, string message, DateTime scheduleAt)
+    public GeneralNotificationBuilder(IRegistrar registrar, string message, DateTime scheduleAt = default)
     {
         this.registrar = registrar;
         ScheduleAt = scheduleAt;
         Message = message;
     }
 
-    public override  IEnumerable<Recipient> GetRecipients()
+    public override Notification Build()
+    {
+        return new Notification(Message, ScheduleAt, GetRecipients());
+    }
+
+    private IEnumerable<Recipient> GetRecipients()
     {
         foreach (var grade in registrar.Grades)
         {

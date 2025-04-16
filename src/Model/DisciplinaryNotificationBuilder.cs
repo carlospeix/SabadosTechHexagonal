@@ -2,21 +2,25 @@
 
 namespace Model;
 
-public class DisciplinaryNotification : Notification
+public class DisciplinaryNotificationBuilder : NotificationBuilder
 {
     private readonly IRegistrar registrar;
     private readonly Student student;
     private readonly Teacher teacher;
 
-    public DisciplinaryNotification(IRegistrar registrar, Student student, Teacher teacher, string message)
+    public DisciplinaryNotificationBuilder(IRegistrar registrar, Student student, Teacher teacher, string message, DateTime scheduleAt = default)
     {
         this.registrar = registrar;
         this.student = student;
         this.teacher = teacher;
-        Message = message;
     }
 
-    public override IEnumerable<Recipient> GetRecipients()
+    public override Notification Build()
+    {
+        return new Notification(Message, ScheduleAt, GetRecipients());
+    }
+
+    private IEnumerable<Recipient> GetRecipients()
     {
         foreach (var recipient in StudentRecipients(student))
         {
