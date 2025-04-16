@@ -23,7 +23,7 @@ public class ApplicationLayerTests : BaseTests
         registrar = dataContext;
         notificator = new();
         testTimeProvider = new TestTimeProvider(DateTime.UtcNow);
-        notifications = new Notifications(registrar, notificator);
+        notifications = new Notifications(registrar, notificator, testTimeProvider);
     }
 
     [TearDown]
@@ -102,8 +102,7 @@ public class ApplicationLayerTests : BaseTests
 
         // Simulate the passage of time and act
         testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
-
-        notifications.SendNotificationsScheduledAtOrBefore(testTimeProvider.UtcNow);
+        notifications.SendScheduledNotifications();
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));

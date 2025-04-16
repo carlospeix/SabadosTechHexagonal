@@ -6,11 +6,13 @@ public class Secretary
 {
     private readonly IRegistrar registrar;
     private readonly INotificator notificator;
+    private readonly ITimeProvider timeProvider;
 
-    public Secretary(IRegistrar registrar, INotificator notificator)
+    public Secretary(IRegistrar registrar, INotificator notificator, ITimeProvider timeProvider)
     {
         this.registrar = registrar;
         this.notificator = notificator;
+        this.timeProvider = timeProvider;
     }
 
     public void SendNotification(Notification notification)
@@ -23,9 +25,9 @@ public class Secretary
         }
     }
 
-    public void SendNotificationsScheduledAtOrBefore(DateTime utcNow)
+    public void SendScheduledNotifications()
     {
-        foreach (var notification in registrar.Notifications.Where(n => n.ScheduleAt <= utcNow))
+        foreach (var notification in registrar.Notifications.Where(n => n.ScheduleAt <= timeProvider.UtcNow))
         {
             notificator.Send(notification.Recipients, notification.Message);
         }
