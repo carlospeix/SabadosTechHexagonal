@@ -20,8 +20,6 @@ public class ApiTests : BaseTests
         dataContext = CreateContext();
         ClearDatabase(dataContext);
 
-        var testDateTimeProvider = new TestTimeProvider(DateTime.UtcNow);
-
         app = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
             {
@@ -30,8 +28,6 @@ public class ApiTests : BaseTests
                 {
                     services.RemoveAll<INotificator>();
                     services.AddSingleton<INotificator, TestNotificator>();
-                    services.RemoveAll<ITimeProvider>();
-                    services.AddSingleton<ITimeProvider>(testDateTimeProvider);
                 });
             });
         client = app.CreateClient();
@@ -390,27 +386,5 @@ public class ApiTests : BaseTests
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
         Assert.That(notificator.NotificationsSent, Is.Zero);
-    }
-
-    [Test, Ignore("Prepared for the video")]
-    public async Task FutureNotificationSchedule30MinutesAheadAndSent()
-    {
-        // Arrange
-        var testDateTimeProvider = (TestTimeProvider)app.Services.GetRequiredService<ITimeProvider>();
-        var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
-
-        dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
-        dataContext.SaveChanges();
-
-        // Act
-        var scheduleAt = testDateTimeProvider.UtcNow.AddMinutes(30);
-        var response = await client.PostAsJsonAsync("/api/v1/notifications/general",
-            new { Message = "Hello World", ScheduleAt = scheduleAt.ToString("o") });
-        
-        testDateTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
-        // hacer algo
-
-        // Assert
-        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 }

@@ -2,15 +2,17 @@ using Application;
 using Model;
 using Model.Ports.Driven;
 using Persistence;
+using System.Net;
 
 namespace Tests;
 
-public class NotificationsTests : BaseTests
+public class ApplicationLayerTests : BaseTests
 {
     ApplicationContext dataContext;
 
     IRegistrar registrar;
     TestNotificator notificator;
+    TestTimeProvider testTimeProvider;
     Notifications notifications;
 
     [SetUp]
@@ -21,6 +23,7 @@ public class NotificationsTests : BaseTests
 
         registrar = dataContext;
         notificator = new();
+        testTimeProvider = new TestTimeProvider(DateTime.UtcNow);
         notifications = new Notifications(registrar, notificator);
     }
 
@@ -69,5 +72,39 @@ public class NotificationsTests : BaseTests
     public void ShouldThrowIfMessageIsEmpty()
     {
         Assert.Throws<ArgumentException>(() => notifications.SendGeneral(""));
+    }
+
+    [Test]
+    public void FutureNotificationHappyPath()
+    {
+        // Arrange
+        dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
+        dataContext.SaveChanges();
+
+        // Act
+        var scheduleAt = DateTime.UtcNow.AddMinutes(30);
+        notifications.SendGeneral("Hello World", scheduleAt);
+
+        // Assert
+        Assert.That(notificator.NotificationsSent, Is.Zero);
+    }
+
+    [Test, Ignore("Prepared for the video")]
+    public void FutureNotificationSchedule30MinutesAheadAndSent()
+    {
+        // Arrange
+        dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
+        dataContext.SaveChanges();
+
+        // Act
+        var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);
+        notifications.SendGeneral("Hello World", scheduleAt);
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
+
+        testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
+        // hacer algo
+
+        // Assert
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 }
