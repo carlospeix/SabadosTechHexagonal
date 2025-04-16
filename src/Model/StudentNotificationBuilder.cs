@@ -9,12 +9,7 @@ public class StudentNotificationBuilder : NotificationBuilder
         this.student = student;
     }
 
-    public override Notification Build()
-    {
-        return new Notification(GetRecipients(), Message, ScheduleAt);
-    }
-
-    private IEnumerable<Recipient> GetRecipients()
+    protected override IEnumerable<Recipient> GetRecipients()
     {
         foreach (var recipient in StudentRecipients(student))
         {

@@ -15,12 +15,8 @@ public class DisciplinaryNotificationBuilder : NotificationBuilder
         this.teacher = teacher;
     }
 
-    public override Notification Build()
-    {
-        return new Notification(GetRecipients(), Message, ScheduleAt);
-    }
+    protected override IEnumerable<Recipient> GetRecipients()
 
-    private IEnumerable<Recipient> GetRecipients()
     {
         foreach (var recipient in StudentRecipients(student))
         {

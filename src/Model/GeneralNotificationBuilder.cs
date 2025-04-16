@@ -11,12 +11,7 @@ public class GeneralNotificationBuilder : NotificationBuilder
         this.registrar = registrar;
     }
 
-    public override Notification Build()
-    {
-        return new Notification(GetRecipients(), Message, ScheduleAt);
-    }
-
-    private IEnumerable<Recipient> GetRecipients()
+    protected override IEnumerable<Recipient> GetRecipients()
     {
         foreach (var grade in registrar.Grades)
         {

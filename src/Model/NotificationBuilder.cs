@@ -5,12 +5,17 @@ public abstract class NotificationBuilder
     public string Message { get; init; }
     public DateTime ScheduleAt { get; init; }
 
-    public abstract Notification Build();
+    protected abstract IEnumerable<Recipient> GetRecipients();
 
     protected NotificationBuilder(string message, DateTime scheduleAt = default)
     {
         Message = message;
         ScheduleAt = scheduleAt;
+    }
+
+    public Notification Build()
+    {
+        return new Notification(GetRecipients(), Message, ScheduleAt);
     }
 
     protected IEnumerable<Recipient> GradeRecipients(Grade grade)
