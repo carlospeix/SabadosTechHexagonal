@@ -10,4 +10,5 @@ public interface IRegistrar
     public IQueryable<Notification> Notifications { get; }
     // TODO: This should be in another place
     void AddNotification(Notification notification);
+    void SaveChanges();
 }

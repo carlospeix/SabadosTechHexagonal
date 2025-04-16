@@ -23,7 +23,10 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
     void IRegistrar.AddNotification(Notification notification)
     {
         Notifications.Add(notification);
-        // TODO: This should be in a transaction
+    }
+
+    void IRegistrar.SaveChanges()
+    {
         SaveChanges();
     }
 

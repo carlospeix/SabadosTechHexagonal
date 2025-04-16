@@ -24,6 +24,8 @@ public class Notifications : INotifications
 
         var builder = new GeneralNotificationBuilder(registrar, message, BringToNowPastScheduleDate(scheduleAt));
         secretary.SendNotification(builder.Build());
+
+        registrar.SaveChanges();
     }
 
     public void SendToGrade(int gradeId, string message)
@@ -38,6 +40,8 @@ public class Notifications : INotifications
 
         var builder = new GradeNotificationBuilder(grade, message);
         secretary.SendNotification(builder.Build());
+
+        registrar.SaveChanges();
     }
 
     public void SendStudent(int studentId, string message)
@@ -52,6 +56,8 @@ public class Notifications : INotifications
 
         var builder = new StudentNotificationBuilder(student, message);
         secretary.SendNotification(builder.Build());
+
+        registrar.SaveChanges();
     }
 
     public void SendDisciplinary(int studentId, int teacherId, string message)
@@ -69,11 +75,15 @@ public class Notifications : INotifications
 
         var builder = new DisciplinaryNotificationBuilder(registrar, student, teacher, message);
         secretary.SendNotification(builder.Build());
+
+        registrar.SaveChanges();
     }
 
     public void SendScheduledNotifications()
     {
         secretary.SendScheduledNotifications();
+
+        registrar.SaveChanges();
     }
 
     private DateTime BringToNowPastScheduleDate(DateTime scheduleAt)
