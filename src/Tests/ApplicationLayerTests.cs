@@ -81,7 +81,7 @@ public class ApplicationLayerTests : BaseTests
         dataContext.SaveChanges();
 
         // Act
-        var scheduleAt = DateTime.UtcNow.AddMinutes(30);
+        var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);
         notifications.SendGeneral("Hello World", scheduleAt);
 
         // Assert
@@ -99,6 +99,7 @@ public class ApplicationLayerTests : BaseTests
         var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);
         notifications.SendGeneral("Hello World", scheduleAt);
         Assert.That(notificator.NotificationsSent, Is.EqualTo(0));
+        notificator.Reset();
 
         // Simulate the passage of time and act
         testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
@@ -106,5 +107,32 @@ public class ApplicationLayerTests : BaseTests
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void FutureNotificationSchedule30MinutesAheadSentAndNotResent()
+    {
+        // Arrange
+        dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
+        dataContext.SaveChanges();
+
+        // Act
+        var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);
+        notifications.SendGeneral("Hello World", scheduleAt);
+        Assert.That(notificator.NotificationsSent, Is.Zero);
+
+        // Simulate the passage of time and act
+        testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
+        notifications.SendScheduledNotifications();
+
+        // Assert
+        Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
+        notificator.Reset();
+
+        // Send again, should not send
+        notifications.SendScheduledNotifications();
+
+        // Assert
+        Assert.That(notificator.NotificationsSent, Is.Zero);
     }
 }

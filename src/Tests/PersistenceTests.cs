@@ -344,6 +344,38 @@ public class PersistenceTests : BaseTests
         Assert.That(notification.Recipients, Has.Count.EqualTo(2));
     }
 
+    [Test]
+    public void PersistSentOnTime()
+    {
+        var recipients = new List<Recipient>
+        {
+            new("Teacher 1", "teacher-1@school.edu", "111"),
+            new("Teacher 2", "teacher-2@school.edu", "222")
+        };
+        var notification = dataContext.Notifications.Add(new Notification(recipients, "Hello world", DateTime.UtcNow)).Entity;
+        dataContext.SaveChanges();
+
+        var id = notification.Id;
+
+        dataContext.Dispose();
+        dataContext = CreateContext();
+
+        notification = dataContext.Notifications.Find(id);
+        Assert.That(notification?.SentOn, Is.Null);
+
+        var timeProvider = new TestTimeProvider(new DateTime(2025, 10, 10));
+        notification?.SendIfItIsTime(new TestNotificator(), timeProvider);
+        
+        dataContext.SaveChanges();
+
+        dataContext.Dispose();
+        dataContext = CreateContext();
+
+        notification = dataContext.Notifications.Find(id);
+
+        Assert.That(notification?.SentOn, Is.EqualTo(timeProvider.UtcNow));
+    }
+
     #endregion
 
 }

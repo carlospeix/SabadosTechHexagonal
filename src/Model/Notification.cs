@@ -1,4 +1,6 @@
-﻿namespace Model;
+﻿using Model.Ports.Driven;
+
+namespace Model;
 
 public class Notification
 {
@@ -6,6 +8,7 @@ public class Notification
 
     public string Message { get; init; }
     public DateTime ScheduleAt { get; init; }
+    public DateTime? SentOn { get; private set; }
 
     public IReadOnlyCollection<Recipient> Recipients => recipients.ToList().AsReadOnly();
     private readonly HashSet<Recipient> recipients = [];
@@ -19,8 +22,22 @@ public class Notification
         ScheduleAt = scheduleAt;
     }
 
-    public bool ShouldSendNow()
+    public void SendIfItIsTime(INotificator notificator, ITimeProvider timeProvider)
     {
-        return DateTime.UtcNow >= ScheduleAt;
+        if (ShouldSend(timeProvider.UtcNow))
+        {
+            notificator.Send(Recipients, Message);
+            MarkAsSentOn(timeProvider.UtcNow);
+        }
+    }
+
+    private void MarkAsSentOn(DateTime utcNow)
+    {
+        SentOn = utcNow;
+    }
+
+    private bool ShouldSend(DateTime utcNow)
+    {
+        return utcNow >= ScheduleAt;
     }
 }

@@ -19,17 +19,17 @@ public class Secretary
     {
         registrar.AddNotification(notification);
 
-        if (notification.ShouldSendNow())
-        {
-            notificator.Send(notification.Recipients, notification.Message);
-        }
+        notification.SendIfItIsTime(notificator, timeProvider);
     }
 
     public void SendScheduledNotifications()
     {
-        foreach (var notification in registrar.Notifications.Where(n => n.ScheduleAt <= timeProvider.UtcNow))
+        var pendingNotifications = registrar.Notifications
+            .Where(n => n.ScheduleAt <= timeProvider.UtcNow && n.SentOn == null);
+
+        foreach (var notification in pendingNotifications)
         {
-            notificator.Send(notification.Recipients, notification.Message);
+            notification.SendIfItIsTime(notificator, timeProvider);
         }
     }
 }

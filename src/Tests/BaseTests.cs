@@ -44,6 +44,7 @@ public abstract class BaseTests
         dataContext.Parents.RemoveRange(dataContext.Parents);
         dataContext.Grades.RemoveRange(dataContext.Grades);
         dataContext.Teachers.RemoveRange(dataContext.Teachers);
+        dataContext.Notifications.RemoveRange(dataContext.Notifications);
         dataContext.SaveChanges();
     }
 }

@@ -1,8 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Model;
+﻿using Model;
 using Persistence;
 using Model.Ports.Driven;
 
@@ -11,6 +7,7 @@ namespace Tests;
 public class ApiTests : BaseTests
 {
     WebApplicationFactory<Program> app;
+    TestTimeProvider testTimeProvider;
     ApplicationContext dataContext;
     HttpClient client;
 
@@ -20,6 +17,8 @@ public class ApiTests : BaseTests
         dataContext = CreateContext();
         ClearDatabase(dataContext);
 
+        testTimeProvider = new TestTimeProvider(DateTime.UtcNow);
+
         app = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
             {
@@ -28,6 +27,8 @@ public class ApiTests : BaseTests
                 {
                     services.RemoveAll<INotificator>();
                     services.AddSingleton<INotificator, TestNotificator>();
+                    services.RemoveAll<ITimeProvider>();
+                    services.AddSingleton<ITimeProvider>(testTimeProvider);
                 });
             });
         client = app.CreateClient();
@@ -379,7 +380,7 @@ public class ApiTests : BaseTests
         dataContext.SaveChanges();
 
         // Act
-        var scheduleAt = DateTime.UtcNow.AddMinutes(30);
+        var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);
         var response = await client.PostAsJsonAsync("/api/v1/notifications/general",
             new { Message = "Hello World", ScheduleAt = scheduleAt.ToString("o") });
 

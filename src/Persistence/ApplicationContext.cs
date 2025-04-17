@@ -92,6 +92,7 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             x.HasKey(t => t.Id);
             x.Property(t => t.Message).HasMaxLength(1000);
             x.Property(t => t.ScheduleAt);
+            x.Property(t => t.SentOn);
             x.HasMany(t => t.Recipients).WithOne(t => t.Notification).IsRequired();
             x.Navigation(t => t.Recipients).AutoInclude();
         });

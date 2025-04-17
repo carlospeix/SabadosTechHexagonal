@@ -7,11 +7,13 @@ namespace Application;
 public class Notifications : INotifications
 {
     private readonly IRegistrar registrar;
+    private readonly ITimeProvider timeProvider;
     private readonly Secretary secretary;
 
     public Notifications(IRegistrar registrar, INotificator notificator, ITimeProvider timeProvider)
     {
         this.registrar = registrar;
+        this.timeProvider = timeProvider;
         secretary = new Secretary(registrar, notificator, timeProvider);
     }
 
@@ -22,7 +24,7 @@ public class Notifications : INotifications
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var builder = new GeneralNotificationBuilder(registrar, message, BringToNowPastScheduleDate(scheduleAt));
+        var builder = new GeneralNotificationBuilder(registrar, message, BringToNowPastScheduleDates(scheduleAt));
         secretary.SendNotification(builder.Build());
 
         registrar.SaveChanges();
@@ -86,8 +88,8 @@ public class Notifications : INotifications
         registrar.SaveChanges();
     }
 
-    private DateTime BringToNowPastScheduleDate(DateTime scheduleAt)
+    private DateTime BringToNowPastScheduleDates(DateTime scheduleAt)
     {
-        return scheduleAt == default ? DateTime.UtcNow : scheduleAt;
+        return scheduleAt == default ? timeProvider.UtcNow : scheduleAt;
     }
 }

@@ -11,6 +11,7 @@ internal class TestNotificator : INotificator
 
     public TestNotificator()
     {
+        Reset();
     }
 
     public TestNotificator(ILogger<TestNotificator> logger)
@@ -20,7 +21,7 @@ internal class TestNotificator : INotificator
 
     public void Send(IEnumerable<Recipient> recipients, string message)
     {
-        notificationCount = 0;
+        Reset();
         foreach (var recipient in recipients)
         {
             logger.LogInformation(
@@ -33,5 +34,10 @@ internal class TestNotificator : INotificator
     internal int NotificationsSent()
     {
         return notificationCount;
+    }
+
+    internal void Reset()
+    {
+        notificationCount = 0;
     }
 }

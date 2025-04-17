@@ -56,7 +56,7 @@ en un Grade en particular.
 
 Como administrador del colegio, deseo enviar una notificación para una fecha y hora futura.
   X Si envío una notificación futura, no se envía inmediatamente
-  - Si envío una notificación futura, se envía en el momento indicado, con una tolerancia de 10 minutos.
+  X Si envío una notificación futura, se envía en el momento indicado, con una tolerancia de 10 minutos.
   - Si el momento no es en el futuro, reportamos un error.
 
 Como administrador del colegio, en la medida de lo posible, quiero saber si las notificaciones llegan y son leidas.
