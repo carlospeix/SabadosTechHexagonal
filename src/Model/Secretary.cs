@@ -25,7 +25,7 @@ public class Secretary
     public void SendScheduledNotifications()
     {
         var pendingNotifications = registrar.Notifications
-            .Where(n => n.ScheduleAt <= timeProvider.UtcNow && n.SentOn == null);
+            .Where(n => n.ScheduleAt <= timeProvider.UtcNow && n.SentAt == null);
 
         foreach (var notification in pendingNotifications)
         {

@@ -345,7 +345,7 @@ public class PersistenceTests : BaseTests
     }
 
     [Test]
-    public void PersistSentOnTime()
+    public void PersistSentAtTime()
     {
         var recipients = new List<Recipient>
         {
@@ -361,7 +361,7 @@ public class PersistenceTests : BaseTests
         dataContext = CreateContext();
 
         notification = dataContext.Notifications.Find(id);
-        Assert.That(notification?.SentOn, Is.Null);
+        Assert.That(notification?.SentAt, Is.Null);
 
         var timeProvider = new TestTimeProvider(new DateTime(2025, 10, 10));
         notification?.SendIfItIsTime(new TestNotificator(), timeProvider);
@@ -373,7 +373,7 @@ public class PersistenceTests : BaseTests
 
         notification = dataContext.Notifications.Find(id);
 
-        Assert.That(notification?.SentOn, Is.EqualTo(timeProvider.UtcNow));
+        Assert.That(notification?.SentAt, Is.EqualTo(timeProvider.UtcNow));
     }
 
     #endregion

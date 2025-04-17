@@ -8,7 +8,7 @@ public class Notification
 
     public string Message { get; init; }
     public DateTime ScheduleAt { get; init; }
-    public DateTime? SentOn { get; private set; }
+    public DateTime? SentAt { get; private set; }
 
     public IReadOnlyCollection<Recipient> Recipients => recipients.ToList().AsReadOnly();
     private readonly HashSet<Recipient> recipients = [];
@@ -24,20 +24,20 @@ public class Notification
 
     public void SendIfItIsTime(INotificator notificator, ITimeProvider timeProvider)
     {
-        if (ShouldSend(timeProvider.UtcNow))
+        if (ShouldSendAt(timeProvider.UtcNow))
         {
             notificator.Send(Recipients, Message);
-            MarkAsSentOn(timeProvider.UtcNow);
+            MarkAsSentAt(timeProvider.UtcNow);
         }
     }
 
-    private void MarkAsSentOn(DateTime utcNow)
-    {
-        SentOn = utcNow;
-    }
-
-    private bool ShouldSend(DateTime utcNow)
+    private bool ShouldSendAt(DateTime utcNow)
     {
         return utcNow >= ScheduleAt;
+    }
+
+    private void MarkAsSentAt(DateTime utcNow)
+    {
+        SentAt = utcNow;
     }
 }
