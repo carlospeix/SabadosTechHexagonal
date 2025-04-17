@@ -2,7 +2,7 @@
 
 namespace WebApi.Endpoints;
 
-public static class Extensions
+public static class NotificationEndpointsExtensions
 {
     public static void MapNotificationsEndPoints(this IEndpointRouteBuilder app)
     {
