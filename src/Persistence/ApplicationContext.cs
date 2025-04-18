@@ -1,16 +1,24 @@
 ﻿using System.Reflection;
-using Model.Ports.Driven;
+using System.Reflection.Emit;
 using Model;
+using Model.Ports.Driven;
 
 namespace Persistence;
 
 public class ApplicationContext : DbContext, IRegistrar
 {
+    private const string TENANT_ID_FIELD_NAME = "TenantId";
     private readonly int tenantId;
+    private readonly Action<TenantEntity, int> tenantIdSetter;
 
     public ApplicationContext(DbContextOptions<ApplicationContext> options, ITenantProvider? tenantProvider = default) : base(options)
     {
         tenantId = tenantProvider?.GetTenantId() ?? 0;
+        
+        var tenantIdFieldInfo = typeof(TenantEntity).GetField(TENANT_ID_FIELD_NAME, BindingFlags.NonPublic | BindingFlags.Instance) ??
+            throw new InvalidOperationException($"Field '{TENANT_ID_FIELD_NAME}' not found on type '{nameof(TenantEntity)}'.");
+        
+        tenantIdSetter = CreateSetter<TenantEntity, int>(tenantIdFieldInfo);
     }
 
     public DbSet<Configuration> Configurations { get; set; }
@@ -119,9 +127,9 @@ public class ApplicationContext : DbContext, IRegistrar
 
     private void AddTenancySupport(EntityTypeBuilder<Configuration> x)
     {
-        x.Property("TenantId").IsRequired();
-        x.HasIndex("TenantId");
-        x.HasQueryFilter(t => EF.Property<int>(t, "TenantId") == tenantId);
+        x.Property(TENANT_ID_FIELD_NAME).IsRequired();
+        x.HasIndex(TENANT_ID_FIELD_NAME);
+        x.HasQueryFilter(t => EF.Property<int>(t, TENANT_ID_FIELD_NAME) == tenantId);
     }
 
     public override int SaveChanges()
@@ -130,20 +138,25 @@ public class ApplicationContext : DbContext, IRegistrar
         {
             if (entry.State == EntityState.Added)
             {
-                var fieldInfo = GetTenantFieldInfo();
-                fieldInfo?.SetValue(entry.Entity, tenantId);
+                tenantIdSetter(entry.Entity, tenantId);
             }
         }
 
         return base.SaveChanges();
     }
 
-    static FieldInfo GetTenantFieldInfo()
+    private Action<S, T> CreateSetter<S, T>(FieldInfo field)
     {
-        // TODO: Implement caching for field info
-        var fieldInfo = typeof(TenantEntity).GetField("TenantId", BindingFlags.NonPublic | BindingFlags.Instance);
-        if (fieldInfo == null)
-            throw new InvalidOperationException($"Field '{"TenantId"}' not found on type '{nameof(TenantEntity)}'.");
-        return fieldInfo;
+        string methodName = $"{field?.ReflectedType?.FullName}.set_{field?.Name}";
+        
+        DynamicMethod setterMethod = new DynamicMethod(methodName, null, new Type[] { typeof(S), typeof(T) }, true);
+        ILGenerator gen = setterMethod.GetILGenerator();
+
+        gen.Emit(OpCodes.Ldarg_0);
+        gen.Emit(OpCodes.Ldarg_1);
+        gen.Emit(OpCodes.Stfld, field);
+        gen.Emit(OpCodes.Ret);
+
+        return (Action<S, T>)setterMethod.CreateDelegate(typeof(Action<S, T>));
     }
 }
