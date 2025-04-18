@@ -2,5 +2,5 @@
 
 public class TenantEntity
 {
-    private int TenantId;
+    protected int TenantId;
 }

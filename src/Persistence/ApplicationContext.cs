@@ -147,10 +147,12 @@ public class ApplicationContext : DbContext, IRegistrar
 
     private Action<S, T> CreateSetter<S, T>(FieldInfo field)
     {
-        string methodName = $"{field?.ReflectedType?.FullName}.set_{field?.Name}";
+        ArgumentNullException.ThrowIfNull(field);
+
+        string methodName = $"{field.ReflectedType!.FullName}.set_{field.Name}";
         
-        DynamicMethod setterMethod = new DynamicMethod(methodName, null, new Type[] { typeof(S), typeof(T) }, true);
-        ILGenerator gen = setterMethod.GetILGenerator();
+        var setterMethod = new DynamicMethod(methodName, null, [typeof(S), typeof(T)], true);
+        var gen = setterMethod.GetILGenerator();
 
         gen.Emit(OpCodes.Ldarg_0);
         gen.Emit(OpCodes.Ldarg_1);

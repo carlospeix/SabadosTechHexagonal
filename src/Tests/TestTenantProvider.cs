@@ -2,11 +2,9 @@
 
 namespace Tests;
 
-internal class TestTenantProvider : ITenantProvider
+internal class TestTenantProvider(int tenantId) : ITenantProvider
 {
-    private int tenantId;
-
-    public TestTenantProvider(int tenantId) => this.tenantId = tenantId;
+    private int tenantId = tenantId;
 
     internal void SetTenantId(int tenantId) => this.tenantId = tenantId;
 
