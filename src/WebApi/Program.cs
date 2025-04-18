@@ -19,6 +19,7 @@ builder.Services.AddDbContext<IRegistrar, ApplicationContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SabadosTechHexagonal")));
 builder.Services.AddSingleton<ITimeProvider, SystemTimeProvider>();
 builder.Services.AddTransient<INotificator, NullNotificator>();
+builder.Services.AddScoped<ITenantProvider, ConstantTenantProvider>();
 builder.Services.AddTransient<INotifications, Notifications>();
 
 var app = builder.Build();

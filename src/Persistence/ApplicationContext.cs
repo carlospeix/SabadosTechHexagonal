@@ -1,11 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
 using Model.Ports.Driven;
 using Model;
 
 namespace Persistence;
 
-public class ApplicationContext(DbContextOptions<ApplicationContext> options) : DbContext(options), IRegistrar
+public class ApplicationContext : DbContext, IRegistrar
 {
+    private readonly int tenantId;
+
+    public ApplicationContext(DbContextOptions<ApplicationContext> options, ITenantProvider? tenantProvider = default) : base(options)
+    {
+        tenantId = tenantProvider?.GetTenantId() ?? 0;
+    }
+
     public DbSet<Configuration> Configurations { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Grade> Grades { get; set; }
@@ -40,6 +47,8 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             x.Property(t => t.Name).HasMaxLength(100);
             x.Property(t => t.Value).HasMaxLength(500);
             x.HasIndex(t => t.Name).IsUnique();
+
+            AddTenancySupport(x);
         });
 
         modelBuilder.Entity<Teacher>(x =>
@@ -106,5 +115,35 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options) : 
             x.Property(t => t.Email).HasMaxLength(100);
             x.Property(t => t.Phone).HasMaxLength(100);
         });
+    }
+
+    private void AddTenancySupport(EntityTypeBuilder<Configuration> x)
+    {
+        x.Property("TenantId").IsRequired();
+        x.HasIndex("TenantId");
+        x.HasQueryFilter(t => EF.Property<int>(t, "TenantId") == tenantId);
+    }
+
+    public override int SaveChanges()
+    {
+        foreach (var entry in ChangeTracker.Entries<TenantEntity>())
+        {
+            if (entry.State == EntityState.Added)
+            {
+                var fieldInfo = GetTenantFieldInfo();
+                fieldInfo?.SetValue(entry.Entity, tenantId);
+            }
+        }
+
+        return base.SaveChanges();
+    }
+
+    static FieldInfo GetTenantFieldInfo()
+    {
+        // TODO: Implement caching for field info
+        var fieldInfo = typeof(TenantEntity).GetField("TenantId", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (fieldInfo == null)
+            throw new InvalidOperationException($"Field '{"TenantId"}' not found on type '{nameof(TenantEntity)}'.");
+        return fieldInfo;
     }
 }

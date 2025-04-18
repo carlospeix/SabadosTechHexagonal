@@ -32,9 +32,9 @@ public abstract class BaseTests
         options = optionsBuilder.Options;
     }
 
-    protected ApplicationContext CreateContext()
+    protected ApplicationContext CreateContext(ITenantProvider? tenantProvider = default)
     {
-        return new ApplicationContext(options);
+        return new ApplicationContext(options, tenantProvider);
     }
 
     protected void ClearDatabase(ApplicationContext dataContext)

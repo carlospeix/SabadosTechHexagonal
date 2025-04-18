@@ -5,12 +5,17 @@ namespace Tests;
 
 public class PersistenceTests : BaseTests
 {
+    const int GOOD_TENANT_ID = 8;
+    const int OTHER_TENANT_ID = 9;
+
     ApplicationContext dataContext;
+    TestTenantProvider tenantProvider;
 
     [SetUp]
     public void Setup()
     {
-        dataContext = CreateContext();
+        tenantProvider = new TestTenantProvider(GOOD_TENANT_ID);
+        dataContext = CreateContext(tenantProvider);
         ClearDatabase(dataContext);
     }
 
@@ -54,14 +59,14 @@ public class PersistenceTests : BaseTests
         var id = config.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         config = dataContext.Configurations.Find(id);
         config?.ChangeValue("new value");
         dataContext.SaveChanges();
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         config = dataContext.Configurations.Find(id);
 
@@ -378,4 +383,28 @@ public class PersistenceTests : BaseTests
 
     #endregion
 
+    #region Multitenancy
+
+    [Test]
+    public void MyTestMethod()
+    {
+        // Arrange
+        var dataContext = CreateContext(tenantProvider);
+
+        var config = dataContext.Configurations.Add(new Configuration("MyName", "A value")).Entity;
+
+        dataContext.SaveChanges();
+        var id = config.Id;
+
+        Assert.That(dataContext.Configurations.Find(id), Is.Not.Null);
+
+        dataContext.Dispose();
+
+        tenantProvider.SetTenantId(OTHER_TENANT_ID);
+        dataContext = CreateContext(tenantProvider);
+
+        Assert.That(dataContext.Configurations.Find(id), Is.Null);
+    }
+
+    #endregion
 }

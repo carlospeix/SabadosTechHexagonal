@@ -1,6 +1,6 @@
 ﻿namespace Model;
 
-public class Configuration
+public class Configuration : TenantEntity
 {
     public const string DISCIPLINARY_INBOX = "DISCIPLINARY_INBOX";
 
