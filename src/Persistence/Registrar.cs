@@ -1,6 +1,7 @@
 ﻿using Model;
 using Model.Ports.Driven;
 using System;
+using System.Linq.Expressions;
 
 namespace Persistence;
 
@@ -25,8 +26,8 @@ public class Registrar(ApplicationContext applicationContext) : IRegistrar
     public Configuration? ConfigurationByName(string name)
         => applicationContext.Configurations.FirstOrDefault(c => c.Name == name);
 
-    public IQueryable<Notification> PendingNotificationsBy(DateTime utcNow) =>
-        applicationContext.Notifications.Where(n => n.ScheduleAt <= utcNow && n.SentAt == null);
+    public IQueryable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter) =>
+        applicationContext.Notifications.Where(filter);
 
     public void AddNotification(Notification notification)
     {

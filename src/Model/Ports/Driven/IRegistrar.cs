@@ -1,4 +1,6 @@
-﻿namespace Model.Ports.Driven;
+﻿using System.Linq.Expressions;
+
+namespace Model.Ports.Driven;
 
 public interface IRegistrar
 {
@@ -13,6 +15,6 @@ public interface IRegistrar
 
     public Configuration? ConfigurationByName(string name);
 
-    public IQueryable<Notification> PendingNotificationsBy(DateTime utcNow);
+    public IQueryable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter);
     void AddNotification(Notification notification);
 }
