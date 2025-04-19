@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace Persistence;
 
@@ -24,6 +23,6 @@ public class ApplicationContextFactory : IDesignTimeDbContextFactory<Application
         optionsBuilder.LogTo(Console.WriteLine, [DbLoggerCategory.Database.Command.Name], LogLevel.Information)
                       .EnableSensitiveDataLogging();
         
-        return new ApplicationContext(optionsBuilder.Options);
+        return new ApplicationContext(optionsBuilder.Options, new ConstantTenantProvider());
     }
 }

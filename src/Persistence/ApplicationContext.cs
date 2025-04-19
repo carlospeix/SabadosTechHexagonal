@@ -11,9 +11,9 @@ public class ApplicationContext : DbContext, IRegistrar
     private readonly int tenantId;
     private readonly Action<TenantEntity, int> tenantIdSetter;
 
-    public ApplicationContext(DbContextOptions<ApplicationContext> options, ITenantProvider? tenantProvider = default) : base(options)
+    public ApplicationContext(DbContextOptions<ApplicationContext> options, ITenantProvider tenantProvider) : base(options)
     {
-        tenantId = tenantProvider?.GetTenantId() ?? 0;
+        tenantId = tenantProvider.GetTenantId();
         
         var tenantIdFieldInfo = typeof(TenantEntity).GetField(TENANT_ID_FIELD_NAME, BindingFlags.NonPublic | BindingFlags.Instance) ??
             throw new InvalidOperationException($"Field '{TENANT_ID_FIELD_NAME}' not found on type '{nameof(TenantEntity)}'.");
@@ -47,7 +47,7 @@ public class ApplicationContext : DbContext, IRegistrar
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+        // modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
 
         modelBuilder.Entity<Configuration>(x =>
         {

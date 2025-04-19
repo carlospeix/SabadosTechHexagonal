@@ -5,7 +5,7 @@ namespace WebApi;
 internal class HttpContextTenantProvider : ITenantProvider
 {
     private const string TenantIdHeaderName = "X-TenantId";
-    private readonly int[] AllowedTenants = { 0, 1, 9 };
+    private readonly int[] AllowedTenants = { 1, 8 };
 
     private readonly IHttpContextAccessor httpContextAccessor;
     //private readonly TenantSettings _tenantSettings;

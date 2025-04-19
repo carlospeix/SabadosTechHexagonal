@@ -9,12 +9,14 @@ public class ApiTests : BaseTests
     WebApplicationFactory<Program> app;
     TestTimeProvider testTimeProvider;
     ApplicationContext dataContext;
+    ITenantProvider tenantProvider;
     HttpClient client;
 
     [SetUp]
     public void Setup()
     {
-        dataContext = CreateContext();
+        tenantProvider = new ConstantTenantProvider();
+        dataContext = CreateContext(tenantProvider);
         ClearDatabase(dataContext);
 
         testTimeProvider = new TestTimeProvider(DateTime.UtcNow);

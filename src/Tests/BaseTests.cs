@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Persistence;
 
 namespace Tests;
@@ -32,7 +31,7 @@ public abstract class BaseTests
         options = optionsBuilder.Options;
     }
 
-    protected ApplicationContext CreateContext(ITenantProvider? tenantProvider = default)
+    protected ApplicationContext CreateContext(ITenantProvider tenantProvider)
     {
         return new ApplicationContext(options, tenantProvider);
     }

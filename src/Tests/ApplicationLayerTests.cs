@@ -12,12 +12,14 @@ public class ApplicationLayerTests : BaseTests
     IRegistrar registrar;
     TestNotificator notificator;
     TestTimeProvider testTimeProvider;
+    ITenantProvider tenantProvider;
     Notifications notifications;
 
     [SetUp]
     public void Setup()
     {
-        dataContext = CreateContext();
+        tenantProvider = new ConstantTenantProvider();
+        dataContext = CreateContext(tenantProvider);
         ClearDatabase(dataContext);
 
         registrar = dataContext;

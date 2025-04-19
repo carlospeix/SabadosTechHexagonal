@@ -5,16 +5,13 @@ namespace Tests;
 
 public class PersistenceTests : BaseTests
 {
-    const int GOOD_TENANT_ID = 8;
-    const int OTHER_TENANT_ID = 9;
-
     ApplicationContext dataContext;
-    TestTenantProvider tenantProvider;
+    ITenantProvider tenantProvider;
 
     [SetUp]
     public void Setup()
     {
-        tenantProvider = new TestTenantProvider(GOOD_TENANT_ID);
+        tenantProvider = new ConstantTenantProvider();
         dataContext = CreateContext(tenantProvider);
         ClearDatabase(dataContext);
     }
@@ -86,7 +83,7 @@ public class PersistenceTests : BaseTests
         var id = teacher.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         teacher = dataContext.Teachers.Find(id);
 
@@ -102,7 +99,7 @@ public class PersistenceTests : BaseTests
         var id = parent.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         parent = dataContext.Parents.Find(id);
 
@@ -118,7 +115,7 @@ public class PersistenceTests : BaseTests
         var id = grade.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         grade = dataContext.Grades.Find(id);
 
@@ -136,7 +133,7 @@ public class PersistenceTests : BaseTests
         var id = grade.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         grade = dataContext.Grades.Find(id);
 
@@ -159,7 +156,7 @@ public class PersistenceTests : BaseTests
         var id = teacher.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         Assert.Throws<DbUpdateException>(() =>
         {
@@ -178,7 +175,7 @@ public class PersistenceTests : BaseTests
         dataContext.SaveChanges();
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         dataContext.Grades.RemoveRange(dataContext.Grades);
         dataContext.SaveChanges();
@@ -195,7 +192,7 @@ public class PersistenceTests : BaseTests
         var id = student.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         student = dataContext.Students.Find(id);
 
@@ -213,7 +210,7 @@ public class PersistenceTests : BaseTests
         var id = grade.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         grade = dataContext.Grades.Find(id);
         Assert.That(grade?.Students.Count, Is.EqualTo(1));
@@ -233,7 +230,7 @@ public class PersistenceTests : BaseTests
         var id = student.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         student = dataContext.Students.Find(id);
         Assert.That(student, Is.Not.Null);
@@ -254,7 +251,7 @@ public class PersistenceTests : BaseTests
         var id = student.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         student = dataContext.Students.Find(id);
         Assert.That(student, Is.Not.Null);
@@ -280,7 +277,7 @@ public class PersistenceTests : BaseTests
         var id = student.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         student = dataContext.Students.Find(id);
         Assert.That(student, Is.Not.Null);
@@ -310,7 +307,7 @@ public class PersistenceTests : BaseTests
         var id = student.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         student = dataContext.Students.Find(id);
         parent1 = dataContext.Parents.First(p => p.Name == "Mariano");
@@ -341,7 +338,7 @@ public class PersistenceTests : BaseTests
         var id = notification.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         notification = dataContext.Notifications.Find(id);
 
@@ -363,7 +360,7 @@ public class PersistenceTests : BaseTests
         var id = notification.Id;
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         notification = dataContext.Notifications.Find(id);
         Assert.That(notification?.SentAt, Is.Null);
@@ -374,7 +371,7 @@ public class PersistenceTests : BaseTests
         dataContext.SaveChanges();
 
         dataContext.Dispose();
-        dataContext = CreateContext();
+        dataContext = CreateContext(tenantProvider);
 
         notification = dataContext.Notifications.Find(id);
 
@@ -386,10 +383,14 @@ public class PersistenceTests : BaseTests
     #region Multitenancy
 
     [Test]
-    public void MyTestMethod()
+    public void ShouldNotReturnAnEntityOwnedByADiferentTenant()
     {
+        const int MAIN_TENANT_ID = 8;
+        const int OTHER_TENANT_ID = 9;
+
         // Arrange
-        var dataContext = CreateContext(tenantProvider);
+        var testTenantProvider = new TestTenantProvider(MAIN_TENANT_ID);
+        var dataContext = CreateContext(testTenantProvider);
 
         var config = dataContext.Configurations.Add(new Configuration("MyName", "A value")).Entity;
 
@@ -400,8 +401,8 @@ public class PersistenceTests : BaseTests
 
         dataContext.Dispose();
 
-        tenantProvider.SetTenantId(OTHER_TENANT_ID);
-        dataContext = CreateContext(tenantProvider);
+        testTenantProvider.SetTenantId(OTHER_TENANT_ID);
+        dataContext = CreateContext(testTenantProvider);
 
         Assert.That(dataContext.Configurations.Find(id), Is.Null);
     }
