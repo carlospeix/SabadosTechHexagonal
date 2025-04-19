@@ -1,23 +1,32 @@
 ﻿using Model;
 using Model.Ports.Driven;
+using System;
 
 namespace Persistence;
 
-public class Registrar : IRegistrar
+public class Registrar(ApplicationContext applicationContext) : IRegistrar
 {
-    private readonly ApplicationContext applicationContext;
+    private readonly ApplicationContext applicationContext = applicationContext;
 
-    public Registrar(ApplicationContext applicationContext)
-    {
-        this.applicationContext = applicationContext;
-    }
+    public Teacher? TeacherById(int teacherId) =>
+        applicationContext.Teachers.FirstOrDefault(s => s.Id == teacherId);
 
-    public IQueryable<Teacher> Teachers => applicationContext.Teachers;
-    public IQueryable<Grade> Grades => applicationContext.Grades;
-    public IQueryable<Parent> Parents => applicationContext.Parents;
-    public IQueryable<Student> Students => applicationContext.Students;
-    public IQueryable<Configuration> Configurations => applicationContext.Configurations;
-    public IQueryable<Notification> Notifications => applicationContext.Notifications;
+    public IQueryable<Grade> AllGrades =>
+        applicationContext.Grades;
+    public Grade? GradeById(int gradeId) =>
+        applicationContext.Grades.FirstOrDefault(g => g.Id == gradeId);
+
+    public IQueryable<Parent> AllParents =>
+        applicationContext.Parents;
+
+    public Student? StudentById(int studentId) =>
+        applicationContext.Students.FirstOrDefault(s => s.Id == studentId);
+
+    public Configuration? ConfigurationByName(string name)
+        => applicationContext.Configurations.FirstOrDefault(c => c.Name == name);
+
+    public IQueryable<Notification> PendingNotificationsBy(DateTime utcNow) =>
+        applicationContext.Notifications.Where(n => n.ScheduleAt <= utcNow && n.SentAt == null);
 
     public void AddNotification(Notification notification)
     {

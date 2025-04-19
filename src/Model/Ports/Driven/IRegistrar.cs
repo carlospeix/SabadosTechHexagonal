@@ -2,11 +2,17 @@
 
 public interface IRegistrar
 {
-    public IQueryable<Teacher> Teachers { get; }
-    public IQueryable<Grade> Grades { get; }
-    public IQueryable<Parent> Parents { get; }
-    public IQueryable<Student> Students { get; }
-    public IQueryable<Configuration> Configurations { get; }
-    public IQueryable<Notification> Notifications { get; }
+    public Teacher? TeacherById(int teacherId);
+
+    public IQueryable<Grade> AllGrades { get; }
+    public Grade? GradeById(int gradeId);
+
+    public IQueryable<Parent> AllParents { get; }
+
+    public Student? StudentById(int studentId);
+
+    public Configuration? ConfigurationByName(string name);
+
+    public IQueryable<Notification> PendingNotificationsBy(DateTime utcNow);
     void AddNotification(Notification notification);
 }

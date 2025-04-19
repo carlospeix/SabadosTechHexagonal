@@ -41,7 +41,7 @@ public class Notifications : INotifications
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var grade = registrar.Grades.FirstOrDefault(grade => grade.Id == gradeId) ??
+        var grade = registrar.GradeById(gradeId) ??
             throw new ArgumentException("Invalid grade identifier", nameof(gradeId));
 
         var builder = new GradeNotificationBuilder(grade, message);
@@ -57,7 +57,7 @@ public class Notifications : INotifications
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var student = registrar.Students.FirstOrDefault(s => s.Id == studentId) ??
+        var student = registrar.StudentById(studentId) ??
             throw new ArgumentException("Invalid student identifier", nameof(studentId));
 
         var builder = new StudentNotificationBuilder(student, message);
@@ -73,10 +73,10 @@ public class Notifications : INotifications
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var student = registrar.Students.FirstOrDefault(s => s.Id == studentId) ??
+        var student = registrar.StudentById(studentId) ??
             throw new ArgumentException("Invalid student identifier", nameof(studentId));
 
-        var teacher = registrar.Teachers.FirstOrDefault(s => s.Id == teacherId) ??
+        var teacher = registrar.TeacherById(teacherId) ??
             throw new ArgumentException("Invalid teacher identifier", nameof(teacherId));
 
         var builder = new DisciplinaryNotificationBuilder(registrar, student, teacher, message);
@@ -85,9 +85,9 @@ public class Notifications : INotifications
         unitOfWork.SaveChanges();
     }
 
-    public void SendScheduledNotifications()
+    public void SendPendingNotifications()
     {
-        secretary.SendScheduledNotifications();
+        secretary.SendPendingNotifications();
 
         unitOfWork.SaveChanges();
     }

@@ -13,14 +13,14 @@ public class GeneralNotificationBuilder : NotificationBuilder
 
     protected override IEnumerable<Recipient> GetRecipients()
     {
-        foreach (var grade in registrar.Grades)
+        foreach (var grade in registrar.AllGrades)
         {
             foreach (var recipient in GradeRecipients(grade))
             {
                 yield return recipient;
             }
         }
-        foreach (var parent in registrar.Parents)
+        foreach (var parent in registrar.AllParents)
         {
             yield return parent.GetRecipient();
         }

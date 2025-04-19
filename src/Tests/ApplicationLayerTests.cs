@@ -104,7 +104,7 @@ public class ApplicationLayerTests : BaseTests
 
         // Simulate the passage of time and act
         testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
-        notifications.SendScheduledNotifications();
+        notifications.SendPendingNotifications();
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
@@ -124,14 +124,14 @@ public class ApplicationLayerTests : BaseTests
 
         // Simulate the passage of time and act
         testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
-        notifications.SendScheduledNotifications();
+        notifications.SendPendingNotifications();
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
         notificator.Reset();
 
         // Send again, should not send
-        notifications.SendScheduledNotifications();
+        notifications.SendPendingNotifications();
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.Zero);

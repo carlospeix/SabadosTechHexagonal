@@ -28,13 +28,8 @@ public class DisciplinaryNotificationBuilder : NotificationBuilder
 
     private Recipient DisciplinaryInboxRecipient()
     {
-        var config = registrar.Configurations
-            .FirstOrDefault(c => c.Name == Configuration.DISCIPLINARY_INBOX);
-
-        if (config is null)
-        {
+        var config = registrar.ConfigurationByName(Configuration.DISCIPLINARY_INBOX) ??
             throw new InvalidOperationException("Disciplinary inbox configuration not found");
-        }
 
         return new Recipient("Disciplinary ionbox", config.Value, "");
     }

@@ -23,7 +23,7 @@ public class BackgroundWorkerService : BackgroundService
             using (var scope = serviceProvider.CreateScope())
             {
                 var notifications = scope.ServiceProvider.GetRequiredService<INotifications>();
-                notifications.SendScheduledNotifications();
+                notifications.SendPendingNotifications();
             }
 
             await Task.Delay(TimeSpan.FromMilliseconds(2000), stoppingToken);

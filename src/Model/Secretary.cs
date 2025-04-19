@@ -22,10 +22,9 @@ public class Secretary
         notification.SendIfItIsTime(notificator, timeProvider);
     }
 
-    public void SendScheduledNotifications()
+    public void SendPendingNotifications()
     {
-        var pendingNotifications = registrar.Notifications
-            .Where(n => n.ScheduleAt <= timeProvider.UtcNow && n.SentAt == null);
+        var pendingNotifications = registrar.PendingNotificationsBy(timeProvider.UtcNow);
 
         foreach (var notification in pendingNotifications)
         {
