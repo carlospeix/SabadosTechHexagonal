@@ -90,7 +90,7 @@ public class ApplicationLayerTests : BaseTests
     }
 
     [Test]
-    public void FutureNotificationSchedule30MinutesAheadAndSent()
+    public async Task FutureNotificationSchedule30MinutesAheadAndSent()
     {
         // Arrange
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
@@ -104,14 +104,14 @@ public class ApplicationLayerTests : BaseTests
 
         // Simulate the passage of time and act
         testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
-        notifications.SendPendingNotifications();
+        await notifications.SendPendingNotifications(CancellationToken.None);
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 
     [Test]
-    public void FutureNotificationSchedule30MinutesAheadSentAndNotResent()
+    public async Task FutureNotificationSchedule30MinutesAheadSentAndNotResent()
     {
         // Arrange
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
@@ -124,14 +124,14 @@ public class ApplicationLayerTests : BaseTests
 
         // Simulate the passage of time and act
         testTimeProvider.TravelBy(TimeSpan.FromMinutes(35));
-        notifications.SendPendingNotifications();
+        await notifications.SendPendingNotifications(CancellationToken.None);
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
         notificator.Reset();
 
         // Send again, should not send
-        notifications.SendPendingNotifications();
+        await notifications.SendPendingNotifications(CancellationToken.None);
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.Zero);

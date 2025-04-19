@@ -1,6 +1,5 @@
 ﻿using Model;
 using Model.Ports.Driven;
-using System;
 using System.Linq.Expressions;
 
 namespace Persistence;
@@ -26,8 +25,8 @@ public class Registrar(ApplicationContext applicationContext) : IRegistrar
     public Configuration? ConfigurationByName(string name)
         => applicationContext.Configurations.FirstOrDefault(c => c.Name == name);
 
-    public IQueryable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter) =>
-        applicationContext.Notifications.Where(filter);
+    public IAsyncEnumerable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter) =>
+        applicationContext.Notifications.Where(filter).AsAsyncEnumerable();
 
     public void AddNotification(Notification notification)
     {

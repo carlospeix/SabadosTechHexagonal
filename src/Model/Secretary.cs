@@ -2,18 +2,11 @@
 
 namespace Model;
 
-public class Secretary
+public class Secretary(IRegistrar registrar, INotificator notificator, ITimeProvider timeProvider)
 {
-    private readonly IRegistrar registrar;
-    private readonly INotificator notificator;
-    private readonly ITimeProvider timeProvider;
-
-    public Secretary(IRegistrar registrar, INotificator notificator, ITimeProvider timeProvider)
-    {
-        this.registrar = registrar;
-        this.notificator = notificator;
-        this.timeProvider = timeProvider;
-    }
+    private readonly IRegistrar registrar = registrar;
+    private readonly INotificator notificator = notificator;
+    private readonly ITimeProvider timeProvider = timeProvider;
 
     public void SendNotification(Notification notification)
     {
@@ -22,13 +15,15 @@ public class Secretary
         notification.SendIfItIsTime(notificator, timeProvider);
     }
 
-    public void SendPendingNotifications()
+    public async Task SendPendingNotifications(CancellationToken cancellationToken)
     {
         var pendingNotifications = registrar.FilteredNotifications(
             n => n.ScheduleAt <= timeProvider.UtcNow && n.SentAt == null);
 
-        foreach (var notification in pendingNotifications)
+        await foreach (var notification in pendingNotifications)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             notification.SendIfItIsTime(notificator, timeProvider);
         }
     }

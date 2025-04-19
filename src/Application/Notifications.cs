@@ -5,21 +5,12 @@ using Persistence;
 
 namespace Application;
 
-public class Notifications : INotifications
+public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotificator notificator, ITimeProvider timeProvider) : INotifications
 {
-    private readonly UnitOfWork unitOfWork;
-    private readonly IRegistrar registrar;
-    private readonly ITimeProvider timeProvider;
-    private readonly Secretary secretary;
-
-    public Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotificator notificator, ITimeProvider timeProvider)
-    {
-        this.unitOfWork = unitOfWork;
-        this.registrar = registrar;
-        this.timeProvider = timeProvider;
-
-        secretary = new Secretary(registrar, notificator, timeProvider);
-    }
+    private readonly UnitOfWork unitOfWork = unitOfWork;
+    private readonly IRegistrar registrar = registrar;
+    private readonly ITimeProvider timeProvider = timeProvider;
+    private readonly Secretary secretary = new(registrar, notificator, timeProvider);
 
     public void SendGeneral(string message, DateTime scheduleAt = default)
     {
@@ -85,9 +76,9 @@ public class Notifications : INotifications
         unitOfWork.SaveChanges();
     }
 
-    public void SendPendingNotifications()
+    public async Task SendPendingNotifications(CancellationToken cancellationToken)
     {
-        secretary.SendPendingNotifications();
+        await secretary.SendPendingNotifications(cancellationToken);
 
         unitOfWork.SaveChanges();
     }

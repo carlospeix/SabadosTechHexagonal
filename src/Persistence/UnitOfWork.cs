@@ -1,11 +1,9 @@
 ﻿namespace Persistence
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork(ApplicationContext applicationContext) : IDisposable
     {
         private bool disposed = false;
-        private readonly ApplicationContext applicationContext;
-
-        public UnitOfWork(ApplicationContext applicationContext) => this.applicationContext = applicationContext;
+        private readonly ApplicationContext applicationContext = applicationContext;
 
         public void SaveChanges()
         {

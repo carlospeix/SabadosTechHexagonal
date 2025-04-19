@@ -2,16 +2,10 @@
 
 namespace WebApi;
 
-public class BackgroundWorkerService : BackgroundService
+public class BackgroundWorkerService(ILogger<BackgroundWorkerService> logger, IServiceProvider serviceProvider) : BackgroundService
 {
-    private readonly ILogger<BackgroundWorkerService> logger;
-    private readonly IServiceProvider serviceProvider;
-
-    public BackgroundWorkerService(ILogger<BackgroundWorkerService> logger, IServiceProvider serviceProvider)
-    {
-        this.logger = logger;
-        this.serviceProvider = serviceProvider;
-    }
+    private readonly ILogger<BackgroundWorkerService> logger = logger;
+    private readonly IServiceProvider serviceProvider = serviceProvider;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -23,7 +17,7 @@ public class BackgroundWorkerService : BackgroundService
             using (var scope = serviceProvider.CreateScope())
             {
                 var notifications = scope.ServiceProvider.GetRequiredService<INotifications>();
-                notifications.SendPendingNotifications();
+                await notifications.SendPendingNotifications(stoppingToken);
             }
 
             await Task.Delay(TimeSpan.FromMilliseconds(2000), stoppingToken);

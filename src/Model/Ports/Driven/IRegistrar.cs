@@ -15,6 +15,6 @@ public interface IRegistrar
 
     public Configuration? ConfigurationByName(string name);
 
-    public IQueryable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter);
+    public IAsyncEnumerable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter);
     void AddNotification(Notification notification);
 }
