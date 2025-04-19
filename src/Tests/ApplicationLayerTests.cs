@@ -22,7 +22,7 @@ public class ApplicationLayerTests : BaseTests
         dataContext = CreateContext(tenantProvider);
         ClearDatabase(dataContext);
 
-        registrar = dataContext;
+        registrar = new Registrar(dataContext);
         notificator = new();
         testTimeProvider = new TestTimeProvider(DateTime.UtcNow);
         notifications = new Notifications(registrar, notificator, testTimeProvider);

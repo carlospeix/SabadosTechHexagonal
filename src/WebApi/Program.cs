@@ -15,11 +15,13 @@ builder.Configuration
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddHostedService<BackgroundWorkerService>();
-builder.Services.AddDbContext<IRegistrar, ApplicationContext>(options =>
+builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SabadosTechHexagonal")));
+
+builder.Services.AddTransient<IRegistrar, Registrar>();
 builder.Services.AddSingleton<ITimeProvider, SystemTimeProvider>();
-builder.Services.AddTransient<INotificator, NullNotificator>();
 builder.Services.AddScoped<ITenantProvider, ConstantTenantProvider>();
+builder.Services.AddTransient<INotificator, NullNotificator>();
 builder.Services.AddTransient<INotifications, Notifications>();
 
 var app = builder.Build();

@@ -1,11 +1,10 @@
 ﻿using System.Reflection;
 using System.Reflection.Emit;
 using Model;
-using Model.Ports.Driven;
 
 namespace Persistence;
 
-public class ApplicationContext : DbContext, IRegistrar
+public class ApplicationContext : DbContext
 {
     private const string TENANT_ID_FIELD_NAME = "TenantId";
     private readonly int tenantId;
@@ -27,23 +26,6 @@ public class ApplicationContext : DbContext, IRegistrar
     public DbSet<Parent> Parents { get; set; }
     public DbSet<Student> Students { get; set; }
     public DbSet<Notification> Notifications { get; set; }
-
-    IQueryable<Teacher> IRegistrar.Teachers => Teachers;
-    IQueryable<Grade> IRegistrar.Grades => Grades;
-    IQueryable<Parent> IRegistrar.Parents => Parents;
-    IQueryable<Student> IRegistrar.Students => Students;
-    IQueryable<Configuration> IRegistrar.Configurations => Configurations;
-    IQueryable<Notification> IRegistrar.Notifications => Notifications;
-
-    void IRegistrar.AddNotification(Notification notification)
-    {
-        Notifications.Add(notification);
-    }
-
-    void IRegistrar.SaveChanges()
-    {
-        SaveChanges();
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

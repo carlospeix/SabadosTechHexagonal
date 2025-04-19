@@ -1,0 +1,8 @@
+
+dotnet ef migrations add XXXXXXX -s ./Persistence/ --context ApplicationContext
+
+dotnet ef migrations remove -s ./Persistence/ --context ApplicationContext
+
+dotnet ef database update -s ./Persistence/ --context ApplicationContext
+
+dotnet ef database drop -s ./Persistence/ --context ApplicationContext
