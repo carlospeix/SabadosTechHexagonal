@@ -1,6 +1,5 @@
-using Application;
 using Model;
-using Model.Ports.Driven;
+using Application;
 using Persistence;
 
 namespace Tests;
@@ -9,7 +8,6 @@ public class ApplicationLayerTests : BaseTests
 {
     ApplicationContext dataContext;
 
-    IRegistrar registrar;
     TestNotificator notificator;
     TestTimeProvider testTimeProvider;
     ITenantProvider tenantProvider;
@@ -22,10 +20,11 @@ public class ApplicationLayerTests : BaseTests
         dataContext = CreateContext(tenantProvider);
         ClearDatabase(dataContext);
 
-        registrar = new Registrar(dataContext);
+        var registrar = new Registrar(dataContext);
+        var unitOfWork = new UnitOfWork(dataContext);
         notificator = new();
         testTimeProvider = new TestTimeProvider(DateTime.UtcNow);
-        notifications = new Notifications(registrar, notificator, testTimeProvider);
+        notifications = new Notifications(unitOfWork, registrar, notificator, testTimeProvider);
     }
 
     [TearDown]

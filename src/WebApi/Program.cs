@@ -18,6 +18,7 @@ builder.Services.AddHostedService<BackgroundWorkerService>();
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SabadosTechHexagonal")));
 
+builder.Services.AddTransient<UnitOfWork>();
 builder.Services.AddTransient<IRegistrar, Registrar>();
 builder.Services.AddSingleton<ITimeProvider, SystemTimeProvider>();
 builder.Services.AddScoped<ITenantProvider, ConstantTenantProvider>();

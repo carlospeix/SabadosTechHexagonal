@@ -8,7 +8,5 @@ public interface IRegistrar
     public IQueryable<Student> Students { get; }
     public IQueryable<Configuration> Configurations { get; }
     public IQueryable<Notification> Notifications { get; }
-    // TODO: This should be in another place
     void AddNotification(Notification notification);
-    void SaveChanges();
 }

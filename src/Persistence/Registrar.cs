@@ -23,9 +23,4 @@ public class Registrar : IRegistrar
     {
         applicationContext.Notifications.Add(notification);
     }
-
-    public void SaveChanges()
-    {
-        applicationContext.SaveChanges();
-    }
 }

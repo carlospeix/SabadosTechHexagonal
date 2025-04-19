@@ -1,19 +1,23 @@
 ﻿using Model;
 using Model.Ports.Driven;
 using Model.Ports.Driving;
+using Persistence;
 
 namespace Application;
 
 public class Notifications : INotifications
 {
+    private readonly UnitOfWork unitOfWork;
     private readonly IRegistrar registrar;
     private readonly ITimeProvider timeProvider;
     private readonly Secretary secretary;
 
-    public Notifications(IRegistrar registrar, INotificator notificator, ITimeProvider timeProvider)
+    public Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotificator notificator, ITimeProvider timeProvider)
     {
+        this.unitOfWork = unitOfWork;
         this.registrar = registrar;
         this.timeProvider = timeProvider;
+
         secretary = new Secretary(registrar, notificator, timeProvider);
     }
 
@@ -27,7 +31,7 @@ public class Notifications : INotifications
         var builder = new GeneralNotificationBuilder(registrar, message, BringToNowPastScheduleDates(scheduleAt));
         secretary.SendNotification(builder.Build());
 
-        registrar.SaveChanges();
+        unitOfWork.SaveChanges();
     }
 
     public void SendToGrade(int gradeId, string message)
@@ -43,7 +47,7 @@ public class Notifications : INotifications
         var builder = new GradeNotificationBuilder(grade, message);
         secretary.SendNotification(builder.Build());
 
-        registrar.SaveChanges();
+        unitOfWork.SaveChanges();
     }
 
     public void SendStudent(int studentId, string message)
@@ -59,7 +63,7 @@ public class Notifications : INotifications
         var builder = new StudentNotificationBuilder(student, message);
         secretary.SendNotification(builder.Build());
 
-        registrar.SaveChanges();
+        unitOfWork.SaveChanges();
     }
 
     public void SendDisciplinary(int studentId, int teacherId, string message)
@@ -78,14 +82,14 @@ public class Notifications : INotifications
         var builder = new DisciplinaryNotificationBuilder(registrar, student, teacher, message);
         secretary.SendNotification(builder.Build());
 
-        registrar.SaveChanges();
+        unitOfWork.SaveChanges();
     }
 
     public void SendScheduledNotifications()
     {
         secretary.SendScheduledNotifications();
 
-        registrar.SaveChanges();
+        unitOfWork.SaveChanges();
     }
 
     private DateTime BringToNowPastScheduleDates(DateTime scheduleAt)
