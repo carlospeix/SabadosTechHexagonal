@@ -11,18 +11,15 @@ public class GeneralNotificationBuilder : NotificationBuilder
         this.registrar = registrar;
     }
 
-    protected override IEnumerable<Recipient> GetRecipients()
+    protected override void AddRecipientsTo(Notification notification)
     {
         foreach (var grade in registrar.AllGrades)
         {
-            foreach (var recipient in GradeRecipients(grade))
-            {
-                yield return recipient;
-            }
+            AddGradeRecipientsTo(grade, notification);
         }
         foreach (var parent in registrar.AllParents)
         {
-            yield return parent.GetRecipient();
+            notification.AddRecipient(parent.Name, parent.Email, parent.Phone);
         }
     }
 }

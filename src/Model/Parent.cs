@@ -20,6 +20,4 @@ public class Parent
         Email = email;
         Phone = phone;
     }
-
-    public Recipient GetRecipient() => new(Name, Email, Phone);
 }

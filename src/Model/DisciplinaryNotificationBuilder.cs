@@ -15,22 +15,14 @@ public class DisciplinaryNotificationBuilder : NotificationBuilder
         this.teacher = teacher;
     }
 
-    protected override IEnumerable<Recipient> GetRecipients()
+    protected override void AddRecipientsTo(Notification notification)
     {
-        foreach (var recipient in StudentRecipients(student))
-        {
-            yield return recipient;
-        }
-        yield return teacher.GetRecipient();
-        yield return DisciplinaryInboxRecipient();
-    }
+        AddStudentRecipientsTo(student, notification);
+        notification.AddRecipient(teacher.Name, teacher.Email, teacher.Phone);
 
-    private Recipient DisciplinaryInboxRecipient()
-    {
-        // TODO: Transform this to async
         var config = registrar.ConfigurationByName(Configuration.DISCIPLINARY_INBOX) ??
             throw new InvalidOperationException("Disciplinary inbox configuration not found");
 
-        return new Recipient("Disciplinary inbox", config.Value, "");
+        notification.AddRecipient("Disciplinary inbox", config.Value, "");
     }
 }

@@ -11,8 +11,9 @@ public class Recipient
 
     private Recipient() { }
 
-    public Recipient(string name, string email, string phone)
+    public Recipient(Notification notification, string name, string email, string phone)
     {
+        Notification = notification;
         Name = name;
         Email = email;
         Phone = phone;

@@ -15,11 +15,15 @@ public class Notification
 
     private Notification() { }
 
-    public Notification(IEnumerable<Recipient> recipients, string message, DateTime scheduleAt)
+    public Notification(string message, DateTime scheduleAt)
     {
-        this.recipients = [.. recipients];
         Message = message;
         ScheduleAt = scheduleAt;
+    }
+
+    public void AddRecipient(string name, string email, string phone)
+    {
+        recipients.Add(new Recipient(this, name, email, phone));
     }
 
     public async Task SendIfItIsTime(INotificator notificator, ITimeProvider timeProvider)

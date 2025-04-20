@@ -9,11 +9,8 @@ public class GradeNotificationBuilder : NotificationBuilder
         this.grade = grade;
     }
 
-    protected override IEnumerable<Recipient> GetRecipients()
+    protected override void AddRecipientsTo(Notification notification)
     {
-        foreach (var recipient in GradeRecipients(grade))
-        {
-            yield return recipient;
-        }
+        AddGradeRecipientsTo(grade, notification);
     }
 }

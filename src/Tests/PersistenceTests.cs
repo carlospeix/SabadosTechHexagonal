@@ -357,12 +357,11 @@ public class PersistenceTests : BaseTests
     [Test]
     public void CanPersistANotification()
     {
-        var recipients = new List<Recipient> 
-        {
-            new("Teacher 1", "teacher-1@school.edu", "111"),
-            new("Teacher 2", "teacher-2@school.edu", "222")
-        };
-        var notification = dataContext.Notifications.Add(new Notification(recipients, "Hello world", DateTime.UtcNow)).Entity;
+        var notification = new Notification("Hello world", DateTime.UtcNow);
+        notification.AddRecipient("Teacher 1", "teacher-1@school.edu", "111");
+        notification.AddRecipient("Teacher 2", "teacher-2@school.edu", "222");
+
+        dataContext.Notifications.Add(notification);
 
         dataContext.SaveChanges();
         var id = notification.Id;
@@ -379,14 +378,13 @@ public class PersistenceTests : BaseTests
     [Test]
     public void PersistSentAtTime()
     {
-        var recipients = new List<Recipient>
-        {
-            new("Teacher 1", "teacher-1@school.edu", "111"),
-            new("Teacher 2", "teacher-2@school.edu", "222")
-        };
-        var notification = dataContext.Notifications.Add(new Notification(recipients, "Hello world", DateTime.UtcNow)).Entity;
-        dataContext.SaveChanges();
+        var notification = new Notification("Hello world", DateTime.UtcNow);
+        notification.AddRecipient("Teacher 1", "teacher-1@school.edu", "111");
+        notification.AddRecipient("Teacher 2", "teacher-2@school.edu", "222");
 
+        dataContext.Notifications.Add(notification);
+
+        dataContext.SaveChanges();
         var id = notification.Id;
 
         dataContext.Dispose();

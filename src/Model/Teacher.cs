@@ -16,6 +16,4 @@ public class Teacher
         Email = email;
         Phone = phone;
     }
-
-    public Recipient GetRecipient() => new(Name, Email, Phone);
 }
