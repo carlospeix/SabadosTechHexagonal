@@ -4,17 +4,20 @@ namespace Model.Ports.Driven;
 
 public interface IRegistrar
 {
-    public Teacher? TeacherById(int teacherId);
+    public Task<Teacher?> TeacherById(int teacherId);
 
+    // TODO: Make async
     public IQueryable<Grade> AllGrades { get; }
-    public Grade? GradeById(int gradeId);
+    public Task<Grade?> GradeById(int gradeId);
 
+    // TODO: Make async
     public IQueryable<Parent> AllParents { get; }
 
-    public Student? StudentById(int studentId);
+    public Task<Student?> StudentById(int studentId);
 
+    // TODO: Make async
     public Configuration? ConfigurationByName(string name);
 
     public IAsyncEnumerable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter);
-    void AddNotification(Notification notification);
+    public void AddNotification(Notification notification);
 }

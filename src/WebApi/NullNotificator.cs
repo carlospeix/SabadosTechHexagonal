@@ -5,11 +5,13 @@ namespace WebApi;
 
 public class NullNotificator : INotificator
 {
-    public void Send(IEnumerable<Recipient> recipients, string message)
+    public Task Send(IEnumerable<Recipient> recipients, string message)
     {
         foreach (var _ in recipients)
         {
             // noop
         }
+
+        return Task.CompletedTask;
     }
 }

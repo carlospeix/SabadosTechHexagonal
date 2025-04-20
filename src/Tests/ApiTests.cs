@@ -53,7 +53,7 @@ public class ApiTests : BaseTests
         var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
 
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/general", new { Message = "Hello World" });
@@ -101,7 +101,7 @@ public class ApiTests : BaseTests
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         grade.AddSubject(teacher, "History");
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/grade",
@@ -117,7 +117,7 @@ public class ApiTests : BaseTests
     {
         // Arrange
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/grade",
@@ -146,7 +146,7 @@ public class ApiTests : BaseTests
     {
         // Arrange
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/grade",
@@ -173,7 +173,7 @@ public class ApiTests : BaseTests
         student.AddParent(parent2);
         grade.AddStudent(student);
 
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/grade",
@@ -200,7 +200,7 @@ public class ApiTests : BaseTests
         student.AddParent(parent1);
         student.AddParent(parent2);
 
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
@@ -216,7 +216,7 @@ public class ApiTests : BaseTests
     {
         // Arrange
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
@@ -245,7 +245,7 @@ public class ApiTests : BaseTests
     {
         // Arrange
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
@@ -272,7 +272,7 @@ public class ApiTests : BaseTests
         var parent = new Parent("Mariano", "john@gmail.com", "1111");
         student.AddParent(parent);
 
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
@@ -292,7 +292,7 @@ public class ApiTests : BaseTests
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
@@ -308,7 +308,7 @@ public class ApiTests : BaseTests
         // Arrange
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
         
         const int NON_EXISTENT_STUDENT_ID = 100;
 
@@ -326,7 +326,7 @@ public class ApiTests : BaseTests
         // Arrange
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         const int NON_EXISTENT_TEACHER_ID = 100;
 
@@ -360,7 +360,7 @@ public class ApiTests : BaseTests
         // Arrange
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
@@ -379,7 +379,7 @@ public class ApiTests : BaseTests
         var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
 
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync();
 
         // Act
         var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);

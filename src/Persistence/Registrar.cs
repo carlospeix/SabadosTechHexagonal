@@ -8,22 +8,22 @@ public class Registrar(ApplicationContext applicationContext) : IRegistrar
 {
     private readonly ApplicationContext applicationContext = applicationContext;
 
-    public Teacher? TeacherById(int teacherId) =>
-        applicationContext.Teachers.FirstOrDefault(s => s.Id == teacherId);
+    public async Task<Teacher?> TeacherById(int teacherId) =>
+        await applicationContext.Teachers.FirstOrDefaultAsync(s => s.Id == teacherId);
 
     public IQueryable<Grade> AllGrades =>
         applicationContext.Grades;
-    public Grade? GradeById(int gradeId) =>
-        applicationContext.Grades.FirstOrDefault(g => g.Id == gradeId);
+    public async Task<Grade?> GradeById(int gradeId) =>
+        await applicationContext.Grades.FirstOrDefaultAsync(g => g.Id == gradeId);
 
     public IQueryable<Parent> AllParents =>
         applicationContext.Parents;
 
-    public Student? StudentById(int studentId) =>
-        applicationContext.Students.FirstOrDefault(s => s.Id == studentId);
+    public async Task<Student?> StudentById(int studentId) =>
+        await applicationContext.Students.FirstOrDefaultAsync(s => s.Id == studentId);
 
-    public Configuration? ConfigurationByName(string name)
-        => applicationContext.Configurations.FirstOrDefault(c => c.Name == name);
+    public Configuration? ConfigurationByName(string name) =>
+        applicationContext.Configurations.FirstOrDefault(c => c.Name == name);
 
     public IAsyncEnumerable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter) =>
         applicationContext.Notifications.Where(filter).AsAsyncEnumerable();

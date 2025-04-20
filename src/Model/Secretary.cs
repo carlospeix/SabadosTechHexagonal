@@ -8,11 +8,11 @@ public class Secretary(IRegistrar registrar, INotificator notificator, ITimeProv
     private readonly INotificator notificator = notificator;
     private readonly ITimeProvider timeProvider = timeProvider;
 
-    public void SendNotification(Notification notification)
+    public async Task SendNotification(Notification notification)
     {
         registrar.AddNotification(notification);
 
-        notification.SendIfItIsTime(notificator, timeProvider);
+        await notification.SendIfItIsTime(notificator, timeProvider);
     }
 
     public async Task SendPendingNotifications(CancellationToken cancellationToken)
@@ -24,7 +24,7 @@ public class Secretary(IRegistrar registrar, INotificator notificator, ITimeProv
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            notification.SendIfItIsTime(notificator, timeProvider);
+            await notification.SendIfItIsTime(notificator, timeProvider);
         }
     }
 }

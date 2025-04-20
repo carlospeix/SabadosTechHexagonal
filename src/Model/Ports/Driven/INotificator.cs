@@ -2,5 +2,5 @@
 
 public interface INotificator
 {
-    public void Send(IEnumerable<Recipient> recipients, string message);
+    public Task Send(IEnumerable<Recipient> recipients, string message);
 }

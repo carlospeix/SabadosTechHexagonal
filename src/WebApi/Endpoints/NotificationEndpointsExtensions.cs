@@ -10,9 +10,9 @@ public static class NotificationEndpointsExtensions
 
         apiV1.MapPost("/notifications/general", (NotificationRequest request , INotifications notifications) =>
         {
-            return CommonHandler(request, () =>
+            return CommonHandler(request, async () =>
             {
-                notifications.SendGeneral(Sanitize(request.Message), request.ScheduleAt);
+                await notifications.SendGeneral(Sanitize(request.Message), request.ScheduleAt);
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
                 return Results.Created($"/api/comunications/general/{response.Id}", response);
             });
@@ -25,9 +25,9 @@ public static class NotificationEndpointsExtensions
 
         apiV1.MapPost("/notifications/grade", (NotificationRequest request, INotifications notifications) =>
         {
-            return CommonHandler(request, () =>
+            return CommonHandler(request, async () =>
             {
-                notifications.SendToGrade(request.GradeId, Sanitize(request.Message));
+                await notifications.SendToGrade(request.GradeId, Sanitize(request.Message));
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
                 return Results.Created($"/api/comunications/grade/{response.Id}", response);
             });
@@ -40,9 +40,9 @@ public static class NotificationEndpointsExtensions
 
         apiV1.MapPost("/notifications/student", (NotificationRequest request, INotifications notifications) =>
         {
-            return CommonHandler(request, () =>
+            return CommonHandler(request, async () =>
             {
-                notifications.SendStudent(request.StudentId, Sanitize(request.Message));
+                await notifications.SendStudent(request.StudentId, Sanitize(request.Message));
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
                 return Results.Created($"/api/comunications/student/{response.Id}", response);
             });
@@ -55,9 +55,9 @@ public static class NotificationEndpointsExtensions
 
         apiV1.MapPost("/notifications/disciplinary", (NotificationRequest request, INotifications notifications) =>
         {
-            return CommonHandler(request, () =>
+            return CommonHandler(request, async () =>
             {
-                notifications.SendDisciplinary(request.StudentId, request.TeacherId, Sanitize(request.Message));
+                await notifications.SendDisciplinary(request.StudentId, request.TeacherId, Sanitize(request.Message));
                 var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
                 return Results.Created($"/api/comunications/disciplinary/{response.Id}", response);
             });
@@ -75,7 +75,7 @@ public static class NotificationEndpointsExtensions
         return parameter;
     }
 
-    private static IResult CommonHandler(NotificationRequest request, Func<IResult> innerHandler)
+    private static async Task<IResult> CommonHandler(NotificationRequest request, Func<Task<IResult>> innerHandler)
     {
         try
         {
@@ -84,7 +84,7 @@ public static class NotificationEndpointsExtensions
                 throw new Exception();
             }
 
-            return innerHandler();
+            return await innerHandler();
         }
         catch (ArgumentException e)
         {

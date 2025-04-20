@@ -1,31 +1,30 @@
-﻿namespace Persistence
+﻿namespace Persistence;
+
+public class UnitOfWork(ApplicationContext applicationContext) : IDisposable
 {
-    public class UnitOfWork(ApplicationContext applicationContext) : IDisposable
+    private readonly ApplicationContext applicationContext = applicationContext;
+    private bool disposed = false;
+
+    public async Task SaveChangesAsync()
     {
-        private bool disposed = false;
-        private readonly ApplicationContext applicationContext = applicationContext;
+        await applicationContext.SaveChangesAsync();
+    }
 
-        public void SaveChanges()
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposed)
         {
-            applicationContext.SaveChanges();
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    applicationContext.Dispose();
-                }
-                disposed = true;
+                applicationContext.Dispose();
             }
+            disposed = true;
         }
+    }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

@@ -12,7 +12,7 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
     private readonly ITimeProvider timeProvider = timeProvider;
     private readonly Secretary secretary = new(registrar, notificator, timeProvider);
 
-    public void SendGeneral(string message, DateTime scheduleAt = default)
+    public async Task SendGeneral(string message, DateTime scheduleAt = default)
     {
         if (string.IsNullOrEmpty(message))
         {
@@ -20,67 +20,67 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
         }
 
         var builder = new GeneralNotificationBuilder(registrar, message, BringToNowPastScheduleDates(scheduleAt));
-        secretary.SendNotification(builder.Build());
+        await secretary.SendNotification(builder.Build());
 
-        unitOfWork.SaveChanges();
+        await unitOfWork.SaveChangesAsync();
     }
 
-    public void SendToGrade(int gradeId, string message)
+    public async Task SendToGrade(int gradeId, string message)
     {
         if (string.IsNullOrEmpty(message))
         {
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var grade = registrar.GradeById(gradeId) ??
+        var grade = await registrar.GradeById(gradeId) ??
             throw new ArgumentException("Invalid grade identifier", nameof(gradeId));
 
         var builder = new GradeNotificationBuilder(grade, message);
-        secretary.SendNotification(builder.Build());
+        await secretary.SendNotification(builder.Build());
 
-        unitOfWork.SaveChanges();
+        await unitOfWork.SaveChangesAsync();
     }
 
-    public void SendStudent(int studentId, string message)
+    public async Task SendStudent(int studentId, string message)
     {
         if (string.IsNullOrEmpty(message))
         {
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var student = registrar.StudentById(studentId) ??
+        var student = await registrar.StudentById(studentId) ??
             throw new ArgumentException("Invalid student identifier", nameof(studentId));
 
         var builder = new StudentNotificationBuilder(student, message);
-        secretary.SendNotification(builder.Build());
+        await secretary.SendNotification(builder.Build());
 
-        unitOfWork.SaveChanges();
+        await unitOfWork.SaveChangesAsync();
     }
 
-    public void SendDisciplinary(int studentId, int teacherId, string message)
+    public async Task SendDisciplinary(int studentId, int teacherId, string message)
     {
         if (string.IsNullOrEmpty(message))
         {
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var student = registrar.StudentById(studentId) ??
+        var student = await registrar.StudentById(studentId) ??
             throw new ArgumentException("Invalid student identifier", nameof(studentId));
 
-        var teacher = registrar.TeacherById(teacherId) ??
+        var teacher = await registrar.TeacherById(teacherId) ??
             throw new ArgumentException("Invalid teacher identifier", nameof(teacherId));
 
         var builder = new DisciplinaryNotificationBuilder(registrar, student, teacher, message);
-        secretary.SendNotification(builder.Build());
+        await secretary.SendNotification(builder.Build());
 
-        unitOfWork.SaveChanges();
+        await unitOfWork.SaveChangesAsync();
     }
 
     public async Task SendPendingNotifications(CancellationToken cancellationToken)
     {
         await secretary.SendPendingNotifications(cancellationToken);
 
-        unitOfWork.SaveChanges();
+        await unitOfWork.SaveChangesAsync();
     }
 
     private DateTime BringToNowPastScheduleDates(DateTime scheduleAt)

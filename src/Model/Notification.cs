@@ -22,11 +22,11 @@ public class Notification
         ScheduleAt = scheduleAt;
     }
 
-    public void SendIfItIsTime(INotificator notificator, ITimeProvider timeProvider)
+    public async Task SendIfItIsTime(INotificator notificator, ITimeProvider timeProvider)
     {
         if (ShouldSendAt(timeProvider.UtcNow))
         {
-            notificator.Send(Recipients, Message);
+            await notificator.Send(Recipients, Message);
             MarkAsSentAt(timeProvider.UtcNow);
         }
     }

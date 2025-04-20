@@ -34,36 +34,36 @@ public class ApplicationLayerTests : BaseTests
     }
 
     [Test]
-    public void SendNoNotificationWhenNoRecipients()
+    public async Task SendNoNotificationWhenNoRecipients()
     {
-        notifications.SendGeneral("Hello World");
+        await notifications.SendGeneral("Hello World");
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(0));
     }
 
     [Test]
-    public void SendGeneralNotificationWithJustTeachersRegistered()
+    public async Task SendGeneralNotificationWithJustTeachersRegistered()
     {
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         grade.AddSubject(teacher, "History");
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync(CancellationToken.None);
 
-        notifications.SendGeneral("Hello World");
+        await notifications.SendGeneral("Hello World");
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(1));
     }
 
     [Test]
-    public void SendGeneralNotificationWithTeachersAndParentsRegistered()
+    public async Task SendGeneralNotificationWithTeachersAndParentsRegistered()
     {
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         grade.AddSubject(teacher, "History");
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", ""));
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync(CancellationToken.None);
 
-        notifications.SendGeneral("Hello World");
+        await notifications.SendGeneral("Hello World");
 
         Assert.That(notificator.NotificationsSent, Is.EqualTo(2));
     }
@@ -71,19 +71,19 @@ public class ApplicationLayerTests : BaseTests
     [Test]
     public void ShouldThrowIfMessageIsEmpty()
     {
-        Assert.Throws<ArgumentException>(() => notifications.SendGeneral(""));
+        Assert.ThrowsAsync<ArgumentException>(async () => await notifications.SendGeneral(""));
     }
 
     [Test]
-    public void FutureNotificationHappyPath()
+    public async Task FutureNotificationHappyPath()
     {
         // Arrange
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync(CancellationToken.None);
 
         // Act
         var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);
-        notifications.SendGeneral("Hello World", scheduleAt);
+        await notifications.SendGeneral("Hello World", scheduleAt);
 
         // Assert
         Assert.That(notificator.NotificationsSent, Is.Zero);
@@ -94,11 +94,11 @@ public class ApplicationLayerTests : BaseTests
     {
         // Arrange
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync(CancellationToken.None);
 
         // Act
         var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);
-        notifications.SendGeneral("Hello World", scheduleAt);
+        await notifications.SendGeneral("Hello World", scheduleAt);
         Assert.That(notificator.NotificationsSent, Is.EqualTo(0));
         notificator.Reset();
 
@@ -115,11 +115,11 @@ public class ApplicationLayerTests : BaseTests
     {
         // Arrange
         dataContext.Parents.Add(new Parent("Mariano", "john@gmail.com", "1111"));
-        dataContext.SaveChanges();
+        await dataContext.SaveChangesAsync(CancellationToken.None);
 
         // Act
         var scheduleAt = testTimeProvider.UtcNow.AddMinutes(30);
-        notifications.SendGeneral("Hello World", scheduleAt);
+        await notifications.SendGeneral("Hello World", scheduleAt);
         Assert.That(notificator.NotificationsSent, Is.Zero);
 
         // Simulate the passage of time and act

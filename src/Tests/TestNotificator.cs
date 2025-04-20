@@ -19,9 +19,10 @@ internal class TestNotificator : INotificator
         this.logger = logger;
     }
 
-    public void Send(IEnumerable<Recipient> recipients, string message)
+    public Task Send(IEnumerable<Recipient> recipients, string message)
     {
         Reset();
+
         foreach (var recipient in recipients)
         {
             logger.LogInformation(
@@ -29,6 +30,8 @@ internal class TestNotificator : INotificator
                 message, recipient.Name, recipient.Email, recipient.Phone);
             notificationCount++;
         }
+
+        return Task.CompletedTask;
     }
 
     internal int NotificationsSent()

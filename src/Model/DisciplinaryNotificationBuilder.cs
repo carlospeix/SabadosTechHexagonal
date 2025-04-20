@@ -16,7 +16,6 @@ public class DisciplinaryNotificationBuilder : NotificationBuilder
     }
 
     protected override IEnumerable<Recipient> GetRecipients()
-
     {
         foreach (var recipient in StudentRecipients(student))
         {
@@ -28,9 +27,10 @@ public class DisciplinaryNotificationBuilder : NotificationBuilder
 
     private Recipient DisciplinaryInboxRecipient()
     {
+        // TODO: Transform this to async
         var config = registrar.ConfigurationByName(Configuration.DISCIPLINARY_INBOX) ??
             throw new InvalidOperationException("Disciplinary inbox configuration not found");
 
-        return new Recipient("Disciplinary ionbox", config.Value, "");
+        return new Recipient("Disciplinary inbox", config.Value, "");
     }
 }
