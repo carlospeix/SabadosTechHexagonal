@@ -220,6 +220,36 @@ public class PersistenceTests : BaseTests
     }
 
     [Test]
+    public void AddingTheSameStudentToAGradeHasNoEffect()
+    {
+        var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
+        var student = new Student("Student 1");
+        grade.AddStudent(student);
+
+        dataContext.SaveChanges();
+        var gradeId = grade.Id;
+        var studentId = student.Id;
+
+        dataContext.Dispose();
+        dataContext = CreateContext(tenantProvider);
+
+        grade = dataContext.Grades.Find(gradeId);
+        Assert.That(grade?.Students.Count, Is.EqualTo(1));
+
+        student = dataContext.Students.Find(studentId);
+        Assert.That(student, Is.Not.Null);
+
+        grade.AddStudent(student);
+        dataContext.SaveChanges();
+
+        dataContext.Dispose();
+        dataContext = CreateContext(tenantProvider);
+
+        grade = dataContext.Grades.Find(gradeId);
+        Assert.That(grade?.Students.Count, Is.EqualTo(1));
+    }
+
+    [Test]
     public void CanAddAParentToAStudent()
     {
         var student = dataContext.Students.Add(new Student("Student 1")).Entity;
