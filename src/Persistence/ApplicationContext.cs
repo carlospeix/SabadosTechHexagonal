@@ -107,24 +107,38 @@ public class ApplicationContext : DbContext
         });
     }
 
-    private void AddTenancySupport(EntityTypeBuilder<Configuration> x)
+    public override int SaveChanges()
     {
-        x.Property(TENANT_ID_FIELD_NAME).IsRequired();
-        x.HasIndex(TENANT_ID_FIELD_NAME);
-        x.HasQueryFilter(t => EF.Property<int>(t, TENANT_ID_FIELD_NAME) == tenantId);
+        AddTenantIdToAddedEntities(CancellationToken.None);
+
+        return base.SaveChanges();
     }
 
-    public override int SaveChanges()
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        AddTenantIdToAddedEntities(cancellationToken);
+
+        return base.SaveChangesAsync(cancellationToken);    
+    }
+
+    private void AddTenantIdToAddedEntities(CancellationToken cancellationToken)
     {
         foreach (var entry in ChangeTracker.Entries<TenantEntity>())
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (entry.State == EntityState.Added)
             {
                 tenantIdSetter(entry.Entity, tenantId);
             }
         }
+    }
 
-        return base.SaveChanges();
+    private void AddTenancySupport(EntityTypeBuilder<Configuration> x)
+    {
+        x.Property(TENANT_ID_FIELD_NAME).IsRequired();
+        x.HasIndex(TENANT_ID_FIELD_NAME);
+        x.HasQueryFilter(t => EF.Property<int>(t, TENANT_ID_FIELD_NAME) == tenantId);
     }
 
     private Action<S, T> CreateSetter<S, T>(FieldInfo field)
