@@ -42,7 +42,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapNotificationsEndPoints();
+app.MapNotificationsEndpoints();
 
 app.Run();
 

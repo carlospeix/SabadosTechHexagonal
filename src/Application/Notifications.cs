@@ -25,7 +25,7 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
         await unitOfWork.SaveChangesAsync();
     }
 
-    public async Task SendToGrade(int gradeId, string message)
+    public async Task SendGrade(int gradeId, string message)
     {
         if (string.IsNullOrEmpty(message))
         {

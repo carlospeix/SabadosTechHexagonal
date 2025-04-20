@@ -4,73 +4,82 @@ namespace WebApi.Endpoints;
 
 public static class NotificationEndpointsExtensions
 {
-    public static void MapNotificationsEndPoints(this IEndpointRouteBuilder app)
+    public static void MapNotificationsEndpoints(this IEndpointRouteBuilder app)
     {
         var apiV1 = app.MapGroup("/api/v1");
+        var notificationsGroup = apiV1.MapGroup("notifications");
 
-        apiV1.MapPost("/notifications/general", (NotificationRequest request , INotifications notifications) =>
-        {
-            return CommonHandler(request, async () =>
-            {
-                await notifications.SendGeneral(Sanitize(request.Message), request.ScheduleAt);
-                var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
-                return Results.Created($"/api/comunications/general/{response.Id}", response);
-            });
-        })
-        .Produces<NotificationResponse>(StatusCodes.Status201Created)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithName("SubmitGeneralNotification")
-        .WithOpenApi();
+        notificationsGroup.MapPost("general", CreateGeneralNotification)
+            .Produces<NotificationResponse>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithName(nameof(CreateGeneralNotification))
+            .WithOpenApi();
 
-        apiV1.MapPost("/notifications/grade", (NotificationRequest request, INotifications notifications) =>
-        {
-            return CommonHandler(request, async () =>
-            {
-                await notifications.SendToGrade(request.GradeId, Sanitize(request.Message));
-                var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
-                return Results.Created($"/api/comunications/grade/{response.Id}", response);
-            });
-        })
-        .Produces<NotificationResponse>(StatusCodes.Status201Created)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithName("SubmitGradeNotification")
-        .WithOpenApi();
+        notificationsGroup.MapPost("grade", CreateGradelNotification)
+            .Produces<NotificationResponse>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithName(nameof(CreateGradelNotification))
+            .WithOpenApi();
 
-        apiV1.MapPost("/notifications/student", (NotificationRequest request, INotifications notifications) =>
-        {
-            return CommonHandler(request, async () =>
-            {
-                await notifications.SendStudent(request.StudentId, Sanitize(request.Message));
-                var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
-                return Results.Created($"/api/comunications/student/{response.Id}", response);
-            });
-        })
-        .Produces<NotificationResponse>(StatusCodes.Status201Created)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithName("SubmitStudentNotification")
-        .WithOpenApi();
+        notificationsGroup.MapPost("student", CreateStudentNotification)
+            .Produces<NotificationResponse>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithName(nameof(CreateStudentNotification))
+            .WithOpenApi();
 
-        apiV1.MapPost("/notifications/disciplinary", (NotificationRequest request, INotifications notifications) =>
+        notificationsGroup.MapPost("disciplinary", CreateDisciplinaryNotification)
+            .Produces<NotificationResponse>(StatusCodes.Status201Created)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status500InternalServerError)
+            .WithName(nameof(CreateDisciplinaryNotification))
+            .WithOpenApi();
+    }
+
+    private static async Task<IResult> CreateGeneralNotification(NotificationRequest request, INotifications notifications)
+    {
+        return await CommonHandler(request, async () =>
         {
-            return CommonHandler(request, async () =>
-            {
-                await notifications.SendDisciplinary(request.StudentId, request.TeacherId, Sanitize(request.Message));
-                var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
-                return Results.Created($"/api/comunications/disciplinary/{response.Id}", response);
-            });
-        })
-        .Produces<NotificationResponse>(StatusCodes.Status201Created)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status500InternalServerError)
-        .WithName("SubmitDisciplinaryNotification")
-        .WithOpenApi();
+            await notifications.SendGeneral(Sanitize(request.Message), request.ScheduleAt);
+            var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
+            return Results.Created($"/api/comunications/general/{response.Id}", response);
+        });
+    }
+
+    private static async Task<IResult> CreateGradelNotification(NotificationRequest request, INotifications notifications)
+    {
+        return await CommonHandler(request, async () =>
+        {
+            await notifications.SendGrade(request.GradeId, Sanitize(request.Message));
+            var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
+            return Results.Created($"/api/comunications/grade/{response.Id}", response);
+        });
+    }
+
+    private static async Task<IResult> CreateStudentNotification(NotificationRequest request, INotifications notifications)
+    {
+        return await CommonHandler(request, async () =>
+        {
+            await notifications.SendStudent(request.StudentId, Sanitize(request.Message));
+            var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
+            return Results.Created($"/api/comunications/student/{response.Id}", response);
+        });
+    }
+
+    private static async Task<IResult> CreateDisciplinaryNotification(NotificationRequest request, INotifications notifications)
+    {
+        return await CommonHandler(request, async () =>
+        {
+            await notifications.SendDisciplinary(request.StudentId, request.TeacherId, Sanitize(request.Message));
+            var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
+            return Results.Created($"/api/comunications/disciplinary/{response.Id}", response);
+        });
     }
 
     // Sanitizes the parameter. Just a placeholder for now.
-    public static T Sanitize<T>(T parameter)
+    private static T Sanitize<T>(T parameter)
     {
         return parameter;
     }
@@ -88,14 +97,14 @@ public static class NotificationEndpointsExtensions
         }
         catch (ArgumentException e)
         {
-            return TypedResults.BadRequest(e.Message);
+            return Results.BadRequest(e.Message);
         }
         catch (Exception)
         {
-            return TypedResults.InternalServerError();
+            return Results.InternalServerError();
         }
     }
 }
 
-internal record NotificationRequest(int GradeId, int StudentId, int TeacherId, string Message, DateTime ScheduleAt);
-internal record NotificationResponse(Guid Id, string Message, int RecipientsAddressed);
+public record NotificationRequest(int GradeId, int StudentId, int TeacherId, string Message, DateTime ScheduleAt);
+public record NotificationResponse(Guid Id, string Message, int RecipientsAddressed);
