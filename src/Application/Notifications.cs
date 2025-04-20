@@ -9,7 +9,7 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
 {
     private readonly UnitOfWork unitOfWork = unitOfWork;
     private readonly IRegistrar registrar = registrar;
-    private readonly ITimeProvider timeProvider = timeProvider;
+
     private readonly Secretary secretary = new(registrar, notificator, timeProvider);
 
     public async Task SendGeneral(string message, DateTime scheduleAt = default)
@@ -19,8 +19,7 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var builder = new GeneralNotificationBuilder(registrar, message, BringToNowPastScheduleDates(scheduleAt));
-        await secretary.SendNotification(builder.Build());
+        await secretary.SendGeneralNotification(message, scheduleAt);
 
         await unitOfWork.SaveChangesAsync();
     }
@@ -35,8 +34,7 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
         var grade = await registrar.GradeById(gradeId) ??
             throw new ArgumentException("Invalid grade identifier", nameof(gradeId));
 
-        var builder = new GradeNotificationBuilder(grade, message);
-        await secretary.SendNotification(builder.Build());
+        await secretary.SendGradeNotification(grade, message);
 
         await unitOfWork.SaveChangesAsync();
     }
@@ -51,8 +49,7 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
         var student = await registrar.StudentById(studentId) ??
             throw new ArgumentException("Invalid student identifier", nameof(studentId));
 
-        var builder = new StudentNotificationBuilder(student, message);
-        await secretary.SendNotification(builder.Build());
+        await secretary.SendStudentNotification(student, message);
 
         await unitOfWork.SaveChangesAsync();
     }
@@ -70,8 +67,7 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
         var teacher = await registrar.TeacherById(teacherId) ??
             throw new ArgumentException("Invalid teacher identifier", nameof(teacherId));
 
-        var builder = new DisciplinaryNotificationBuilder(registrar, student, teacher, message);
-        await secretary.SendNotification(builder.Build());
+        await secretary.SendDisciplinaryNotification(student, teacher, message);
 
         await unitOfWork.SaveChangesAsync();
     }
@@ -81,10 +77,5 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
         await secretary.SendPendingNotifications(cancellationToken);
 
         await unitOfWork.SaveChangesAsync();
-    }
-
-    private DateTime BringToNowPastScheduleDates(DateTime scheduleAt)
-    {
-        return scheduleAt == default ? timeProvider.UtcNow : scheduleAt;
     }
 }

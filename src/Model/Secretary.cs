@@ -8,11 +8,36 @@ public class Secretary(IRegistrar registrar, INotificator notificator, ITimeProv
     private readonly INotificator notificator = notificator;
     private readonly ITimeProvider timeProvider = timeProvider;
 
-    public async Task SendNotification(Notification notification)
+    public async Task SendGeneralNotification(string message, DateTime scheduleAt)
     {
-        registrar.AddNotification(notification);
+        var builder = new GeneralNotificationBuilder(registrar, message, BringToNowPastScheduleDates(scheduleAt));
 
-        await notification.SendIfItIsTime(notificator, timeProvider);
+        await SendNotification(builder.Build());
+    }
+
+    public async Task SendGradeNotification(Grade grade, string message)
+    {
+        var builder = new GradeNotificationBuilder(grade, message);
+
+        await SendNotification(builder.Build());
+    }
+
+    public async Task SendStudentNotification(Student student, string message)
+    {
+        var builder = new StudentNotificationBuilder(student, message);
+
+        await SendNotification(builder.Build());
+    }
+
+    public async Task SendDisciplinaryNotification(Student student, Teacher teacher, string message)
+    {
+        var disciplinaryInboxConfig = await registrar.RequiredConfigurationByName(
+            Configuration.DISCIPLINARY_INBOX, "Disciplinary inbox configuration not valid.");
+
+        var builder = new DisciplinaryNotificationBuilder(student, teacher, message,
+            notification => notification.AddRecipient("Disciplinary inbox", disciplinaryInboxConfig.Value, string.Empty));
+
+        await SendNotification(builder.Build());
     }
 
     public async Task SendPendingNotifications(CancellationToken cancellationToken)
@@ -26,5 +51,17 @@ public class Secretary(IRegistrar registrar, INotificator notificator, ITimeProv
 
             await notification.SendIfItIsTime(notificator, timeProvider);
         }
+    }
+
+    private async Task SendNotification(Notification notification)
+    {
+        registrar.AddNotification(notification);
+
+        await notification.SendIfItIsTime(notificator, timeProvider);
+    }
+
+    private DateTime BringToNowPastScheduleDates(DateTime scheduleAt)
+    {
+        return scheduleAt == default ? timeProvider.UtcNow : scheduleAt;
     }
 }

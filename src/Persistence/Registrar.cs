@@ -22,8 +22,18 @@ public class Registrar(ApplicationContext applicationContext) : IRegistrar
     public async Task<Student?> StudentById(int studentId) =>
         await applicationContext.Students.FirstOrDefaultAsync(s => s.Id == studentId);
 
-    public Configuration? ConfigurationByName(string name) =>
-        applicationContext.Configurations.FirstOrDefault(c => c.Name == name);
+    public async Task<Configuration?> ConfigurationByName(string name) =>
+        await applicationContext.Configurations.FirstOrDefaultAsync(c => c.Name == name);
+
+    public async Task<Configuration> RequiredConfigurationByName(string name, string errorMessageIfNotConfigured)
+    {
+        var config = await applicationContext.Configurations.FirstOrDefaultAsync(c => c.Name == name);
+
+        if (config is null || string.IsNullOrWhiteSpace(config.Value))
+            throw new InvalidOperationException(errorMessageIfNotConfigured);
+        
+        return config;
+    }
 
     public IAsyncEnumerable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter) =>
         applicationContext.Notifications.Where(filter).AsAsyncEnumerable();

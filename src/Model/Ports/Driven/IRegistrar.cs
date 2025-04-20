@@ -15,8 +15,8 @@ public interface IRegistrar
 
     public Task<Student?> StudentById(int studentId);
 
-    // TODO: Make async
-    public Configuration? ConfigurationByName(string name);
+    public Task<Configuration?> ConfigurationByName(string name);
+    public Task<Configuration> RequiredConfigurationByName(string name, string errorMessageIfNotConfigured);
 
     public IAsyncEnumerable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter);
     public void AddNotification(Notification notification);
