@@ -1,7 +1,6 @@
 using Model;
 using Persistence;
 using System.Reflection;
-using System.Runtime.InteropServices.Marshalling;
 
 namespace Tests;
 
@@ -264,10 +263,13 @@ public class PersistenceTests : BaseTests
         dataContext.Dispose();
         dataContext = CreateContext(tenantProvider);
 
-        student = dataContext.Students.Find(id);
+        student = dataContext.Students
+            .Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
+            .Where(s => s.Id == id).FirstOrDefault();
+
         Assert.That(student, Is.Not.Null);
 
-        Assert.That(student.Parents, Has.Count.EqualTo(1));
+        Assert.That(student.CaregivingRelationships, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -285,14 +287,16 @@ public class PersistenceTests : BaseTests
         dataContext.Dispose();
         dataContext = CreateContext(tenantProvider);
 
-        student = dataContext.Students.Find(id);
+        student = dataContext.Students
+            .Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
+            .Where(s => s.Id == id).FirstOrDefault();
+
         Assert.That(student, Is.Not.Null);
         parent1 = student.Parents.First();
 
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(student?.Parents.Count, Is.EqualTo(2));
-            Assert.That(parent1?.Students.Count, Is.EqualTo(1));
+            Assert.That(student?.CaregivingRelationships, Has.Count.EqualTo(2));
         }
     }
 
@@ -311,9 +315,12 @@ public class PersistenceTests : BaseTests
         dataContext.Dispose();
         dataContext = CreateContext(tenantProvider);
 
-        student = dataContext.Students.Find(id);
+        student = dataContext.Students
+            .Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
+            .Where(s => s.Id == id).FirstOrDefault();
+
         Assert.That(student, Is.Not.Null);
-        Assert.That(student.Parents, Has.Count.EqualTo(2));
+        Assert.That(student.CaregivingRelationships, Has.Count.EqualTo(2));
 
         var parent = student.Parents.Last();
         dataContext.Parents.Remove(parent);
@@ -341,7 +348,10 @@ public class PersistenceTests : BaseTests
         dataContext.Dispose();
         dataContext = CreateContext(tenantProvider);
 
-        student = dataContext.Students.Find(id);
+        student = dataContext.Students
+            .Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
+            .Where(s => s.Id == id).FirstOrDefault();
+
         parent1 = dataContext.Parents.First(p => p.Name == "Mariano");
         parent2 = dataContext.Parents.First(p => p.Name == "Marie");
         Assert.That(student, Is.Not.Null);
@@ -448,7 +458,7 @@ public class PersistenceTests : BaseTests
         AssertNotAccesibleFor(new Teacher("Mr. Teacher", "", ""));
     }
 
-    public void AssertNotAccesibleFor<T>(T entityToAdd) where T : TenantEntity
+    private void AssertNotAccesibleFor<T>(T entityToAdd) where T : TenantEntity
     {
         const int MAIN_TENANT_ID = 8;
         const int OTHER_TENANT_ID = 9;

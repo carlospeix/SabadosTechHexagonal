@@ -1,17 +1,11 @@
 ﻿namespace Model;
 
-public abstract class NotificationBuilder
+public abstract class NotificationBuilder(string message, DateTime scheduleAt)
 {
-    public string Message { get; init; }
-    public DateTime ScheduleAt { get; init; }
+    public string Message { get; init; } = message;
+    public DateTime ScheduleAt { get; init; } = scheduleAt;
 
     protected abstract void AddRecipientsTo(Notification notification);
-
-    protected NotificationBuilder(string message, DateTime scheduleAt)
-    {
-        Message = message;
-        ScheduleAt = scheduleAt;
-    }
 
     public Notification Build()
     {
@@ -36,9 +30,9 @@ public abstract class NotificationBuilder
 
     protected void AddStudentRecipientsTo(Student student, Notification notification)
     {
-        foreach (var parent in student.Parents)
+        foreach (var cgr in student.CaregivingRelationships)
         {
-            notification.AddRecipient(parent.Name, parent.Email, parent.Phone);
+            notification.AddRecipient(cgr.Parent.Name, cgr.Parent.Email, cgr.Parent.Phone);
         }
     }
 }

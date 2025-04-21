@@ -69,7 +69,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Configurations");
+                    b.ToTable("Configurations", (string)null);
                 });
 
             modelBuilder.Entity("Model.Grade", b =>
@@ -92,7 +92,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Grades");
+                    b.ToTable("Grades", (string)null);
                 });
 
             modelBuilder.Entity("Model.Notification", b =>
@@ -121,7 +121,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Model.Parent", b =>
@@ -154,7 +154,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Parents");
+                    b.ToTable("Parents", (string)null);
                 });
 
             modelBuilder.Entity("Model.Recipient", b =>
@@ -215,7 +215,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("Model.Subject", b =>
@@ -276,7 +276,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Teachers");
+                    b.ToTable("Teachers", (string)null);
                 });
 
             modelBuilder.Entity("Model.CaregivingRelationship", b =>

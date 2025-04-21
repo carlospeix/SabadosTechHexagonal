@@ -12,15 +12,20 @@ public class Registrar(ApplicationContext applicationContext) : IRegistrar
         await applicationContext.Teachers.FirstOrDefaultAsync(s => s.Id == teacherId);
 
     public IQueryable<Grade> AllGrades =>
-        applicationContext.Grades;
+        applicationContext.Grades.Include(g => g.Students)
+                                 .Include(g => g.Subjects)
+                                 .ThenInclude(s => s.Teacher);
     public async Task<Grade?> GradeById(int gradeId) =>
-        await applicationContext.Grades.FirstOrDefaultAsync(g => g.Id == gradeId);
+        await applicationContext.Grades.Include(g => g.Students).ThenInclude(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
+                                       .Include(g => g.Subjects).ThenInclude(s => s.Teacher)
+                                       .FirstOrDefaultAsync(g => g.Id == gradeId);
 
     public IQueryable<Parent> AllParents =>
         applicationContext.Parents;
 
     public async Task<Student?> StudentById(int studentId) =>
-        await applicationContext.Students.FirstOrDefaultAsync(s => s.Id == studentId);
+        await applicationContext.Students.Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
+                                         .FirstOrDefaultAsync(s => s.Id == studentId);
 
     public async Task<Configuration?> ConfigurationByName(string name) =>
         await applicationContext.Configurations.FirstOrDefaultAsync(c => c.Name == name);
@@ -36,7 +41,8 @@ public class Registrar(ApplicationContext applicationContext) : IRegistrar
     }
 
     public IAsyncEnumerable<Notification> FilteredNotifications(Expression<Func<Notification, bool>> filter) =>
-        applicationContext.Notifications.Where(filter).AsAsyncEnumerable();
+        applicationContext.Notifications.Include(n => n.Recipients)
+                                        .Where(filter).AsAsyncEnumerable();
 
     public void AddNotification(Notification notification)
     {
