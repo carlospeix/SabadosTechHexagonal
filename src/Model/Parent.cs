@@ -1,7 +1,7 @@
 ﻿
 namespace Model;
 
-public class Parent
+public class Parent : TenantEntity
 {
     public int Id { get; private set; }
 

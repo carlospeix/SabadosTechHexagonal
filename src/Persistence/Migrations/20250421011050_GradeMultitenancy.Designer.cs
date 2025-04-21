@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20250421011050_GradeMultitenancy")]
+    partial class GradeMultitenancy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,12 +117,7 @@ namespace Persistence.Migrations
                     b.Property<DateTime?>("SentAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("Notifications");
                 });
@@ -147,12 +145,7 @@ namespace Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("Parents");
                 });
@@ -206,14 +199,9 @@ namespace Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GradeId");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("Students");
                 });

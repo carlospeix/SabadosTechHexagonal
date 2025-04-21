@@ -2,7 +2,7 @@
 
 namespace Model;
 
-public class Notification
+public class Notification : TenantEntity
 {
     public int Id { get; private set; }
 

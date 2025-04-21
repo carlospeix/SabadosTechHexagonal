@@ -47,6 +47,8 @@ public class ApplicationContext : DbContext
             x.Property(t => t.Name).HasMaxLength(100);
             x.Property(t => t.Email).HasMaxLength(100);
             x.Property(t => t.Phone).HasMaxLength(100);
+
+            AddTenancySupport(x);
         });
 
         modelBuilder.Entity<Grade>(x =>
@@ -57,6 +59,8 @@ public class ApplicationContext : DbContext
             x.HasMany(t => t.Students).WithOne(t => t.Grade).IsRequired(false);
             x.Navigation(t => t.Subjects).AutoInclude();
             x.Navigation(t => t.Students).AutoInclude();
+
+            AddTenancySupport(x);
         });
 
         modelBuilder.Entity<Subject>(x =>
@@ -75,6 +79,8 @@ public class ApplicationContext : DbContext
             x.Property(t => t.Name).HasMaxLength(100);
             x.Property(t => t.Email).HasMaxLength(100);
             x.Property(t => t.Phone).HasMaxLength(100);
+
+            AddTenancySupport(x);
         });
 
         modelBuilder.Entity<Student>(x =>
@@ -84,6 +90,8 @@ public class ApplicationContext : DbContext
             x.HasMany(t => t.Parents).WithMany(t => t.Students).UsingEntity<CaregivingRelationship>().ToTable("CaregivingRelationships");
             x.Navigation(t => t.CaregivingRelationships).AutoInclude();
             x.Navigation(t => t.Parents).AutoInclude();
+
+            AddTenancySupport(x);
         });
 
         modelBuilder.Entity<Notification>(x =>
@@ -94,6 +102,8 @@ public class ApplicationContext : DbContext
             x.Property(t => t.SentAt);
             x.HasMany(t => t.Recipients).WithOne(t => t.Notification).IsRequired();
             x.Navigation(t => t.Recipients).AutoInclude();
+
+            AddTenancySupport(x);
         });
 
         modelBuilder.Entity<Recipient>(x =>
@@ -134,7 +144,7 @@ public class ApplicationContext : DbContext
         }
     }
 
-    private void AddTenancySupport(EntityTypeBuilder<Configuration> x)
+    private void AddTenancySupport<T>(EntityTypeBuilder<T> x) where T : TenantEntity
     {
         x.Property(TENANT_ID_FIELD_NAME).IsRequired();
         x.HasIndex(TENANT_ID_FIELD_NAME);

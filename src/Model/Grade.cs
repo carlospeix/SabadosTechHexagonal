@@ -1,7 +1,7 @@
 ﻿
 namespace Model;
 
-public class Grade
+public class Grade : TenantEntity
 {
     public int Id { get; private set; }
 

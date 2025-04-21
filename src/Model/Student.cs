@@ -3,7 +3,7 @@
 
 namespace Model;
 
-public class Student
+public class Student : TenantEntity
 {
     public int Id { get; private set; }
 

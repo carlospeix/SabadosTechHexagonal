@@ -1,5 +1,7 @@
 using Model;
 using Persistence;
+using System.Reflection;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace Tests;
 
@@ -411,28 +413,64 @@ public class PersistenceTests : BaseTests
     #region Multitenancy
 
     [Test]
-    public void ShouldNotReturnAnEntityOwnedByADiferentTenant()
+    public void ShouldNotReturnAConfigurationOwnedByADiferentTenant()
+    {
+        AssertNotAccesibleFor(new Configuration("MyName", "A value"));
+    }
+
+    [Test]
+    public void ShouldNotReturnAGradeOwnedByADiferentTenant()
+    {
+        AssertNotAccesibleFor(new Grade("10th grade"));
+    }
+
+    [Test]
+    public void ShouldNotReturnANotificationOwnedByADiferentTenant()
+    {
+        AssertNotAccesibleFor(new Notification("Message", DateTime.UtcNow));
+    }
+
+    [Test]
+    public void ShouldNotReturnAParentOwnedByADiferentTenant()
+    {
+        AssertNotAccesibleFor(new Parent("John Doe", "", ""));
+    }
+
+    [Test]
+    public void ShouldNotReturnAStudentOwnedByADiferentTenant()
+    {
+        AssertNotAccesibleFor(new Student("Student 1"));
+    }
+
+    [Test]
+    public void ShouldNotReturnATeacherOwnedByADiferentTenant()
+    {
+        AssertNotAccesibleFor(new Teacher("Mr. Teacher", "", ""));
+    }
+
+    public void AssertNotAccesibleFor<T>(T entityToAdd) where T : TenantEntity
     {
         const int MAIN_TENANT_ID = 8;
         const int OTHER_TENANT_ID = 9;
 
-        // Arrange
         var testTenantProvider = new TestTenantProvider(MAIN_TENANT_ID);
-        var dataContext = CreateContext(testTenantProvider);
+        dataContext = CreateContext(testTenantProvider);
 
-        var config = dataContext.Configurations.Add(new Configuration("MyName", "A value")).Entity;
+        T entity = dataContext.Set<T>().Add(entityToAdd).Entity;
 
         dataContext.SaveChanges();
-        var id = config.Id;
 
-        Assert.That(dataContext.Configurations.Find(id), Is.Not.Null);
+        var propertyInfo = typeof(T).GetProperty("Id", BindingFlags.Public | BindingFlags.Instance);
+        var id = propertyInfo?.GetValue(entity);
+
+        Assert.That(dataContext.Set<T>().Find(id), Is.Not.Null);
 
         dataContext.Dispose();
 
         testTenantProvider.SetTenantId(OTHER_TENANT_ID);
         dataContext = CreateContext(testTenantProvider);
 
-        Assert.That(dataContext.Configurations.Find(id), Is.Null);
+        Assert.That(dataContext.Set<T>().Find(id), Is.Null);
     }
 
     #endregion

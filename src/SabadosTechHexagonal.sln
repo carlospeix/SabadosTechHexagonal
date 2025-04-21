@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{00CFD1BD-F0E1-4770-923F-12B1E6B5F86B}"
 	ProjectSection(SolutionItems) = preProject
 		..\specs\arquitectura.md = ..\specs\arquitectura.md
+		commands.txt = commands.txt
 		coverage.bat = coverage.bat
 		..\specs\historias-de-usuario.md = ..\specs\historias-de-usuario.md
 		..\specs\pendientes.md = ..\specs\pendientes.md

@@ -1,6 +1,6 @@
 ﻿namespace Model;
 
-public class Teacher
+public class Teacher : TenantEntity
 {
     public int Id { get; private set; }
 
