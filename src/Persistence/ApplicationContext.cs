@@ -86,7 +86,7 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<StudentRecord>(x =>
         {
             x.HasKey(t => t.Id);
-            x.Property(t => t.Name).HasMaxLength(100);
+            x.Property(t => t.StudentName).HasMaxLength(100);
             x.HasMany(t => t.Parents).WithMany().UsingEntity<CaregivingRelationship>().ToTable("CaregivingRelationships");
 
             AddTenancySupport(x);

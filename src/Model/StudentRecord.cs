@@ -4,7 +4,8 @@ public class StudentRecord : TenantEntity
 {
     public int Id { get; private set; }
 
-    public string Name { get; private set; }
+    public string StudentName { get; private set; }
+
     public Grade? CurrentGrade { get; private set; }
 
     public IReadOnlyCollection<Parent> Parents => parents.ToList().AsReadOnly();
@@ -17,7 +18,7 @@ public class StudentRecord : TenantEntity
 
     public StudentRecord(string name)
     {
-        Name = name;
+        StudentName = name;
     }
 
     public void AddParent(Parent parent, string? relationshipName = null)
