@@ -12,20 +12,20 @@ public class Registrar(ApplicationContext applicationContext) : IRegistrar
         await applicationContext.Teachers.FirstOrDefaultAsync(s => s.Id == teacherId);
 
     public IQueryable<Grade> AllGrades =>
-        applicationContext.Grades.Include(g => g.Students)
+        applicationContext.Grades.Include(g => g.StudentRecords)
                                  .Include(g => g.Subjects)
                                  .ThenInclude(s => s.Teacher);
     public async Task<Grade?> GradeById(int gradeId) =>
-        await applicationContext.Grades.Include(g => g.Students).ThenInclude(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
+        await applicationContext.Grades.Include(g => g.StudentRecords).ThenInclude(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
                                        .Include(g => g.Subjects).ThenInclude(s => s.Teacher)
                                        .FirstOrDefaultAsync(g => g.Id == gradeId);
 
     public IQueryable<Parent> AllParents =>
         applicationContext.Parents;
 
-    public async Task<Student?> StudentById(int studentId) =>
-        await applicationContext.Students.Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
-                                         .FirstOrDefaultAsync(s => s.Id == studentId);
+    public async Task<StudentRecord?> StudentRecordById(int studentRecordId) =>
+        await applicationContext.StudentRecords.Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
+                                               .FirstOrDefaultAsync(s => s.Id == studentRecordId);
 
     public async Task<Configuration?> ConfigurationByName(string name) =>
         await applicationContext.Configurations.FirstOrDefaultAsync(c => c.Name == name);

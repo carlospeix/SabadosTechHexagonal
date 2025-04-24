@@ -24,7 +24,7 @@ public class ApplicationContext : DbContext
     public DbSet<Teacher> Teachers { get; set; }
     public DbSet<Grade> Grades { get; set; }
     public DbSet<Parent> Parents { get; set; }
-    public DbSet<Student> Students { get; set; }
+    public DbSet<StudentRecord> StudentRecords { get; set; }
     public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -54,11 +54,11 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Grade>(x =>
         {
             x.HasKey(t => t.Id);
-            x.Property(t => t.Name).HasMaxLength(100);
+            x.Property(t => t.StudentName).HasMaxLength(100);
             x.HasMany(t => t.Subjects).WithOne(t => t.Grade).IsRequired();
-            x.HasMany(t => t.Students).WithOne(t => t.Grade).IsRequired(false);
+            x.HasMany(t => t.StudentRecords).WithOne(t => t.CurrentGrade).IsRequired(false);
             x.Navigation(t => t.Subjects).AutoInclude();
-            x.Navigation(t => t.Students).AutoInclude();
+            x.Navigation(t => t.StudentRecords).AutoInclude();
 
             AddTenancySupport(x);
         });
@@ -83,7 +83,7 @@ public class ApplicationContext : DbContext
             AddTenancySupport(x);
         });
 
-        modelBuilder.Entity<Student>(x =>
+        modelBuilder.Entity<StudentRecord>(x =>
         {
             x.HasKey(t => t.Id);
             x.Property(t => t.Name).HasMaxLength(100);

@@ -1,20 +1,18 @@
-﻿using System.Xml.Linq;
-
-namespace Model;
+﻿namespace Model;
 
 public class CaregivingRelationship
 {
     protected int? Id;
 
     public Parent Parent { get; private set; }
-    public Student Student { get; private set; }
+    public StudentRecord StudentRecord { get; private set; }
     public string Name { get; private set; }
 
     private CaregivingRelationship() {}
 
-    public CaregivingRelationship(Student student, Parent parent, string? name)
+    public CaregivingRelationship(StudentRecord studentRecord, Parent parent, string? name)
     {
-        Student = student;
+        StudentRecord = studentRecord;
         Parent = parent;
         SetName(name);
     }

@@ -22,14 +22,14 @@ public class Secretary(IRegistrar registrar, INotificator notificator, ITimeProv
         await SendNotification(builder.Build());
     }
 
-    public async Task SendStudentNotification(Student student, string message)
+    public async Task SendStudentNotification(StudentRecord student, string message)
     {
         var builder = new StudentNotificationBuilder(student, message);
 
         await SendNotification(builder.Build());
     }
 
-    public async Task SendDisciplinaryNotification(Student student, Teacher teacher, string message)
+    public async Task SendDisciplinaryNotification(StudentRecord student, Teacher teacher, string message)
     {
         var disciplinaryInboxConfig = await registrar.RequiredConfigurationByName(
             Configuration.DISCIPLINARY_INBOX, "Disciplinary inbox configuration not valid.");

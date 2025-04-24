@@ -39,35 +39,35 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
         await unitOfWork.SaveChangesAsync();
     }
 
-    public async Task SendStudent(int studentId, string message)
+    public async Task SendStudent(int studentRecordId, string message)
     {
         if (string.IsNullOrEmpty(message))
         {
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var student = await registrar.StudentById(studentId) ??
-            throw new ArgumentException("Invalid student identifier", nameof(studentId));
+        var studentRecord = await registrar.StudentRecordById(studentRecordId) ??
+            throw new ArgumentException("Invalid student identifier", nameof(studentRecordId));
 
-        await secretary.SendStudentNotification(student, message);
+        await secretary.SendStudentNotification(studentRecord, message);
 
         await unitOfWork.SaveChangesAsync();
     }
 
-    public async Task SendDisciplinary(int studentId, int teacherId, string message)
+    public async Task SendDisciplinary(int studentRecordId, int teacherId, string message)
     {
         if (string.IsNullOrEmpty(message))
         {
             throw new ArgumentException("Message cannot be null or empty", nameof(message));
         }
 
-        var student = await registrar.StudentById(studentId) ??
-            throw new ArgumentException("Invalid student identifier", nameof(studentId));
+        var studentRecord = await registrar.StudentRecordById(studentRecordId) ??
+            throw new ArgumentException("Invalid student record identifier", nameof(studentRecordId));
 
         var teacher = await registrar.TeacherById(teacherId) ??
             throw new ArgumentException("Invalid teacher identifier", nameof(teacherId));
 
-        await secretary.SendDisciplinaryNotification(student, teacher, message);
+        await secretary.SendDisciplinaryNotification(studentRecord, teacher, message);
 
         await unitOfWork.SaveChangesAsync();
     }

@@ -1,23 +1,22 @@
-﻿
-namespace Model;
+﻿namespace Model;
 
 public class Grade : TenantEntity
 {
     public int Id { get; private set; }
 
-    public string Name { get; private set; }
+    public string StudentName { get; private set; }
 
     public IReadOnlyCollection<Subject> Subjects => subjects.ToList().AsReadOnly();
     private readonly HashSet<Subject> subjects = [];
 
-    public IReadOnlyCollection<Student> Students => students.ToList().AsReadOnly();
-    private readonly HashSet<Student> students = [];
+    public IReadOnlyCollection<StudentRecord> StudentRecords => studentRecords.ToList().AsReadOnly();
+    private readonly HashSet<StudentRecord> studentRecords = [];
 
     private Grade() {}
 
-    public Grade(string name)
+    public Grade(string studentName)
     {
-        Name = name;
+        StudentName = studentName;
     }
 
     public Subject AddSubject(Teacher teacher, string subjectName)
@@ -29,11 +28,11 @@ public class Grade : TenantEntity
         return subject;
     }
 
-    public void AddStudent(Student student)
+    public void AddStudent(StudentRecord studentRecord)
     {
-        if (students.Contains(student))
+        if (studentRecords.Contains(studentRecord))
             return;
         
-        students.Add(student);
+        studentRecords.Add(studentRecord);
     }
 }

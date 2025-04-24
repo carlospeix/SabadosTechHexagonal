@@ -166,7 +166,7 @@ public class ApiTests : BaseTests
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         grade.AddSubject(teacher, "History");
 
-        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
         var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
         student.AddParent(parent1);
@@ -194,7 +194,7 @@ public class ApiTests : BaseTests
         // Arrange
         var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
 
-        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
         var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
         student.AddParent(parent1);
@@ -215,7 +215,7 @@ public class ApiTests : BaseTests
     public async Task StudentNotificationReturnsBadRequestWhenMessageIsEmpty()
     {
         // Arrange
-        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         await dataContext.SaveChangesAsync();
 
         // Act
@@ -244,7 +244,7 @@ public class ApiTests : BaseTests
     public async Task StudentNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
     {
         // Arrange
-        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         await dataContext.SaveChangesAsync();
 
         // Act
@@ -268,7 +268,7 @@ public class ApiTests : BaseTests
         var config = dataContext.Configurations.Add(
             new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
-        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var parent = new Parent("Mariano", "john@gmail.com", "1111");
         student.AddParent(parent);
 
@@ -290,7 +290,7 @@ public class ApiTests : BaseTests
     {
         // Arrange
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
-        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         await dataContext.SaveChangesAsync();
 
@@ -325,7 +325,7 @@ public class ApiTests : BaseTests
     {
         // Arrange
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
-        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         await dataContext.SaveChangesAsync();
 
         const int NON_EXISTENT_TEACHER_ID = 100;
@@ -343,7 +343,7 @@ public class ApiTests : BaseTests
     {
         // Arrange
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
-        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
 
         // Act
@@ -358,7 +358,7 @@ public class ApiTests : BaseTests
     public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenDisciplinaryInboxIsNotConfigured()
     {
         // Arrange
-        var student = dataContext.Students.Add(new Student("Student 1")).Entity;
+        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         await dataContext.SaveChangesAsync();
 

@@ -13,7 +13,7 @@ public interface IRegistrar
     // TODO: Make async
     public IQueryable<Parent> AllParents { get; }
 
-    public Task<Student?> StudentById(int studentId);
+    public Task<StudentRecord?> StudentRecordById(int studentRecordId);
 
     public Task<Configuration?> ConfigurationByName(string name);
     public Task<Configuration> RequiredConfigurationByName(string name, string errorMessageIfNotConfigured);

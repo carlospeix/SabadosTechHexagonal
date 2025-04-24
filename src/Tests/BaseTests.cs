@@ -39,7 +39,7 @@ public abstract class BaseTests
     protected void ClearDatabase(ApplicationContext dataContext)
     {
         dataContext.Configurations.RemoveRange(dataContext.Configurations);
-        dataContext.Students.RemoveRange(dataContext.Students);
+        dataContext.StudentRecords.RemoveRange(dataContext.StudentRecords);
         dataContext.Parents.RemoveRange(dataContext.Parents);
         dataContext.Grades.RemoveRange(dataContext.Grades);
         dataContext.Teachers.RemoveRange(dataContext.Teachers);

@@ -22,15 +22,15 @@ public abstract class NotificationBuilder(string message, DateTime scheduleAt)
         {
             notification.AddRecipient(subject.Teacher.Name, subject.Teacher.Email, subject.Teacher.Phone);
         }
-        foreach (var student in grade.Students)
+        foreach (var studentRecord in grade.StudentRecords)
         {
-            AddStudentRecipientsTo(student, notification);
+            AddStudentRecipientsTo(studentRecord, notification);
         }
     }
 
-    protected void AddStudentRecipientsTo(Student student, Notification notification)
+    protected void AddStudentRecipientsTo(StudentRecord studentRecord, Notification notification)
     {
-        foreach (var cgr in student.CaregivingRelationships)
+        foreach (var cgr in studentRecord.CaregivingRelationships)
         {
             notification.AddRecipient(cgr.Parent.Name, cgr.Parent.Email, cgr.Parent.Phone);
         }

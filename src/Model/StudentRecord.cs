@@ -1,14 +1,11 @@
-﻿
+﻿namespace Model;
 
-
-namespace Model;
-
-public class Student : TenantEntity
+public class StudentRecord : TenantEntity
 {
     public int Id { get; private set; }
 
     public string Name { get; private set; }
-    public Grade? Grade { get; private set; }
+    public Grade? CurrentGrade { get; private set; }
 
     public IReadOnlyCollection<Parent> Parents => parents.ToList().AsReadOnly();
     private readonly HashSet<Parent> parents = [];
@@ -16,9 +13,9 @@ public class Student : TenantEntity
     public IReadOnlyCollection<CaregivingRelationship> CaregivingRelationships => caregivingRelationships.ToList().AsReadOnly();
     private readonly HashSet<CaregivingRelationship> caregivingRelationships = [];
 
-    private Student() {}
+    private StudentRecord() {}
 
-    public Student(string name)
+    public StudentRecord(string name)
     {
         Name = name;
     }

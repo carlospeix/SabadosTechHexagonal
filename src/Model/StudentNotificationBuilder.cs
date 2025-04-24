@@ -2,15 +2,15 @@
 
 public class StudentNotificationBuilder : NotificationBuilder
 {
-    private readonly Student student;
+    private readonly StudentRecord studentRecord;
 
-    public StudentNotificationBuilder(Student student, string message) : base(message, default)
+    public StudentNotificationBuilder(StudentRecord studentRecord, string message) : base(message, default)
     {
-        this.student = student;
+        this.studentRecord = studentRecord;
     }
 
     protected override void AddRecipientsTo(Notification notification)
     {
-        AddStudentRecipientsTo(student, notification);
+        AddStudentRecipientsTo(studentRecord, notification);
     }
 }
