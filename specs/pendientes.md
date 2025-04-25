@@ -48,8 +48,8 @@ Mantengamos acá una lista de los refáctorings pendientes para que cualquier pu
 ## Temas para la próxima reunión
 
   - Persistencia dentro o fuera del hexágono (InMemory, SqlServer, etc.)
-  - Refactorings pendientes
-  - Hacemos una API? App?
+  X Refactorings pendientes
+  X Hacemos una API? App?
   - Hacemos pruebas de carga?
-  - Multitenancy
+  X Multitenancy
   - Transacciones (UnitOfWork) vs acciones compensatorias.
