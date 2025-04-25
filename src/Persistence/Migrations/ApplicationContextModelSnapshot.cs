@@ -69,7 +69,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Configurations", (string)null);
+                    b.ToTable("Configurations");
                 });
 
             modelBuilder.Entity("Model.Grade", b =>
@@ -92,7 +92,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Grades", (string)null);
+                    b.ToTable("Grades");
                 });
 
             modelBuilder.Entity("Model.Notification", b =>
@@ -121,7 +121,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Model.Parent", b =>
@@ -154,7 +154,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Parents", (string)null);
+                    b.ToTable("Parents");
                 });
 
             modelBuilder.Entity("Model.Recipient", b =>
@@ -201,7 +201,7 @@ namespace Persistence.Migrations
                     b.Property<int?>("CurrentGradeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("StudentName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -215,7 +215,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("StudentRecords", (string)null);
+                    b.ToTable("StudentRecords");
                 });
 
             modelBuilder.Entity("Model.Subject", b =>
@@ -276,7 +276,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Teachers", (string)null);
+                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("Model.CaregivingRelationship", b =>

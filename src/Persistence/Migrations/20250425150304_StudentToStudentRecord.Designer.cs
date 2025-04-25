@@ -12,7 +12,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20250424231339_StudentToStudentRecord")]
+    [Migration("20250425150304_StudentToStudentRecord")]
     partial class StudentToStudentRecord
     {
         /// <inheritdoc />
@@ -204,7 +204,7 @@ namespace Persistence.Migrations
                     b.Property<int?>("CurrentGradeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("StudentName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -218,7 +218,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("StudentRecords", (string)null);
+                    b.ToTable("StudentRecords");
                 });
 
             modelBuilder.Entity("Model.Subject", b =>
