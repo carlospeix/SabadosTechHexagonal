@@ -13,10 +13,12 @@ public class DisciplinaryNotificationBuilder : NotificationBuilder
         this.specialRecipientsDelegate = specialRecipientsDelegate;
     }
 
-    protected override void AddRecipientsTo(Notification notification)
+    protected override Task AddRecipientsTo(Notification notification)
     {
         AddStudentRecipientsTo(studentRecord, notification);
         notification.AddRecipient(teacher.Name, teacher.Email, teacher.Phone);
         specialRecipientsDelegate.Invoke(notification);
+
+        return Task.CompletedTask;
     }
 }

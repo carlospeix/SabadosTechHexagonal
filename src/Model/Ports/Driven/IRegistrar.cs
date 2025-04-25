@@ -6,12 +6,10 @@ public interface IRegistrar
 {
     public Task<Teacher?> TeacherById(int teacherId);
 
-    // TODO: Make async
-    public IQueryable<Grade> AllGrades { get; }
+    public IAsyncEnumerable<Grade> AllGrades { get; }
     public Task<Grade?> GradeById(int gradeId);
 
-    // TODO: Make async
-    public IQueryable<Parent> AllParents { get; }
+    public IAsyncEnumerable<Parent> AllParents { get; }
 
     public Task<StudentRecord?> StudentRecordById(int studentRecordId);
 

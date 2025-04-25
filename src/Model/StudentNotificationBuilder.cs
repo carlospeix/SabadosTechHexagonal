@@ -9,8 +9,10 @@ public class StudentNotificationBuilder : NotificationBuilder
         this.studentRecord = studentRecord;
     }
 
-    protected override void AddRecipientsTo(Notification notification)
+    protected override Task AddRecipientsTo(Notification notification)
     {
         AddStudentRecipientsTo(studentRecord, notification);
+
+        return Task.CompletedTask;
     }
 }

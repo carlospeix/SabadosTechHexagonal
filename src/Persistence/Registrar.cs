@@ -11,17 +11,18 @@ public class Registrar(ApplicationContext applicationContext) : IRegistrar
     public async Task<Teacher?> TeacherById(int teacherId) =>
         await applicationContext.Teachers.FirstOrDefaultAsync(s => s.Id == teacherId);
 
-    public IQueryable<Grade> AllGrades =>
+    public IAsyncEnumerable<Grade> AllGrades =>
         applicationContext.Grades.Include(g => g.StudentRecords)
                                  .Include(g => g.Subjects)
-                                 .ThenInclude(s => s.Teacher);
+                                 .ThenInclude(s => s.Teacher)
+                                 .AsAsyncEnumerable();
     public async Task<Grade?> GradeById(int gradeId) =>
         await applicationContext.Grades.Include(g => g.StudentRecords).ThenInclude(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
                                        .Include(g => g.Subjects).ThenInclude(s => s.Teacher)
                                        .FirstOrDefaultAsync(g => g.Id == gradeId);
 
-    public IQueryable<Parent> AllParents =>
-        applicationContext.Parents;
+    public IAsyncEnumerable<Parent> AllParents =>
+        applicationContext.Parents.AsAsyncEnumerable();
 
     public async Task<StudentRecord?> StudentRecordById(int studentRecordId) =>
         await applicationContext.StudentRecords.Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)

@@ -9,8 +9,10 @@ public class GradeNotificationBuilder : NotificationBuilder
         this.grade = grade;
     }
 
-    protected override void AddRecipientsTo(Notification notification)
+    protected override Task AddRecipientsTo(Notification notification)
     {
         AddGradeRecipientsTo(grade, notification);
+
+        return Task.CompletedTask;
     }
 }

@@ -5,13 +5,13 @@ public abstract class NotificationBuilder(string message, DateTime scheduleAt)
     public string Message { get; init; } = message;
     public DateTime ScheduleAt { get; init; } = scheduleAt;
 
-    protected abstract void AddRecipientsTo(Notification notification);
+    protected abstract Task AddRecipientsTo(Notification notification);
 
-    public Notification Build()
+    public async Task<Notification> Build()
     {
         var notification = new Notification(Message, ScheduleAt);
 
-        AddRecipientsTo(notification);
+        await AddRecipientsTo(notification);
 
         return notification;
     }

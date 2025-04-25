@@ -11,13 +11,13 @@ public class GeneralNotificationBuilder : NotificationBuilder
         this.registrar = registrar;
     }
 
-    protected override void AddRecipientsTo(Notification notification)
+    protected override async Task AddRecipientsTo(Notification notification)
     {
-        foreach (var grade in registrar.AllGrades)
+        await foreach (var grade in registrar.AllGrades)
         {
             AddGradeRecipientsTo(grade, notification);
         }
-        foreach (var parent in registrar.AllParents)
+        await foreach (var parent in registrar.AllParents)
         {
             notification.AddRecipient(parent.Name, parent.Email, parent.Phone);
         }
