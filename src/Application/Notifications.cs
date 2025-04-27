@@ -47,7 +47,7 @@ public class Notifications(UnitOfWork unitOfWork, IRegistrar registrar, INotific
         }
 
         var studentRecord = await registrar.StudentRecordById(studentRecordId) ??
-            throw new ArgumentException("Invalid student identifier", nameof(studentRecordId));
+            throw new ArgumentException("Invalid student record identifier", nameof(studentRecordId));
 
         await secretary.SendStudentNotification(studentRecord, message);
 

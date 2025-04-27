@@ -22,16 +22,16 @@ public class Secretary(IRegistrar registrar, INotificator notificator, ITimeProv
         await SendNotification(builder);
     }
 
-    public async Task SendStudentNotification(StudentRecord student, string message)
+    public async Task SendStudentNotification(StudentRecord studentRecord, string message)
     {
-        var builder = new StudentNotificationBuilder(student, message);
+        var builder = new StudentNotificationBuilder(studentRecord, message);
 
         await SendNotification(builder);
     }
 
-    public async Task SendDisciplinaryNotification(StudentRecord student, Teacher teacher, string message)
+    public async Task SendDisciplinaryNotification(StudentRecord studentRecord, Teacher teacher, string message)
     {
-        var builder = new DisciplinaryNotificationBuilder(student, teacher, message, registrar);
+        var builder = new DisciplinaryNotificationBuilder(studentRecord, teacher, message, registrar);
 
         await SendNotification(builder);
     }

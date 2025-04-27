@@ -73,7 +73,7 @@ public class PersistenceTests : BaseTests
 
     #endregion
 
-    #region Teachers, Grades, Subjects, Parents, Students
+    #region Teachers, Grades, Subjects, Parents, StudentRecords
 
     [Test]
     public void CanPersistATeacher()
@@ -185,27 +185,27 @@ public class PersistenceTests : BaseTests
     }
 
     [Test]
-    public void CanPersistAStudent()
+    public void CanPersistAStudentRecord()
     {
-        var student = new StudentRecord("Student 1");
-        dataContext.StudentRecords.Add(student);
+        var studentRecord = new StudentRecord("Student 1");
+        dataContext.StudentRecords.Add(studentRecord);
         dataContext.SaveChanges();
-        var id = student.Id;
+        var id = studentRecord.Id;
 
         dataContext.Dispose();
         dataContext = CreateContext(tenantProvider);
 
-        student = dataContext.StudentRecords.Find(id);
+        studentRecord = dataContext.StudentRecords.Find(id);
 
-        Assert.That(student, Is.Not.Null);
+        Assert.That(studentRecord, Is.Not.Null);
     }
 
     [Test]
-    public void CanAddAStudentToAGrade()
+    public void CanAddAStudentRecordToAGrade()
     {
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
-        var student = new StudentRecord("Student 1");
-        grade.AddStudent(student);
+        var studentRecord = new StudentRecord("Student 1");
+        grade.AddStudent(studentRecord);
 
         dataContext.SaveChanges();
         var id = grade.Id;
@@ -216,20 +216,20 @@ public class PersistenceTests : BaseTests
         grade = dataContext.Grades.Find(id);
         Assert.That(grade?.StudentRecords.Count, Is.EqualTo(1));
 
-        student = grade.StudentRecords.First();
-        Assert.That(student.CurrentGrade, Is.Not.Null);
+        studentRecord = grade.StudentRecords.First();
+        Assert.That(studentRecord.CurrentGrade, Is.Not.Null);
     }
 
     [Test]
     public void AddingTheSameStudentToAGradeHasNoEffect()
     {
         var grade = dataContext.Grades.Add(new Grade("10th grade")).Entity;
-        var student = new StudentRecord("Student 1");
-        grade.AddStudent(student);
+        var studentRecord = new StudentRecord("Student 1");
+        grade.AddStudent(studentRecord);
 
         dataContext.SaveChanges();
         var gradeId = grade.Id;
-        var studentId = student.Id;
+        var studentRecordId = studentRecord.Id;
 
         dataContext.Dispose();
         dataContext = CreateContext(tenantProvider);
@@ -237,10 +237,10 @@ public class PersistenceTests : BaseTests
         grade = dataContext.Grades.Find(gradeId);
         Assert.That(grade?.StudentRecords.Count, Is.EqualTo(1));
 
-        student = dataContext.StudentRecords.Find(studentId);
-        Assert.That(student, Is.Not.Null);
+        studentRecord = dataContext.StudentRecords.Find(studentRecordId);
+        Assert.That(studentRecord, Is.Not.Null);
 
-        grade.AddStudent(student);
+        grade.AddStudent(studentRecord);
         dataContext.SaveChanges();
 
         dataContext.Dispose();
@@ -251,25 +251,25 @@ public class PersistenceTests : BaseTests
     }
 
     [Test]
-    public void CanAddAParentToAStudent()
+    public void CanAddAParentToAStudentRecord()
     {
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var parent = new Parent("Mariano", "john@gmail.com", "1111");
-        student.AddParent(parent);
+        studentRecord.AddParent(parent);
 
         dataContext.SaveChanges();
-        var id = student.Id;
+        var id = studentRecord.Id;
 
         dataContext.Dispose();
         dataContext = CreateContext(tenantProvider);
 
-        student = dataContext.StudentRecords
+        studentRecord = dataContext.StudentRecords
             .Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
             .Where(s => s.Id == id).FirstOrDefault();
 
-        Assert.That(student, Is.Not.Null);
+        Assert.That(studentRecord, Is.Not.Null);
 
-        Assert.That(student.CaregivingRelationships, Has.Count.EqualTo(1));
+        Assert.That(studentRecord.CaregivingRelationships, Has.Count.EqualTo(1));
     }
 
     [Test]
@@ -303,63 +303,63 @@ public class PersistenceTests : BaseTests
     [Test]
     public void DeletesRelationshipWhenParentIsDeleted()
     {
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
         var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
-        student.AddParent(parent1);
-        student.AddParent(parent2);
+        studentRecord.AddParent(parent1);
+        studentRecord.AddParent(parent2);
 
         dataContext.SaveChanges();
-        var id = student.Id;
+        var id = studentRecord.Id;
 
         dataContext.Dispose();
         dataContext = CreateContext(tenantProvider);
 
-        student = dataContext.StudentRecords
+        studentRecord = dataContext.StudentRecords
             .Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
             .Where(s => s.Id == id).FirstOrDefault();
 
-        Assert.That(student, Is.Not.Null);
-        Assert.That(student.CaregivingRelationships, Has.Count.EqualTo(2));
+        Assert.That(studentRecord, Is.Not.Null);
+        Assert.That(studentRecord.CaregivingRelationships, Has.Count.EqualTo(2));
 
-        var parent = student.Parents.Last();
+        var parent = studentRecord.Parents.Last();
         dataContext.Parents.Remove(parent);
         dataContext.SaveChanges();
 
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(student.Parents, Has.Count.EqualTo(1));
-            Assert.That(student.CaregivingRelationships, Has.Count.EqualTo(1));
+            Assert.That(studentRecord.Parents, Has.Count.EqualTo(1));
+            Assert.That(studentRecord.CaregivingRelationships, Has.Count.EqualTo(1));
         }
     }
 
     [Test]
     public void StoresARelationshipNameWhenProvided()
     {
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
         var parent2 = new Parent("Marie", "aut_marie@gmail.com", "222");
-        student.AddParent(parent1);
-        student.AddParent(parent2, "Aunt");
+        studentRecord.AddParent(parent1);
+        studentRecord.AddParent(parent2, "Aunt");
 
         dataContext.SaveChanges();
-        var id = student.Id;
+        var id = studentRecord.Id;
 
         dataContext.Dispose();
         dataContext = CreateContext(tenantProvider);
 
-        student = dataContext.StudentRecords
+        studentRecord = dataContext.StudentRecords
             .Include(s => s.CaregivingRelationships).ThenInclude(cgr => cgr.Parent)
             .Where(s => s.Id == id).FirstOrDefault();
 
         parent1 = dataContext.Parents.First(p => p.Name == "Mariano");
         parent2 = dataContext.Parents.First(p => p.Name == "Marie");
-        Assert.That(student, Is.Not.Null);
+        Assert.That(studentRecord, Is.Not.Null);
 
         using (Assert.EnterMultipleScope())
         {
-            Assert.That(student.CaregivingRelationships.First(r => r.Parent == parent1).Name, Is.EqualTo("Parent"));
-            Assert.That(student.CaregivingRelationships.First(r => r.Parent == parent2).Name, Is.EqualTo("Aunt"));
+            Assert.That(studentRecord.CaregivingRelationships.First(r => r.Parent == parent1).Name, Is.EqualTo("Parent"));
+            Assert.That(studentRecord.CaregivingRelationships.First(r => r.Parent == parent2).Name, Is.EqualTo("Aunt"));
         }
     }
     #endregion

@@ -62,7 +62,7 @@ public static class NotificationEndpointsExtensions
     {
         return await CommonHandler(request, async () =>
         {
-            await notifications.SendStudent(request.StudentId, Sanitize(request.Message));
+            await notifications.SendStudent(request.StudentRecordId, Sanitize(request.Message));
             var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
             return Results.Created($"/api/comunications/student/{response.Id}", response);
         });
@@ -72,7 +72,7 @@ public static class NotificationEndpointsExtensions
     {
         return await CommonHandler(request, async () =>
         {
-            await notifications.SendDisciplinary(request.StudentId, request.TeacherId, Sanitize(request.Message));
+            await notifications.SendDisciplinary(request.StudentRecordId, request.TeacherId, Sanitize(request.Message));
             var response = new NotificationResponse(Guid.NewGuid(), request.Message, 1);
             return Results.Created($"/api/comunications/disciplinary/{response.Id}", response);
         });
@@ -106,5 +106,5 @@ public static class NotificationEndpointsExtensions
     }
 }
 
-public record NotificationRequest(int GradeId, int StudentId, int TeacherId, string Message, DateTime ScheduleAt);
+public record NotificationRequest(int GradeId, int StudentRecordId, int TeacherId, string Message, DateTime ScheduleAt);
 public record NotificationResponse(Guid Id, string Message, int RecipientsAddressed);

@@ -38,6 +38,15 @@ Mantengamos acá una lista de los refáctorings pendientes para que cualquier pu
   protected int? Id;
 ```
 
+  - Definir una clase persona (Party) y luego definir Teacher y Parent (o Caregiver) como roles de Party.
+    Esto permitiría, también, definir al colegio o a áreas del colegio como parties.
+
+  - Incorporar el envío diferido en distintos tipos de notificaciones.
+
+  - Ajustar la estrategia de multitenancy para que el worker tenga acceso a todos los tenants.
+
+  - Incorporar Open Telemetry para disponer de traicing, metrics y logs.
+  
   - Adding tests for the DataRange class and rename it to DatePeriod
 
 ## Agregados

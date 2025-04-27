@@ -166,12 +166,12 @@ public class ApiTests : BaseTests
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         grade.AddSubject(teacher, "History");
 
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
         var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
-        student.AddParent(parent1);
-        student.AddParent(parent2);
-        grade.AddStudent(student);
+        studentRecord.AddParent(parent1);
+        studentRecord.AddParent(parent2);
+        grade.AddStudent(studentRecord);
 
         await dataContext.SaveChangesAsync();
 
@@ -186,7 +186,7 @@ public class ApiTests : BaseTests
 
     #endregion
 
-    #region Student
+    #region StudentRecord
 
     [Test]
     public async Task StudentNotificationHappyPath()
@@ -194,17 +194,17 @@ public class ApiTests : BaseTests
         // Arrange
         var notificator = (TestNotificator)app.Services.GetRequiredService<INotificator>();
 
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var parent1 = new Parent("Mariano", "john@gmail.com", "1111");
         var parent2 = new Parent("Carlos", "carlos@gmail.com", "222");
-        student.AddParent(parent1);
-        student.AddParent(parent2);
+        studentRecord.AddParent(parent1);
+        studentRecord.AddParent(parent2);
 
         await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-            new { StudentId = student.Id, Message = "Hello student" });
+            new { StudentRecordId = studentRecord.Id, Message = "Hello student" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
@@ -215,26 +215,26 @@ public class ApiTests : BaseTests
     public async Task StudentNotificationReturnsBadRequestWhenMessageIsEmpty()
     {
         // Arrange
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-            new { StudentId = student.Id, Message = "" });
+            new { StudentRecordId = studentRecord.Id, Message = "" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
 
     [Test]
-    public async Task StudentNotificationReturnsBadRequestWhenStudentDoesNotExist()
+    public async Task StudentNotificationReturnsBadRequestWhenStudentRecordDoesNotExist()
     {
         // Arrange
-        const int NON_EXISTENT_STUDENT_ID = 100;
+        const int NON_EXISTENT_STUDENT_RECORD_ID = 100;
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-            new { StudentId = NON_EXISTENT_STUDENT_ID, Message = "Hello student" });
+            new { StudentRecordId = NON_EXISTENT_STUDENT_RECORD_ID, Message = "Hello student" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -244,12 +244,12 @@ public class ApiTests : BaseTests
     public async Task StudentNotificationReturnsInternalServerErrorWhenExceptionsIsThrown()
     {
         // Arrange
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/student",
-            new { StudentId = student.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+            new { StudentRecordId = studentRecord.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
@@ -268,15 +268,15 @@ public class ApiTests : BaseTests
         var config = dataContext.Configurations.Add(
             new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var parent = new Parent("Mariano", "john@gmail.com", "1111");
-        student.AddParent(parent);
+        studentRecord.AddParent(parent);
 
         await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
-            new { StudentId = student.Id, TeacherId = teacher.Id, Message = "Disciplinary notification" });
+            new { StudentRecordId = studentRecord.Id, TeacherId = teacher.Id, Message = "Disciplinary notification" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
@@ -290,31 +290,31 @@ public class ApiTests : BaseTests
     {
         // Arrange
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
-            new { StudentId = student.Id, TeacherId = teacher.Id, Message = "" });
+            new { StudentRecordId = studentRecord.Id, TeacherId = teacher.Id, Message = "" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
 
     [Test]
-    public async Task DisciplinaryNotificationReturnsBadRequestWhenStudentDoesNotExist()
+    public async Task DisciplinaryNotificationReturnsBadRequestWhenStudentRecordDoesNotExist()
     {
         // Arrange
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         await dataContext.SaveChangesAsync();
         
-        const int NON_EXISTENT_STUDENT_ID = 100;
+        const int NON_EXISTENT_STUDENT_RECORD_ID = 100;
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
-            new { StudentId = NON_EXISTENT_STUDENT_ID, TeacherId = teacher.Id, Message = "Disciplinary notification" });
+            new { StudentRecordId = NON_EXISTENT_STUDENT_RECORD_ID, TeacherId = teacher.Id, Message = "Disciplinary notification" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -325,14 +325,14 @@ public class ApiTests : BaseTests
     {
         // Arrange
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         await dataContext.SaveChangesAsync();
 
         const int NON_EXISTENT_TEACHER_ID = 100;
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
-            new { StudentId = student.Id, TeacherId = NON_EXISTENT_TEACHER_ID, Message = "Disciplinary notification" });
+            new { StudentRecordId = studentRecord.Id, TeacherId = NON_EXISTENT_TEACHER_ID, Message = "Disciplinary notification" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
@@ -343,12 +343,12 @@ public class ApiTests : BaseTests
     {
         // Arrange
         dataContext.Configurations.Add(new Configuration(Configuration.DISCIPLINARY_INBOX, "disciplinary-inbox@school.edu"));
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
-            new { StudentId = student.Id, TeacherId = teacher.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
+            new { StudentRecordId = studentRecord.Id, TeacherId = teacher.Id, Message = "Please Throw! 8756D35F-B8AE-4018-BFCF-2148ADDA1EF4" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
@@ -358,13 +358,13 @@ public class ApiTests : BaseTests
     public async Task DisciplinaryNotificationReturnsInternalServerErrorWhenDisciplinaryInboxIsNotConfigured()
     {
         // Arrange
-        var student = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
+        var studentRecord = dataContext.StudentRecords.Add(new StudentRecord("Student 1")).Entity;
         var teacher = dataContext.Teachers.Add(new Teacher("Jophn Doe", "john@school.edu", "")).Entity;
         await dataContext.SaveChangesAsync();
 
         // Act
         var response = await client.PostAsJsonAsync("/api/v1/notifications/disciplinary",
-            new { StudentId = student.Id, TeacherId = teacher.Id, Message = "Disciplinary notification" });
+            new { StudentRecordId = studentRecord.Id, TeacherId = teacher.Id, Message = "Disciplinary notification" });
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
